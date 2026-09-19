@@ -1,0 +1,3166 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-19T19:51:30.853Z",
+  "metadataPaths": [
+    "/Applications/Cavalry.app/Contents/assets/MetaData/api_function_metadata.json",
+    "/Applications/Cavalry.app/Contents/assets/MetaData/core_api_function_metadata.json",
+    "/Applications/Cavalry.app/Contents/assets/MetaData/gui_api_function_metadata.json",
+    "/Applications/Cavalry.app/Contents/assets/MetaData/widget_api_function_metadata.json"
+  ],
+  "discovered": 358,
+  "counts": {
+    "covered": 283,
+    "not relevant": 75
+  },
+  "unexplained": 0,
+  "methods": [
+    {
+      "method": "add",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "addArrayIndex",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "addAssetToComp",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "addCallbackObject",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "addDynamic",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "addGuide",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "addMenuItem",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "addPreCompOverride",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "addRenderQueueItem",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "addSpacing",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "addStretch",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "addSubMenu",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "addToControlCentre",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "angleFromVector",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "areAttributeValuesEqual",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "backgroundRender",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "backgroundRenderAll",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "bringForward",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "bringToFront",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "cancelRender",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "centrePivot",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "centrePivotAtDepthAtIndex",
+      "namespaces": [
+        "@JS_DEFORMER"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "chooseFileToOpen",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "chooseFileToSave",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "chooseFolderPath",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "clamp",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "clearAttributeDefinitionOverrides",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "clearAttributeEditor",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "clearContextMenu",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "clearGuides",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "clearKeyframeVelocity",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "clearProject",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "clearTransformAtDepthAtIndex",
+      "namespaces": [
+        "@JS_DEFORMER"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "compareVersions",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "connect",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "connectDynamicIndex",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "convertSVGToLayers",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "copyFilePath",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "create",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "createAssetGroup",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "createComp",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "createCompReference",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "createEditable",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "createTimeMarker",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "degreesToRadians",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "deleteAnimation",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "deleteFilePath",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "deleteGuide",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "deleteKeyframe",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "deleteLayer",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "deselectAttribute",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "deserialise",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "disconnect",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "disconnectInput",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "disconnectOutputs",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "dist",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "duplicate",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "editComponent",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "encodeBinary",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "encrypt",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "encryptFile",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "exec",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "exportSceneAs",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "exportSelected",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "filePathExists",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "flipGraph",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "fontExists",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "framesToTimecode",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "freezeTransform",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "get",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getAbsolutePath",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getActiveCamera",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getActiveComp",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getActiveTool",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getAllLayerTypes",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getAllSceneLayers",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getAnimatedAttributes",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getAppAssetsPath",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getAppDataFolder",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getArrayCount",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getAssetFilePath",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getAssetPath",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getAssetType",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getAssetWindowLayers",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getAttrChildren",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getAttributeDefinition",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getAttributeDefinitionOverride",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getAttributeExpression",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getAttributeFromKeyframeId",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getAttributeNiceName",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getAttributes",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getAttrParent",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getAttrType",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getBoundingBox",
+      "namespaces": [
+        "@JS_DEFORMER",
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getCavalryPreference",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getCavalryVersion",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getChildren",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getClipboardText",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getCompFromReference",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getCompLayers",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getCompLayersOfType",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getComps",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getCurrentGenerator",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getCurrentGeneratorType",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getCustomAttributeName",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getDesktopFolder",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getDownloadsFolder",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getDrawInstructionsForSelection",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getDropdownNiceName",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getDynamicIndex",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getEditablePath",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getEffectiveAttributeDefinition",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getExtensionFromPath",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getFalloffAtPoint",
+      "namespaces": [
+        "@JS_DEFORMER"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "getFileModifiedDate",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getFileNameFromPath",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getFileSize",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getFolderFromPath",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getFontAssetFamilyName",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getFontAssetStyleName",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getFontFamilies",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "getFontsFolder",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getFontStyles",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "getFrame",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getGenerators",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getGoogleSheetAssetURL",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getGuideInfo",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getHomeFolder",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getImageSequenceFilePaths",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getInConnectedAttributes",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getInConnection",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getInFrame",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getInOutKeyframeIds",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getKeyframeIdsForAttribute",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getKeyframeTimes",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getLayerFromUUID",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getLayerType",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getLayerVersion",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getMeshAtDepthAtIndex",
+      "namespaces": [
+        "@JS_DEFORMER"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "getMeshesAtDepth",
+      "namespaces": [
+        "@JS_DEFORMER"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "getNiceName",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getNthBeat",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getOutConnectedAttributes",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getOutConnections",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getOutFrame",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getPalettesPath",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getParent",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getParentComp",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getPivotPosition",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getPlatform",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getPoints",
+      "namespaces": [
+        "@JS_DEFORMER"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "getPreference",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getPreferenceObject",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getPreferencesFolder",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getPreferencesPath",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getPresetsPath",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getProfileName",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getProjectPath",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getRelativePath",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getRenderPath",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getRenderQueueItems",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getRootMesh",
+      "namespaces": [
+        "@JS_DEFORMER"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "getSceneFilePath",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getScenesPath",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getSelectedAttributes",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getSelectedKeyframeIds",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getSelectedKeyframes",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getSelection",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getSelectionBoundingBox",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getSuperTypes",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getSystemInfo",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getTempFolder",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "getThemeColor",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "getTimeMarkers",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "getUserDataKey",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "globalTransformationMatrix",
+      "namespaces": [
+        "@JS_CTX"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "graphPreset",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "has3dTransforms",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "hasActiveCamera",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "hasAttribute",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "hasAttributeDefinitionOverrides",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "hasAttributeExpression",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "hasCustomAttributeName",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "hasFill",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "hasObject",
+      "namespaces": [
+        "@JS_CTX"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "hasPreferenceObject",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "hasStroke",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "hasUserDataKey",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "hexToHsv",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "hexToRgba",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "highestDepthWithPath",
+      "namespaces": [
+        "@JS_DEFORMER"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "hsvToHex",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "hsvToRgba",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "importScene",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "invertSelection",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "isAltHeld",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "isAnimatedAttribute",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "isAttrDefault",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "isControlHeld",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "isDirectory",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "isFile",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "isFileAsset",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "isGoogleSheetAsset",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "isGuiSession",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "isMetaHeld",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "isProLayerType",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "isReferenced",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "isRestrictedLicence",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "isShape",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "isShiftHeld",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "isThirdPartyLayer",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "isTransform",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "isVisible",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "jsonFromAsset",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "keyframe",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "layerExists",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "lerp",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "listDirectory",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "listDirectoryPaths",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "listDirectoryRecursive",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "listPreCompOverrides",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "load",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "loadAsset",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "loadGoogleSheet",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "loadObject",
+      "namespaces": [
+        "@JS_CTX"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "loadSmartFolderAsset",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "magicEasing",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "makeEditable",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "makeFirstPoint",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "makeFolder",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "map",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "measureText",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "meshCountAtDepth",
+      "namespaces": [
+        "@JS_DEFORMER"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "modifyKeyframe",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "modifyKeyframeTangent",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "move",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "moveBackward",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "movePoint",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "moveToBack",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "nameThatColor",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "newScene",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "noise1d",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "noise2d",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "noise3d",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "norm",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "offsetLayerTime",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "openScene",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "openSceneDialog",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "openURL",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "parent",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "play",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "preCompose",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "presentChooseFolder",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "presentOpenFile",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "presentSaveFile",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "primitive",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "processEvents",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "radiansToDegrees",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "random",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "readFromFile",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "registerDragDropMimeType",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "reloadAsset",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "removeArrayIndex",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "removeFromControlCentre",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "removePreCompOverride",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "removeTimeMarker",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "rename",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "renameAttribute",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "render",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "renderAll",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "renderPNGFrame",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "renderSVGFrame",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "reorder",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "reorderArrayAttr",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "replaceAsset",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "replaceGoogleSheet",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "resetAttribute",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "resetLayerAttributes",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "resetTransform",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "resyncPathKeyframes",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "rgbaToHex",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "rgbToHex",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "rgbToHsv",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "runDetachedProcess",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "runFileScript",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "runProcess",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "saveObject",
+      "namespaces": [
+        "@JS_CTX"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "saveScene",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "saveSceneAs",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "saveViewportContentsAsImage",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "sceneHasUnsavedChanges",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "select",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "selectAttribute",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "serialise",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "set",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "setActiveComp",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "setAttributeDefinitionOverride",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "setAttributeExpression",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "setBackgroundColor",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "setCallbacksActive",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "setCavalryPreference",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "setClipboardText",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "setDynamicIndexOffset",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "setEditablePath",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "setFill",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "setFixedHeight",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "setFixedSize",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "setFixedWidth",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "setFrame",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "setGenerator",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "setGradientFromColors",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "setGradientInterpolation",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "setInFrame",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "setKeyframeVelocity",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "setMargins",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "setMaterialAtDepthAtIndex",
+      "namespaces": [
+        "@JS_DEFORMER"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "setMaximumHeight",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "setMaximumWidth",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "setMeshAtDepthAtIndex",
+      "namespaces": [
+        "@JS_DEFORMER"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "setMeshesAtDepth",
+      "namespaces": [
+        "@JS_DEFORMER"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "setMinimumHeight",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "setMinimumWidth",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "setOutFrame",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "setPointPosition",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "setPoints",
+      "namespaces": [
+        "@JS_DEFORMER"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "setPreference",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "setPreferenceObject",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "setProject",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "setRootMesh",
+      "namespaces": [
+        "@JS_DEFORMER"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "setSelectedKeyframeIds",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "setSpaceBetween",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "setStroke",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "setTitle",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "setToolbar",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "setTransformAtDepthAtIndex",
+      "namespaces": [
+        "@JS_DEFORMER"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "setUserData",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "setVerticalToolbar",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "show",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "showContextMenu",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "showContextMenuOnRightClick",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "showInAttributeEditor",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "size",
+      "namespaces": [
+        "@JS_WIDGET_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "soloLayers",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "sortLayerIdsByHierarchy",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "stop",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "textFromAsset",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "timecodeToFrames",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "toNativeFilePath",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "transformationMatrix",
+      "namespaces": [
+        "@JS_CTX"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "uniform",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "unParent",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    },
+    {
+      "method": "unzip",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "updateAppTitleBar",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "uuid",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "vectorFromAngle",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "versionLessThan",
+      "namespaces": [
+        "@JS_CORE_API"
+      ],
+      "status": "not relevant",
+      "rationale": "This metadata entry is not part of the desktop @JS_GUI_API surface used by the Script UI bridge."
+    },
+    {
+      "method": "writeEncodedToBinaryFile",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "guarded_raw_script",
+      "rationale": "Public GUI API remains reachable through the explicit opt-in raw-script escape hatch; no dedicated semantic tool is currently justified."
+    },
+    {
+      "method": "writeToFile",
+      "namespaces": [
+        "@JS_GUI_API"
+      ],
+      "status": "covered",
+      "route": "bridge",
+      "rationale": "Called by a structured bridge operation."
+    }
+  ]
+}

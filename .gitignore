@@ -4,5 +4,4 @@ dist/
 .env
 .DS_Store
 tmp/
-coverage/
 cavalry-previews/

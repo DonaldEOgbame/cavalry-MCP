@@ -1,6 +1,6 @@
 import { bridgeClient } from '../bridge/client.js';
 import { identityResolver } from '../utils/ids.js';
-import { attributeSet } from './attributes.js';
+import { attributeSetMany } from './attributes.js';
 
 export async function renderQueueList(): Promise<{ count: number; items: Array<{ id: string; name: string }> }> {
   const res = await bridgeClient.send<any>('render_queue_list');
@@ -15,7 +15,7 @@ export async function renderQueueAdd(compId?: string): Promise<{ renderQueueItem
 
 export async function renderQueueConfigure(itemId: string, settings: Record<string, unknown>): Promise<Record<string, unknown>> {
   const resolved = identityResolver.resolveToLayerId(itemId);
-  return attributeSet(resolved, '', settings);
+  return attributeSetMany(resolved, settings);
 }
 
 export async function renderStart(itemId: string): Promise<Record<string, unknown>> {

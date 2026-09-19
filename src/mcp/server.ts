@@ -27,6 +27,9 @@ import * as ContactSheet from '../preview/contact-sheet.js';
 import * as Video from '../preview/video.js';
 import * as Layout from '../design/layout.js';
 import { audioProbe } from '../audio/probe.js';
+import * as Events from '../cavalry/events.js';
+import * as Parity from '../cavalry/parity.js';
+import { cavalryParityAudit } from '../cavalry/coverage.js';
 
 export function createMcpServer(): McpServer {
   const server = new McpServer({
@@ -92,6 +95,10 @@ export function createMcpServer(): McpServer {
     return getCapabilities();
   }));
 
+  server.tool('cavalry_parity_audit', 'Audit structured, raw-script, UI fallback, manual-feature, and official API coverage without claiming unsupported parity', {}, handleTool('cavalry_parity_audit', async () => {
+    return cavalryParityAudit();
+  }));
+
   server.tool('cavalry_bridge_info', 'Get bridge connection metadata and host system information', {}, handleTool('cavalry_bridge_info', async () => {
     return getBridgeInfo();
   }));
@@ -103,6 +110,184 @@ export function createMcpServer(): McpServer {
   server.tool('cavalry_raw_script', 'Escape hatch to execute arbitrary JavaScript in Cavalry (disabled by default; requires CAVALRY_ALLOW_RAW_SCRIPT=true)', Schemas.SystemSchemas.rawScript.shape, handleTool('cavalry_raw_script', async (args) => {
     return executeRawScript(args.code);
   }));
+  server.tool('events_subscribe', 'Subscribe the bridge event queue to native Cavalry application callbacks', Schemas.EventSchemas.subscription.shape, handleTool('events_subscribe', async (args) => Events.eventsSubscribe(args.events)));
+  server.tool('events_unsubscribe', 'Remove native Cavalry event subscriptions', Schemas.EventSchemas.subscription.shape, handleTool('events_unsubscribe', async (args) => Events.eventsUnsubscribe(args.events)));
+  server.tool('events_poll', 'Consume queued Cavalry events and invalidate affected MCP caches', Schemas.EventSchemas.poll.shape, handleTool('events_poll', async (args) => Events.eventsPoll(args.limit)));
+  server.tool('events_get_recent', 'Read recent Cavalry events without consuming the queue', Schemas.EventSchemas.poll.shape, handleTool('events_get_recent', async (args) => Events.eventsGetRecent(args.limit)));
+  server.tool('events_clear', 'Clear queued and recent Cavalry events', {}, handleTool('events_clear', async () => Events.eventsClear()));
+  server.tool('events_status', 'Inspect native callback subscriptions and queue depth', {}, handleTool('events_status', async () => Events.eventsStatus()));
+  server.tool('app_state', 'Get Cavalry activity, active tool, platform, version, and licence state', {}, handleTool('app_state', async () => Events.appState()));
+  server.tool('app_is_active', 'Check whether Cavalry is the active application', {}, handleTool('app_is_active', async () => Events.appIsActive()));
+  server.tool('app_active_tool', 'Get the active Cavalry Viewport tool', {}, handleTool('app_active_tool', async () => Events.appActiveTool()));
+  server.tool('app_platform', 'Get the platform reported by Cavalry', {}, handleTool('app_platform', async () => Events.appPlatform()));
+  server.tool('app_version', 'Get the live Cavalry application version', {}, handleTool('app_version', async () => Events.appVersion()));
+  server.tool('app_license', 'Get the available Cavalry licence restriction state', {}, handleTool('app_license', async () => Events.appLicense()));
+  server.tool('bridge_flush_events', 'Flush Cavalry GUI events before a verification read', {}, handleTool('bridge_flush_events', async () => Events.bridgeFlushEvents()));
+
+  const parityTool = (name: string, description: string, schema: any, operation = name, mapArgs?: (args: any) => Record<string, unknown>) => {
+    server.tool(name, description, schema.shape ?? schema, handleTool(name, async (args) => Parity.parityCall(operation, mapArgs ? mapArgs(args) : args)));
+  };
+  const P = Schemas.ParitySchemas;
+
+  // Native editor state and selection domains.
+  parityTool('keyframe_get_ids', 'Get stable keyframe IDs for one attribute', P.attribute);
+  parityTool('keyframe_get_selected_ids', 'Get exact IDs of selected keyframes', {});
+  parityTool('keyframe_select', 'Set the keyframe selection by ID', P.keyframeIds);
+  parityTool('keyframe_deselect_all', 'Clear keyframe selection', {});
+  parityTool('keyframe_get_attribute_from_id', 'Resolve the attribute owning a keyframe ID', P.keyframeId);
+  parityTool('keyframe_get_selected', 'Inspect selected keyframes and their IDs', {});
+  parityTool('attribute_get_selection', 'Get the independent Attribute Editor selection', {});
+  parityTool('attribute_select', 'Select Attribute Editor paths', P.attributes);
+  parityTool('attribute_deselect', 'Deselect Attribute Editor paths', P.attributes);
+  parityTool('attribute_clear_selection', 'Clear Attribute Editor selection', {});
+
+  // Editable paths and path animation.
+  parityTool('path_make_editable', 'Convert a supported shape to an Editable Shape', P.makeEditable);
+  parityTool('path_get_editable', 'Read complete editable contours, points, handles, locks, and selection state', P.layerWorld);
+  parityTool('path_set_editable', 'Replace an Editable Shape path in local or world space', P.editablePath);
+  parityTool('path_select_points', 'Select specific Editable Shape points', P.pathSelection);
+  parityTool('path_deselect_points', 'Clear point and handle selection on an Editable Shape', P.layerWorld);
+  parityTool('path_get_selected_points', 'Inspect selected points and handles', P.layerWorld);
+  parityTool('path_move_selected_points', 'Move the selected path points with Cavalry hierarchy semantics', P.pointMove);
+  parityTool('path_set_point_position', 'Set selected point positions through Cavalry Edit Shape semantics', P.pointPosition);
+  parityTool('path_set_handle_position', 'Set one incoming or outgoing handle position', P.pathHandle);
+  parityTool('path_set_handle_locking', 'Set angle and weight locks for one path point', P.pathLocking);
+  parityTool('path_make_first_point', 'Make the currently selected point the first point', P.layer);
+  for (const [name, action, schema] of [
+    ['path_add_contour', 'addContour', P.pathAddContour], ['path_remove_contour', 'removeContour', P.pathContour],
+    ['path_add_point', 'addPoint', P.pathAddPoint], ['path_remove_point', 'removePoint', P.pathPoint],
+    ['path_close_contour', 'closeContour', P.pathContour], ['path_open_contour', 'openContour', P.pathContour],
+  ] as const) parityTool(name, `${action} on an Editable Shape`, schema, 'path_edit_contours', (args) => ({ ...args, action }));
+  parityTool('path_keyframe_create', 'Create and resynchronise an Editable Path keyframe', P.pathKeyframeSet, 'path_keyframe_set');
+  parityTool('path_keyframe_get', 'Read an Editable Path at a keyframe time while restoring the playhead', P.pathKeyframeGet);
+  parityTool('path_keyframe_set', 'Set and resynchronise an Editable Path keyframe', P.pathKeyframeSet);
+  parityTool('path_keyframe_resync', 'Run Cavalry path-animation resynchronisation', P.attribute);
+  parityTool('path_morph', 'Create a resynchronised two-key Editable Path morph', P.pathMorph);
+
+  // Transform, camera, ruler guides, and reusable controls.
+  parityTool('transform_move', 'Move selected layers using Cavalry hierarchy-aware movement', P.layersMove);
+  parityTool('transform_freeze', 'Freeze a layer transform', P.layer);
+  parityTool('transform_reset', 'Reset a layer transform', P.layer);
+  parityTool('transform_center_pivot', 'Center a layer pivot', P.pivot);
+  parityTool('transform_center_pivot_centroid', 'Center a layer pivot on its shape centroid', P.pivot, 'transform_center_pivot', (args) => ({ ...args, centroid: true }));
+  parityTool('transform_get_pivot', 'Get a pivot in local or world space', P.layerWorld);
+  parityTool('transform_has_3d', 'Check whether a layer has active 3D transforms', P.layer);
+  parityTool('transform_enable_3d', 'Report the unsupported 2.5D toggle explicitly on Cavalry 2.7.2', P.layer, 'camera_layer_2_5d');
+  parityTool('camera_create', 'Create a native planar camera', P.cameraCreate);
+  parityTool('camera_list', 'List planar cameras in the active composition', {});
+  parityTool('camera_get_active', 'Get the active camera', {});
+  parityTool('camera_has_active', 'Check for an active camera', {});
+  parityTool('camera_inspect', 'Inspect camera type, transforms, look-at target, zoom, and guides', P.layer);
+  parityTool('camera_set_type', 'Set native camera mode: freeform, look-at, or guide', P.cameraType);
+  parityTool('camera_create_guide', 'Create a native Camera Guide', P.cameraGuideCreate);
+  parityTool('camera_sequence_guides', 'Set the ordered Camera Guide sequence', P.cameraGuides, 'camera_set_guides');
+  parityTool('camera_add_guide', 'Append one native Camera Guide to a camera', P.cameraGuide);
+  parityTool('camera_remove_guide', 'Remove one native Camera Guide from a camera', P.cameraGuide);
+  parityTool('camera_look_at', 'Set a camera look-at position and Look At mode', P.cameraLookAt);
+  parityTool('camera_enable_layer_2_5d', 'Report the unavailable 2.5D toggle explicitly', P.layer, 'camera_layer_2_5d');
+  parityTool('camera_disable_layer_2_5d', 'Report the unavailable 2.5D toggle explicitly', P.layer, 'camera_layer_2_5d');
+  parityTool('guide_list', 'List composition ruler guides', P.guideList);
+  parityTool('guide_create_horizontal', 'Create a horizontal ruler guide', P.guideCreate, 'guide_create', (args) => ({ ...args, vertical: false }));
+  parityTool('guide_create_vertical', 'Create a vertical ruler guide', P.guideCreate, 'guide_create', (args) => ({ ...args, vertical: true }));
+  parityTool('guide_move', 'Move a ruler guide, returning its replacement guide ID', P.guideMove);
+  parityTool('guide_delete', 'Delete a composition ruler guide', P.guideDelete);
+  parityTool('guide_clear', 'Clear composition ruler guides', P.guideList);
+  parityTool('control_centre_list', 'Report that Cavalry exposes no supported Control Centre list API', P.guideList);
+  parityTool('control_centre_describe', 'Report that Cavalry exposes no supported Control Centre describe API', P.guideList, 'control_centre_list');
+  parityTool('control_centre_add_attribute', 'Expose an attribute in the Control Centre', P.attribute);
+  parityTool('control_centre_remove_attribute', 'Remove an attribute from the Control Centre', P.attribute);
+
+  // Attribute UI, graph values, native beat timing, and persistent metadata.
+  parityTool('attribute_limits_get', 'Read attribute definition limit overrides', P.attribute);
+  parityTool('attribute_limits_set', 'Set hard/soft bounds and step overrides', P.limits);
+  parityTool('attribute_limits_clear', 'Clear attribute definition limit overrides', P.attribute);
+  parityTool('attribute_definition_get_effective', 'Read effective attribute definition after overrides', P.attribute);
+  parityTool('graph_attribute_get', 'Read a Graph attribute value', P.attribute);
+  parityTool('graph_attribute_set', 'Set a Graph attribute value', P.graphValue);
+  parityTool('graph_attribute_apply_preset', 'Apply a native Graph attribute preset', P.graphPreset);
+  parityTool('graph_attribute_flip_horizontal', 'Flip a Graph attribute horizontally', P.attribute, 'graph_attribute_flip', (args) => ({ ...args, direction: 'horizontal' }));
+  parityTool('graph_attribute_flip_vertical', 'Flip a Graph attribute vertically', P.attribute, 'graph_attribute_flip', (args) => ({ ...args, direction: 'vertical' }));
+  parityTool('beat_get_nth', 'Get the nth beat from active composition BPM settings', P.beat);
+  parityTool('beat_generate_markers', 'Create Time Markers from a native beat range', P.beatRange);
+  parityTool('metadata_set', 'Set native per-layer Cavalry User Data', P.metadata);
+  parityTool('metadata_get', 'Get native per-layer Cavalry User Data', P.metadata);
+  parityTool('metadata_has', 'Check native per-layer Cavalry User Data', P.metadata);
+  parityTool('mcp_state_get', 'Read MCP-specific persistent Cavalry script state', P.keyValue);
+  parityTool('mcp_state_set', 'Write MCP-specific persistent Cavalry script state', P.keyValue);
+  parityTool('preferences_get', 'Read one explicit Cavalry preference', P.keyValue);
+  parityTool('preferences_set', 'Explicitly set one global Cavalry preference', P.keyValue);
+  parityTool('preferences_snapshot', 'Snapshot an explicit set of global Cavalry preference keys', P.preferenceKeys);
+  parityTool('preferences_restore', 'Restore a previously captured explicit preference snapshot', P.preferenceValues);
+
+  // Viewport, project, assets, render variants, and editor interoperability.
+  parityTool('viewport_capture', 'Capture the actual Cavalry Viewport to an image', P.filePath);
+  parityTool('viewport_active_tool', 'Read the active Viewport tool', {});
+  parityTool('viewport_preferences_get', 'Snapshot explicit Viewport preference keys', P.preferenceKeys, 'preferences_snapshot');
+  parityTool('viewport_preferences_set', 'Explicitly set one Viewport preference key', P.keyValue, 'preferences_set');
+  parityTool('viewport_prepare_for_visual_qa', 'Apply explicit temporary Viewport preferences and return the exact previous values', P.viewportProfile, 'viewport_prepare');
+  parityTool('viewport_restore', 'Restore exact Viewport preference values returned by viewport_prepare_for_visual_qa', P.preferenceValues, 'preferences_restore');
+  parityTool('tool_get_active', 'Read the active Viewport tool', {}, 'viewport_active_tool');
+  parityTool('project_get', 'Get project root and production paths', {});
+  parityTool('project_paths', 'Get project root and production paths', {}, 'project_get');
+  parityTool('project_set', 'Set a Cavalry Project root', P.projectSet);
+  parityTool('project_clear', 'Clear the active Cavalry Project', {});
+  parityTool('asset_group_create', 'Create an Asset Window group', P.assetGroup);
+  parityTool('asset_sequence_inspect', 'Inspect image-sequence source paths', P.asset);
+  parityTool('asset_google_sheet_inspect', 'Inspect Google Sheet asset state and URL', P.asset);
+  parityTool('asset_google_sheet_replace', 'Replace a Google Sheet asset source', P.googleSheet);
+  parityTool('asset_icc_profile', 'Inspect an asset ICC profile', P.asset);
+  parityTool('color_asset_profile', 'Inspect an asset ICC profile', P.asset, 'asset_icc_profile');
+  parityTool('asset_is_file', 'Check whether an asset is file-backed', P.asset);
+  parityTool('asset_smart_folder_create', 'Create a Smart Folder asset', P.smartFolder);
+  parityTool('asset_smart_folder_reload', 'Reload a Smart Folder asset after its source changes', P.asset, 'asset_reload');
+  parityTool('render_dynamic_index_get', 'Read the Dynamic Rendering index', {});
+  parityTool('render_dynamic_index_connect', 'Connect Dynamic Index to an attribute', P.dynamicConnect);
+  parityTool('render_dynamic_range', 'Enable Dynamic Rendering and set its index range', P.dynamicRange);
+  parityTool('render_dynamic_offset', 'Set the Dynamic Rendering index offset', P.dynamicOffset);
+  parityTool('render_dynamic_preview', 'Report the missing native Dynamic preview API and direct callers to preview_frame', P.renderItem);
+  parityTool('render_background_start', 'Start background rendering for a Render Queue Item', P.renderItem);
+  parityTool('render_item_create', 'Create a first-class Render Queue Item for a composition', Schemas.RenderQueueSchemas.add, 'render_queue_add');
+  parityTool('render_item_inspect', 'Inspect every exposed Render Queue Item attribute and value', P.renderItem);
+  parityTool('render_item_attributes', 'List Render Queue Item attributes', P.renderItem);
+  parityTool('render_item_set', 'Set arbitrary validated Render Queue Item attributes', P.renderItemSettings);
+  parityTool('render_item_enable', 'Enable a Render Queue Item', P.renderItem, 'render_item_set', (args) => ({ ...args, settings: { selected: true } }));
+  parityTool('render_item_disable', 'Disable a Render Queue Item', P.renderItem, 'render_item_set', (args) => ({ ...args, settings: { selected: false } }));
+  parityTool('render_item_delete', 'Delete a Render Queue Item', P.renderItem);
+  parityTool('render_item_duplicate', 'Duplicate a Render Queue Item', P.renderItem);
+  parityTool('render_item_set_range', 'Set a custom Render Queue Item frame range', P.renderItemRange, 'render_item_set', (args) => ({ itemId: args.itemId, settings: { frameRangeMode: 2, frameRange: { x: args.startFrame, y: args.endFrame } } }));
+  parityTool('render_item_set_resolution_scale', 'Set Render Queue Item resolution percentage', P.renderItemScale, 'render_item_set', (args) => ({ itemId: args.itemId, settings: { resolutionScale: args.scale } }));
+  parityTool('render_item_set_quality', 'Set the native Render Queue Item quality enum', P.renderItemQuality, 'render_item_set', (args) => ({ itemId: args.itemId, settings: { renderQuality: args.quality } }));
+  parityTool('render_item_set_output', 'Set output path, file name, and optional installed format generator', P.renderItemOutput);
+  parityTool('render_item_set_audio', 'Set codec-specific audio attributes on the active format generator', P.renderItemSettings, 'render_item_set_generator');
+  parityTool('render_item_set_metadata', 'Replace Render Manager metadata entries', P.renderMetadata, 'render_item_set', (args) => ({ itemId: args.itemId, settings: { metadata: args.metadata } }));
+  parityTool('render_item_set_dynamic', 'Configure Dynamic Rendering attributes', P.renderItemSettings, 'render_item_set');
+  parityTool('render_item_set_format', 'Set an installed render format generator such as renderMP4 or renderPNG', P.renderFormat);
+  parityTool('render_script_get', 'Inspect setup, pre-render, and post-render scripts', P.renderItem, 'render_item_inspect');
+  parityTool('render_script_set_setup', 'Set the Setup Render Script', P.renderScript, 'render_item_set', (args) => ({ itemId: args.itemId, settings: { renderSetupExpression: args.script } }));
+  parityTool('render_script_set_pre', 'Set the Pre-Render Script', P.renderScript, 'render_item_set', (args) => ({ itemId: args.itemId, settings: { preRenderExpression: args.script } }));
+  parityTool('render_script_set_post', 'Set the Post-Render Script', P.renderScript, 'render_item_set', (args) => ({ itemId: args.itemId, settings: { postRenderExpression: args.script } }));
+  parityTool('render_script_clear', 'Clear all three Render Queue Item scripts', P.renderItem, 'render_item_set', (args) => ({ itemId: args.itemId, settings: { renderSetupExpression: '', preRenderExpression: '', postRenderExpression: '' } }));
+  parityTool('render_metadata_enable', 'Enable Render Manager metadata output', P.renderItem, 'render_item_set', (args) => ({ itemId: args.itemId, settings: { enableMetadata: true } }));
+  parityTool('render_metadata_disable', 'Disable Render Manager metadata output', P.renderItem, 'render_item_set', (args) => ({ itemId: args.itemId, settings: { enableMetadata: false } }));
+  parityTool('render_metadata_add', 'Add or append a Render Manager metadata entry', P.renderMetadataEntry);
+  parityTool('render_metadata_remove', 'Remove Render Manager metadata entries by name', P.renderMetadataEntry);
+  parityTool('render_metadata_format', 'Set metadata format: 0 JSON, 1 Simple Traits, 2 NFT Traits', P.renderMetadataFormat, 'render_item_set', (args) => ({ itemId: args.itemId, settings: { metaDataFormat: args.format } }));
+  parityTool('render_is_active', 'Report the unavailable active-render status API explicitly', {}, 'render_status_unavailable');
+  parityTool('render_wait', 'Report the unavailable render-wait status API explicitly', P.renderItem, 'render_status_unavailable');
+  parityTool('layer_get_supertypes', 'Read Cavalry layer supertypes', P.layer);
+  parityTool('shape_has_fill', 'Check explicit shape fill state', P.layer);
+  parityTool('shape_enable_fill', 'Enable shape fill', P.layer, 'shape_set_fill', (args) => ({ ...args, enabled: true }));
+  parityTool('shape_disable_fill', 'Disable shape fill', P.layer, 'shape_set_fill', (args) => ({ ...args, enabled: false }));
+  parityTool('shape_has_stroke', 'Check explicit shape stroke state', P.layer);
+  parityTool('shape_enable_stroke', 'Enable shape stroke', P.layer, 'shape_set_stroke', (args) => ({ ...args, enabled: true }));
+  parityTool('shape_disable_stroke', 'Disable shape stroke', P.layer, 'shape_set_stroke', (args) => ({ ...args, enabled: false }));
+  for (const [name, action] of [['layer_bring_forward', 'forward'], ['layer_bring_to_front', 'front'], ['layer_send_backward', 'backward'], ['layer_send_to_back', 'back']] as const) {
+    parityTool(name, `Move selected layers ${action}`, P.stack, 'layer_stack_action', (args) => ({ ...args, action }));
+  }
+  parityTool('scene_export_copy', 'Export a copy of the current Scene', P.filePath);
+  parityTool('component_export_selected', 'Export selected connected layers as a Component', P.exportSelected);
+  parityTool('clipboard_get_text', 'Read Cavalry clipboard text', {});
+  parityTool('clipboard_set_text', 'Write Cavalry clipboard text', P.clipboard);
 
   // ============================================================================
   // SCENE TOOLS

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "features": {
+    "Scene Window": { "coverage": "Structured MCP", "notes": "Hierarchy, selection, visibility, stack order, and generic nodes are covered." },
+    "Time Editor": { "coverage": "Structured MCP", "notes": "Timeline, keyframes, markers, and key selection are covered." },
+    "Graph Editor": { "coverage": "Structured MCP", "notes": "Key tangents/velocity and Graph attribute presets are covered; editor layout is not." },
+    "Viewport": { "coverage": "Structured MCP", "notes": "Capture and active-tool reads are covered; UI-only display profiles are not." },
+    "Attribute Editor": { "coverage": "Structured MCP", "notes": "Discovery, values, limits, expressions, and selection are covered." },
+    "Dependency Graph": { "coverage": "Structured MCP", "notes": "Connections and generic node inspection are covered." },
+    "Assets": { "coverage": "Structured MCP", "notes": "Files, groups, sequences, cloud sheets, smart folders, ICC data, and async callbacks are covered." },
+    "Control Centre": { "coverage": "Not Automatable", "notes": "Add/remove are structured; listing/description have no public API." },
+    "Render Manager": { "coverage": "Raw Script", "notes": "Queue basics are structured; format-specific attributes vary by installed definitions." },
+    "Animation Utilities": { "coverage": "Structured MCP" },
+    "Tags": { "coverage": "Not Automatable", "notes": "No documented structured API and no accessibility fallback yet." },
+    "Presets": { "coverage": "Not Automatable", "notes": "No documented structured API and no accessibility fallback yet." },
+    "Workspaces": { "coverage": "Not Automatable", "notes": "No accessibility fallback yet." },
+    "Shortcuts": { "coverage": "Not Automatable", "notes": "No accessibility fallback yet." },
+    "Preferences": { "coverage": "Structured MCP", "notes": "Explicit keyed read/write only." },
+    "Tool Settings": { "coverage": "Raw Script", "notes": "Scene-backed settings use attributes; editor-only settings remain unavailable." },
+    "Camera": { "coverage": "Structured MCP", "notes": "Planar cameras and Camera Guides are covered; 2.5D activation is not exposed." },
+    "JavaScript": { "coverage": "Raw Script", "notes": "Explicit opt-in only." },
+    "Third-party plugins": { "coverage": "Raw Script", "notes": "Scene-node attributes are generic; custom plugin UI remains unavailable." }
+  }
+}

@@ -9,6 +9,29 @@
   const BRIDGE_INSTANCE_ID = "bridge_" + Date.now() + "_" + Math.random().toString(36).slice(2);
   const LISTEN_HOST = "127.0.0.1";
   const LISTEN_PORT = 8080;
+  const MAX_EVENT_QUEUE = 1000;
+  const eventQueue = [];
+  const recentEvents = [];
+  let eventSubscriptions = {};
+  let appState = "unknown";
+  let sceneRevision = 0;
+
+  function emitEvent(eventName, details) {
+    if (eventName === "scene.changed" || eventName === "composition.changed" || eventName === "attribute.changed" || eventName === "attribute.connected" || eventName === "attribute.disconnected" || eventName.startsWith("layer.") || eventName.startsWith("asset.")) {
+      sceneRevision++;
+    }
+    const event = Object.assign({
+      event: eventName,
+      timestamp: Date.now(),
+      sceneRevision: sceneRevision,
+    }, details || {});
+    recentEvents.push(event);
+    if (recentEvents.length > MAX_EVENT_QUEUE) recentEvents.shift();
+    if (eventSubscriptions["*"] || eventSubscriptions[eventName]) {
+      eventQueue.push(event);
+      if (eventQueue.length > MAX_EVENT_QUEUE) eventQueue.shift();
+    }
+  }
 
   // Verify Cavalry environment
   if (typeof api === "undefined") {
@@ -141,6 +164,68 @@
         cavalryVersion: api.getCavalryVersion(),
         systemInfo: api.getSystemInfo ? api.getSystemInfo() : null,
       };
+    },
+
+    events_subscribe: function (params) {
+      const events = params.events && params.events.length ? params.events : ["*"];
+      for (let eventName of events) eventSubscriptions[eventName] = true;
+      return { subscribed: Object.keys(eventSubscriptions), queueSize: eventQueue.length };
+    },
+
+    events_unsubscribe: function (params) {
+      const events = params.events && params.events.length ? params.events : ["*"];
+      for (let eventName of events) delete eventSubscriptions[eventName];
+      return { subscribed: Object.keys(eventSubscriptions), queueSize: eventQueue.length };
+    },
+
+    events_poll: function (params) {
+      const limit = Math.max(1, Math.min(params.limit || 100, 500));
+      const events = eventQueue.splice(0, limit);
+      return { events: events, count: events.length, remaining: eventQueue.length };
+    },
+
+    events_get_recent: function (params) {
+      const limit = Math.max(1, Math.min(params.limit || 100, 500));
+      const events = recentEvents.slice(Math.max(0, recentEvents.length - limit));
+      return { events: events, count: events.length };
+    },
+
+    events_clear: function () {
+      eventQueue.length = 0;
+      recentEvents.length = 0;
+      return { cleared: true };
+    },
+
+    events_status: function () {
+      return {
+        subscribed: Object.keys(eventSubscriptions),
+        queueSize: eventQueue.length,
+        recentSize: recentEvents.length,
+        maxQueueSize: MAX_EVENT_QUEUE,
+        sceneRevision: sceneRevision,
+      };
+    },
+
+    app_state: function () {
+      return {
+        state: appState,
+        active: appState === "active",
+        activeTool: api.getActiveTool(),
+        platform: api.getPlatform(),
+        version: api.getCavalryVersion(),
+        restrictedLicence: api.isRestrictedLicence(),
+      };
+    },
+
+    app_is_active: function () { return { active: appState === "active", state: appState }; },
+    app_active_tool: function () { return { activeTool: api.getActiveTool() }; },
+    app_platform: function () { return { platform: api.getPlatform() }; },
+    app_version: function () { return { version: api.getCavalryVersion() }; },
+    app_license: function () { return { restricted: api.isRestrictedLicence() }; },
+
+    bridge_flush_events: function () {
+      api.processEvents();
+      return { flushed: true, queueSize: eventQueue.length };
     },
 
     // --------------------------------------------------------------------------
@@ -535,7 +620,7 @@
 
     layer_duplicate: function (params) {
       const layerId = resolveLayerId(params.layerId);
-      const newLayerId = api.duplicate(layerId);
+      const newLayerId = api.duplicate(layerId, params.withInputConnections === true);
       return getLayerIdentity(newLayerId);
     },
 
@@ -724,6 +809,7 @@
         Object.assign(updates, params.attributes);
       }
       api.set(layerId, updates);
+      api.processEvents();
 
       const after = {};
       for (let k of Object.keys(updates)) {
@@ -740,6 +826,7 @@
     attribute_set_many: function (params) {
       const layerId = resolveLayerId(params.layerId);
       api.set(layerId, params.attributes || {});
+      api.processEvents();
       return {
         layerId: layerId,
         applied: params.attributes,
@@ -1320,6 +1407,24 @@
       return { cancelled: true };
     },
 
+    render_item_inspect: function (params) {
+      const id = resolveLayerId(params.itemId);
+      const attributes = api.getAttributes(id) || [];
+      const values = {};
+      for (let attr of attributes) { try { values[attr] = api.get(id, attr); } catch (e) {} }
+      return { identity: getLayerIdentity(id), attributes: attributes, values: values };
+    },
+    render_item_attributes: function (params) { const id = resolveLayerId(params.itemId); return { itemId: id, attributes: api.getAttributes(id) || [] }; },
+    render_item_set: function (params) { const id = resolveLayerId(params.itemId); api.set(id, params.settings || {}); api.processEvents(); return handlers.render_item_inspect({ itemId: id }); },
+    render_item_set_generator: function (params) { const id = resolveLayerId(params.itemId); const generatorId = api.get(id, "generator"); if (!generatorId) throw new Error("Render Queue Item has no active format generator"); api.set(generatorId, params.settings || {}); api.processEvents(); return { itemId: id, generatorId: generatorId, attributes: api.getAttributes(generatorId) || [] }; },
+    render_item_set_output: function (params) { const id = resolveLayerId(params.itemId); const settings = { filePath: params.filePath }; if (params.fileName !== undefined) settings.fileName = params.fileName; api.set(id, settings); if (params.formatType) api.setGenerator(id, "generator", params.formatType); api.processEvents(); return handlers.render_item_inspect({ itemId: id }); },
+    render_item_delete: function (params) { const id = resolveLayerId(params.itemId); api.deleteLayer(id); api.processEvents(); return { itemId: id, deleted: true }; },
+    render_item_duplicate: function (params) { const id = resolveLayerId(params.itemId); const duplicateId = api.duplicate(id, false); api.processEvents(); return { sourceItemId: id, item: getLayerIdentity(duplicateId) }; },
+    render_item_set_format: function (params) { const id = resolveLayerId(params.itemId); api.setGenerator(id, "generator", params.formatType); api.processEvents(); return handlers.render_item_inspect({ itemId: id }); },
+    render_metadata_add: function (params) { const id = resolveLayerId(params.itemId); const metadata = api.get(id, "metadata") || []; metadata.push({ name: params.name, value: params.value }); api.set(id, { metadata: metadata }); api.processEvents(); return { itemId: id, metadata: api.get(id, "metadata") || [] }; },
+    render_metadata_remove: function (params) { const id = resolveLayerId(params.itemId); const metadata = (api.get(id, "metadata") || []).filter(function (item) { return item.name !== params.name; }); api.set(id, { metadata: metadata }); api.processEvents(); return { itemId: id, metadata: api.get(id, "metadata") || [] }; },
+    render_status_unavailable: function () { throw new Error("Cavalry 2.7.2 exposes render/cancel/backgroundRender, but no supported active-render status API required for render_is_active or render_wait"); },
+
     // --------------------------------------------------------------------------
     // Serialization & Reusable Components
     // --------------------------------------------------------------------------
@@ -1343,6 +1448,232 @@
       const ok = api.exportSelected(params.filePath);
       return { exported: ok, filePath: params.filePath };
     },
+
+    // --------------------------------------------------------------------------
+    // Desktop Parity APIs
+    // --------------------------------------------------------------------------
+    keyframe_get_ids: function (params) {
+      const layerId = resolveLayerId(params.layerId);
+      return { layerId: layerId, attrPath: params.attrPath, keyframeIds: api.getKeyframeIdsForAttribute(layerId, params.attrPath) || [] };
+    },
+    keyframe_get_selected_ids: function () { return { keyframeIds: api.getSelectedKeyframeIds() || [] }; },
+    keyframe_select: function (params) { api.setSelectedKeyframeIds(params.keyframeIds || []); return { keyframeIds: api.getSelectedKeyframeIds() || [] }; },
+    keyframe_deselect_all: function () { api.setSelectedKeyframeIds([]); return { keyframeIds: [] }; },
+    keyframe_get_attribute_from_id: function (params) { return { keyframeId: params.keyframeId, attribute: api.getAttributeFromKeyframeId(params.keyframeId) }; },
+    keyframe_get_selected: function () { return { selected: api.getSelectedKeyframes() || {}, keyframeIds: api.getSelectedKeyframeIds() || [] }; },
+
+    path_make_editable: function (params) {
+      const sourceId = resolveLayerId(params.layerId);
+      const layerId = api.makeEditable(sourceId, params.makeCopy === true);
+      api.processEvents();
+      return getLayerIdentity(layerId || sourceId);
+    },
+    path_get_editable: function (params) {
+      const id = resolveLayerId(params.layerId);
+      return { layerId: id, worldSpace: params.worldSpace === true, path: api.getEditablePath(id, params.worldSpace === true) };
+    },
+    path_set_editable: function (params) {
+      const id = resolveLayerId(params.layerId);
+      api.setEditablePath(id, params.worldSpace === true, params.pathObject);
+      api.processEvents();
+      return { layerId: id, worldSpace: params.worldSpace === true, path: api.getEditablePath(id, params.worldSpace === true) };
+    },
+    path_select_points: function (params) {
+      const id = resolveLayerId(params.layerId);
+      const path = api.getEditablePath(id, params.worldSpace === true);
+      const contours = Array.isArray(path) ? path : (path.contours || []);
+      const wanted = params.points || [];
+      for (let c = 0; c < contours.length; c++) {
+        const points = contours[c].points || [];
+        for (let p = 0; p < points.length; p++) {
+          const match = wanted.some(function (item) { return item.contourIndex === c && item.pointIndex === p; });
+          if (params.add === true) points[p].selected = points[p].selected === true || match;
+          else points[p].selected = match;
+        }
+      }
+      api.setEditablePath(id, params.worldSpace === true, path);
+      api.processEvents();
+      return handlers.path_get_selected_points({ layerId: id, worldSpace: params.worldSpace });
+    },
+    path_deselect_points: function (params) {
+      const id = resolveLayerId(params.layerId);
+      const path = api.getEditablePath(id, params.worldSpace === true);
+      const contours = Array.isArray(path) ? path : (path.contours || []);
+      for (let contour of contours) for (let point of (contour.points || [])) {
+        point.selected = false;
+        if (point.inHandle) point.inHandle.selected = false;
+        if (point.outHandle) point.outHandle.selected = false;
+      }
+      api.setEditablePath(id, params.worldSpace === true, path);
+      api.processEvents();
+      return { layerId: id, selected: [] };
+    },
+    path_get_selected_points: function (params) {
+      const id = resolveLayerId(params.layerId);
+      const path = api.getEditablePath(id, params.worldSpace === true);
+      const contours = Array.isArray(path) ? path : (path.contours || []);
+      const selected = [];
+      for (let c = 0; c < contours.length; c++) for (let p = 0; p < (contours[c].points || []).length; p++) {
+        const point = contours[c].points[p];
+        if (point.selected || (point.inHandle && point.inHandle.selected) || (point.outHandle && point.outHandle.selected)) {
+          selected.push({ contourIndex: c, pointIndex: p, point: point });
+        }
+      }
+      return { layerId: id, worldSpace: params.worldSpace === true, selected: selected };
+    },
+    path_move_selected_points: function (params) {
+      const id = resolveLayerId(params.layerId);
+      api.select([id]);
+      api.movePoint(params.x, params.y, params.localSpace !== false);
+      api.processEvents();
+      return handlers.path_get_selected_points({ layerId: id, worldSpace: params.localSpace === false });
+    },
+    path_set_point_position: function (params) {
+      const id = resolveLayerId(params.layerId);
+      api.select([id]);
+      api.setPointPosition(params.position, params.localSpace !== false, params.handles === true);
+      api.processEvents();
+      return handlers.path_get_selected_points({ layerId: id, worldSpace: params.localSpace === false });
+    },
+    path_set_handle_position: function (params) {
+      const id = resolveLayerId(params.layerId);
+      const path = api.getEditablePath(id, params.worldSpace === true);
+      const contours = Array.isArray(path) ? path : (path.contours || []);
+      const point = contours[params.contourIndex] && (contours[params.contourIndex].points || [])[params.pointIndex];
+      if (!point) throw new Error("Editable path point index is out of range");
+      const key = params.handle === "in" ? "inHandle" : "outHandle";
+      point[key] = Object.assign({}, point[key] || {}, params.position);
+      api.setEditablePath(id, params.worldSpace === true, path);
+      api.processEvents();
+      return { layerId: id, contourIndex: params.contourIndex, pointIndex: params.pointIndex, handle: key, value: point[key] };
+    },
+    path_set_handle_locking: function (params) {
+      const id = resolveLayerId(params.layerId);
+      const path = api.getEditablePath(id, params.worldSpace === true);
+      const contours = Array.isArray(path) ? path : (path.contours || []);
+      const point = contours[params.contourIndex] && (contours[params.contourIndex].points || [])[params.pointIndex];
+      if (!point) throw new Error("Editable path point index is out of range");
+      if (params.angleLocked !== undefined) point.angleLocked = params.angleLocked;
+      if (params.weightLocked !== undefined) point.weightLocked = params.weightLocked;
+      api.setEditablePath(id, params.worldSpace === true, path);
+      return { layerId: id, contourIndex: params.contourIndex, pointIndex: params.pointIndex, angleLocked: point.angleLocked, weightLocked: point.weightLocked };
+    },
+    path_make_first_point: function (params) { const id = resolveLayerId(params.layerId); api.select([id]); api.makeFirstPoint(id); api.processEvents(); return { layerId: id, changed: true }; },
+    path_edit_contours: function (params) {
+      const id = resolveLayerId(params.layerId);
+      const path = api.getEditablePath(id, params.worldSpace === true);
+      const contours = Array.isArray(path) ? path : (path.contours || []);
+      const ci = params.contourIndex;
+      if (params.action === "addContour") contours.push(params.contour || { points: [], isClosed: false });
+      else if (!contours[ci]) throw new Error("Editable path contour index is out of range");
+      else if (params.action === "removeContour") contours.splice(ci, 1);
+      else if (params.action === "addPoint") (contours[ci].points || (contours[ci].points = [])).splice(params.pointIndex === undefined ? contours[ci].points.length : params.pointIndex, 0, params.point);
+      else if (params.action === "removePoint") (contours[ci].points || []).splice(params.pointIndex, 1);
+      else if (params.action === "closeContour") contours[ci].isClosed = true;
+      else if (params.action === "openContour") contours[ci].isClosed = false;
+      else throw new Error("Unknown path contour action: " + params.action);
+      api.setEditablePath(id, params.worldSpace === true, path);
+      api.processEvents();
+      return { layerId: id, worldSpace: params.worldSpace === true, path: api.getEditablePath(id, params.worldSpace === true) };
+    },
+    path_keyframe_get: function (params) { const id = resolveLayerId(params.layerId); const previousFrame = api.getFrame(); api.setFrame(params.frame); api.processEvents(); const value = api.get(id, params.attrPath); api.setFrame(previousFrame); api.processEvents(); return { layerId: id, attrPath: params.attrPath, frame: params.frame, value: value }; },
+    path_keyframe_set: function (params) { const id = resolveLayerId(params.layerId); const values = {}; values[params.attrPath] = params.pathObject; api.keyframe(id, params.frame, values); api.resyncPathKeyframes(id, params.attrPath); api.processEvents(); return handlers.path_keyframe_get({ layerId: id, attrPath: params.attrPath, frame: params.frame }); },
+    path_keyframe_resync: function (params) { const id = resolveLayerId(params.layerId); api.resyncPathKeyframes(id, params.attrPath); api.processEvents(); return { layerId: id, attrPath: params.attrPath, resynced: true }; },
+    path_morph: function (params) { const id = resolveLayerId(params.layerId); const a = {}; const b = {}; a[params.attrPath] = params.fromPath; b[params.attrPath] = params.toPath; api.keyframe(id, params.startFrame, a); api.keyframe(id, params.endFrame, b); api.resyncPathKeyframes(id, params.attrPath); api.processEvents(); return { layerId: id, attrPath: params.attrPath, startFrame: params.startFrame, endFrame: params.endFrame, resynced: true }; },
+
+    attribute_get_selection: function () { return { attributes: api.getSelectedAttributes() || [] }; },
+    attribute_select: function (params) { api.selectAttribute(params.attributePaths || [], params.add === true); return { attributes: api.getSelectedAttributes() || [] }; },
+    attribute_deselect: function (params) { api.deselectAttribute(params.attributePaths || []); return { attributes: api.getSelectedAttributes() || [] }; },
+    attribute_clear_selection: function () { api.selectAttribute([], false); return { attributes: [] }; },
+
+    transform_move: function (params) { const ids = (params.layerIds || []).map(resolveLayerId); api.select(ids); api.move(params.x, params.y); api.processEvents(); return { layerIds: ids, x: params.x, y: params.y }; },
+    transform_freeze: function (params) { const id = resolveLayerId(params.layerId); api.freezeTransform(id); api.processEvents(); return { layerId: id, frozen: true }; },
+    transform_reset: function (params) { const id = resolveLayerId(params.layerId); api.resetTransform(id); api.processEvents(); return { layerId: id, reset: true }; },
+    transform_center_pivot: function (params) { const id = resolveLayerId(params.layerId); api.centrePivot(id, params.centroid === true); api.processEvents(); return { layerId: id, pivot: api.getPivotPosition(id, params.worldSpace === true) }; },
+    transform_get_pivot: function (params) { const id = resolveLayerId(params.layerId); return { layerId: id, pivot: api.getPivotPosition(id, params.worldSpace === true), worldSpace: params.worldSpace === true }; },
+    transform_has_3d: function (params) { const id = resolveLayerId(params.layerId); return { layerId: id, has3d: api.has3dTransforms(id) }; },
+
+    camera_create: function (params) { const id = api.create("planarCamera"); if (params.name) api.rename(id, params.name); if (params.cameraType !== undefined) api.set(id, { cameraType: params.cameraType }); api.processEvents(); return getLayerIdentity(id); },
+    camera_list: function () { const ids = api.getCompLayersOfType(false, "planarCamera") || []; return { cameras: ids.map(getLayerIdentity) }; },
+    camera_get_active: function () { const id = api.getActiveCamera(); return { hasActive: api.hasActiveCamera(), camera: id ? getLayerIdentity(id) : null }; },
+    camera_has_active: function () { return { hasActive: api.hasActiveCamera() }; },
+    camera_inspect: function (params) { const id = resolveLayerId(params.layerId); return { identity: getLayerIdentity(id), cameraType: api.get(id, "cameraType"), position: api.get(id, "position"), rotation: api.get(id, "rotation"), lookAt: api.get(id, "lookAt"), zoom: api.get(id, "zoom"), guides: api.get(id, "inputGuides") }; },
+    camera_set_type: function (params) { const id = resolveLayerId(params.layerId); api.set(id, { cameraType: params.cameraType }); api.processEvents(); return { layerId: id, cameraType: api.get(id, "cameraType") }; },
+    camera_create_guide: function (params) { const id = api.create("cameraGuide"); if (params.name) api.rename(id, params.name); api.processEvents(); return getLayerIdentity(id); },
+    camera_set_guides: function (params) { const id = resolveLayerId(params.layerId); const guides = (params.guideIds || []).map(resolveLayerId); api.set(id, { inputGuides: guides }); api.processEvents(); return { layerId: id, guideIds: api.get(id, "inputGuides") || [] }; },
+    camera_add_guide: function (params) { const id = resolveLayerId(params.layerId); const guideId = resolveLayerId(params.guideId); const guides = api.get(id, "inputGuides") || []; if (guides.indexOf(guideId) === -1) guides.push(guideId); api.set(id, { inputGuides: guides }); api.processEvents(); return { layerId: id, guideIds: api.get(id, "inputGuides") || [] }; },
+    camera_remove_guide: function (params) { const id = resolveLayerId(params.layerId); const guideId = resolveLayerId(params.guideId); const guides = (api.get(id, "inputGuides") || []).filter(function (item) { return item !== guideId; }); api.set(id, { inputGuides: guides }); api.processEvents(); return { layerId: id, guideIds: api.get(id, "inputGuides") || [] }; },
+    camera_look_at: function (params) { const id = resolveLayerId(params.layerId); api.set(id, { lookAt: params.position, cameraType: 1 }); api.processEvents(); return { layerId: id, lookAt: api.get(id, "lookAt") }; },
+    camera_layer_2_5d: function () { throw new Error("Cavalry 2.7.2 exposes has3dTransforms(), but no supported scripting API for enabling or disabling a layer's 2.5D transform state"); },
+
+    guide_list: function (params) { const id = resolveLayerId(params.compId || api.getActiveComp()); return { compId: id, guides: api.getGuideInfo(id) || [] }; },
+    guide_create: function (params) { const id = resolveLayerId(params.compId || api.getActiveComp()); const guideId = api.addGuide(id, params.vertical === true, params.position); return { compId: id, guideId: guideId, vertical: params.vertical === true, position: params.position }; },
+    guide_move: function (params) { const id = resolveLayerId(params.compId || api.getActiveComp()); api.deleteGuide(id, params.guideId); const guideId = api.addGuide(id, params.vertical === true, params.position); api.processEvents(); return { compId: id, previousGuideId: params.guideId, guideId: guideId, vertical: params.vertical === true, position: params.position }; },
+    guide_delete: function (params) { const id = resolveLayerId(params.compId || api.getActiveComp()); api.deleteGuide(id, params.guideId); return { compId: id, guideId: params.guideId, deleted: true }; },
+    guide_clear: function (params) { const id = resolveLayerId(params.compId || api.getActiveComp()); api.clearGuides(id); return { compId: id, cleared: true }; },
+
+    control_centre_list: function () { throw new Error("Cavalry 2.7.2 exposes add/remove Control Centre operations, but no supported API for listing entries"); },
+    control_centre_add_attribute: function (params) { const id = resolveLayerId(params.layerId); api.addToControlCentre(id, params.attrPath); return { layerId: id, attrPath: params.attrPath, added: true }; },
+    control_centre_remove_attribute: function (params) { const id = resolveLayerId(params.layerId); api.removeFromControlCentre(id, params.attrPath); return { layerId: id, attrPath: params.attrPath, removed: true }; },
+
+    attribute_limits_get: function (params) { const id = resolveLayerId(params.layerId); const keys = ["hardMin", "hardMax", "softMin", "softMax", "step"]; const limits = {}; for (let key of keys) limits[key] = api.getAttributeDefinitionOverride(id, params.attrPath, key); return { layerId: id, attrPath: params.attrPath, limits: limits }; },
+    attribute_limits_set: function (params) { const id = resolveLayerId(params.layerId); for (let key of Object.keys(params.limits || {})) api.setAttributeDefinitionOverride(id, params.attrPath, key, params.limits[key]); api.processEvents(); return handlers.attribute_limits_get({ layerId: id, attrPath: params.attrPath }); },
+    attribute_limits_clear: function (params) { const id = resolveLayerId(params.layerId); api.clearAttributeDefinitionOverrides(id, params.attrPath); return { layerId: id, attrPath: params.attrPath, cleared: true }; },
+    attribute_definition_get_effective: function (params) { const id = resolveLayerId(params.layerId); return { layerId: id, attrPath: params.attrPath, definition: api.getEffectiveAttributeDefinition(id, params.attrPath) }; },
+
+    graph_attribute_get: function (params) { const id = resolveLayerId(params.layerId); return { layerId: id, attrPath: params.attrPath, value: api.get(id, params.attrPath) }; },
+    graph_attribute_set: function (params) { const id = resolveLayerId(params.layerId); const values = {}; values[params.attrPath] = params.value; api.set(id, values); api.processEvents(); return { layerId: id, attrPath: params.attrPath, value: api.get(id, params.attrPath) }; },
+    graph_attribute_apply_preset: function (params) { const id = resolveLayerId(params.layerId); const presets = { "s-curve": 0, ramp: 1, linear: 2, flat: 3 }; api.graphPreset(id, params.attrPath, presets[params.preset]); return { layerId: id, attrPath: params.attrPath, preset: params.preset }; },
+    graph_attribute_flip: function (params) { const id = resolveLayerId(params.layerId); api.flipGraph(id, params.attrPath, params.direction); return { layerId: id, attrPath: params.attrPath, direction: params.direction }; },
+
+    beat_get_nth: function (params) { return { beat: params.beat, frame: api.getNthBeat(params.beat) }; },
+    beat_generate_markers: function (params) { const markers = []; for (let n = params.startBeat; n <= params.endBeat; n++) { const frame = api.getNthBeat(n); markers.push({ beat: n, frame: frame, markerId: api.createTimeMarker(frame) }); } return { markers: markers }; },
+
+    metadata_set: function (params) { const id = resolveLayerId(params.layerId); api.setUserData(id, params.key, params.value); api.processEvents(); return { layerId: id, key: params.key, value: api.getUserDataKey(id, params.key) }; },
+    metadata_get: function (params) { const id = resolveLayerId(params.layerId); return { layerId: id, key: params.key, value: api.getUserDataKey(id, params.key) }; },
+    metadata_has: function (params) { const id = resolveLayerId(params.layerId); return { layerId: id, key: params.key, has: api.hasUserDataKey(id, params.key) }; },
+
+    preferences_get: function (params) { return { key: params.key, value: api.getCavalryPreference(params.key) }; },
+    preferences_set: function (params) { api.setCavalryPreference(params.key, params.value); api.processEvents(); return { key: params.key, value: api.getCavalryPreference(params.key) }; },
+    preferences_snapshot: function (params) { const values = {}; for (let key of (params.keys || [])) values[key] = api.getCavalryPreference(key); return { values: values }; },
+    preferences_restore: function (params) { for (let key of Object.keys(params.values || {})) api.setCavalryPreference(key, params.values[key]); api.processEvents(); return handlers.preferences_snapshot({ keys: Object.keys(params.values || {}) }); },
+    viewport_prepare: function (params) { const previous = {}; for (let key of Object.keys(params.settings || {})) { previous[key] = api.getCavalryPreference(key); api.setCavalryPreference(key, params.settings[key]); } api.processEvents(); return { profile: params.profile || "custom", previous: previous, applied: params.settings || {} }; },
+    mcp_state_get: function (params) { return { key: params.key, exists: api.hasPreferenceObject(params.key), value: api.hasPreferenceObject(params.key) ? api.getPreferenceObject(params.key) : null }; },
+    mcp_state_set: function (params) { api.setPreferenceObject(params.key, params.value); api.processEvents(); return { key: params.key, value: api.getPreferenceObject(params.key) }; },
+
+    viewport_capture: function (params) { api.saveViewportContentsAsImage(params.filePath); return { filePath: params.filePath }; },
+    viewport_active_tool: function () { return { activeTool: api.getActiveTool() }; },
+
+    project_get: function () { return { projectPath: api.getProjectPath(), assetPath: api.getAssetPath(), renderPath: api.getRenderPath(), scenesPath: api.getScenesPath(), palettesPath: api.getPalettesPath(), scenePath: api.getSceneFilePath() }; },
+    project_set: function (params) { api.setProject(params.path); api.processEvents(); return handlers.project_get(); },
+    project_clear: function () { api.clearProject(); api.processEvents(); return handlers.project_get(); },
+
+    asset_group_create: function (params) { const id = api.createAssetGroup(params.name); return { assetId: id, name: api.getNiceName(id) }; },
+    asset_sequence_inspect: function (params) { return { assetId: params.assetId, filePaths: api.getImageSequenceFilePaths(params.assetId) || [] }; },
+    asset_google_sheet_inspect: function (params) { return { assetId: params.assetId, isGoogleSheet: api.isGoogleSheetAsset(params.assetId), url: api.getGoogleSheetAssetURL(params.assetId) }; },
+    asset_google_sheet_replace: function (params) { api.replaceGoogleSheet(params.assetId, params.spreadsheetId, params.sheetId); return { assetId: params.assetId, replaced: true }; },
+    asset_icc_profile: function (params) { return { assetId: params.assetId, profile: api.getProfileName(params.assetId) }; },
+    asset_is_file: function (params) { return { assetId: params.assetId, isFile: api.isFileAsset(params.assetId) }; },
+    asset_smart_folder_create: function (params) { const id = api.loadSmartFolderAsset(params.path, params.assetType); return { assetId: id }; },
+
+    render_dynamic_index_get: function () { return { index: api.getDynamicIndex() }; },
+    render_dynamic_index_connect: function (params) { const id = resolveLayerId(params.layerId); api.connectDynamicIndex(id, params.attrPath); return { layerId: id, attrPath: params.attrPath }; },
+    render_dynamic_offset: function (params) { api.setDynamicIndexOffset(params.offset); return { offset: params.offset }; },
+    render_dynamic_range: function (params) { const id = resolveLayerId(params.itemId); api.set(id, { dynamicRender: true, dynamicRenderRange: { x: params.start, y: params.end } }); api.processEvents(); return handlers.render_item_inspect({ itemId: id }); },
+    render_dynamic_preview: function () { throw new Error("Cavalry 2.7.2 has no documented Dynamic Rendering preview API; configure an index/offset and use preview_frame instead"); },
+    render_background_start: function (params) { api.backgroundRender(params.itemId); return { itemId: params.itemId, status: "started" }; },
+
+    layer_get_supertypes: function (params) { const id = resolveLayerId(params.layerId); return { layerId: id, supertypes: api.getSuperTypes(id) || [] }; },
+    shape_has_fill: function (params) { const id = resolveLayerId(params.layerId); return { layerId: id, hasFill: api.hasFill(id) }; },
+    shape_set_fill: function (params) { const id = resolveLayerId(params.layerId); api.setFill(id, params.enabled); api.processEvents(); return { layerId: id, hasFill: api.hasFill(id) }; },
+    shape_has_stroke: function (params) { const id = resolveLayerId(params.layerId); return { layerId: id, hasStroke: api.hasStroke(id) }; },
+    shape_set_stroke: function (params) { const id = resolveLayerId(params.layerId); api.setStroke(id, params.enabled); api.processEvents(); return { layerId: id, hasStroke: api.hasStroke(id) }; },
+
+    layer_stack_action: function (params) { api.select((params.layerIds || []).map(resolveLayerId)); if (params.action === "forward") api.bringForward(); else if (params.action === "front") api.bringToFront(); else if (params.action === "backward") api.moveBackward(); else api.moveToBack(); return { layerIds: params.layerIds, action: params.action }; },
+    scene_export_copy: function (params) { return { filePath: params.filePath, exported: api.exportSceneAs(params.filePath) }; },
+    component_export_selected: function (params) { return { filePath: params.filePath, exported: api.exportSelected(params.filePath, params.asProject === true) }; },
+    clipboard_get_text: function () { return { text: api.getClipboardText() }; },
+    clipboard_set_text: function (params) { api.setClipboardText(params.text); return { text: params.text }; },
 
     // --------------------------------------------------------------------------
     // Batch Execution Engine with Symbolic Reference Resolution
@@ -1487,6 +1818,21 @@
     const params = request.params || {};
     const reqId = request.id || "req_" + Date.now();
 
+    if (typeof params.expectedRevision === "number" && params.expectedRevision !== sceneRevision) {
+      return {
+        id: reqId,
+        ok: false,
+        operation: op,
+        durationMs: Date.now() - startTime,
+        error: {
+          code: "EDIT_CONFLICT",
+          message: "Cavalry scene changed since the operation was planned (expected revision " + params.expectedRevision + ", current revision " + sceneRevision + ").",
+          operation: op,
+          suggestion: "Poll events, refresh affected state, recalculate the operation, and retry with the new scene revision.",
+        },
+      };
+    }
+
     const handler = handlers[op];
     if (!handler) {
       return {
@@ -1521,6 +1867,7 @@
         ok: true,
         operation: op,
         result: resData,
+        sceneRevision: sceneRevision,
         affected: affected.length ? affected : undefined,
         durationMs: Date.now() - startTime,
       };
@@ -1594,6 +1941,57 @@
   server.listen(LISTEN_HOST, LISTEN_PORT);
   server.addCallbackObject(cb);
   server.setRealtime(); // 60 Hz polling
+
+  function ApplicationCallbacks() {
+    this.onCompChanged = function () {
+      emitEvent("composition.changed", { compId: api.getActiveComp() });
+    };
+    this.onSceneChanged = function () { emitEvent("scene.changed"); };
+    this.onSelectionChanged = function () {
+      emitEvent("selection.layers.changed", { layerIds: api.getSelection() || [] });
+    };
+    this.onAttrChanged = function (layerId, attrId) {
+      const ident = getLayerIdentity(layerId);
+      let value = null;
+      try { value = api.get(layerId, attrId); } catch (e) {}
+      emitEvent("attribute.changed", {
+        layerId: layerId,
+        uuid: ident ? ident.uuid : "",
+        attribute: attrId,
+        value: value,
+      });
+    };
+    this.onAssetAdded = function (layerId) { emitEvent("asset.added", { assetId: layerId }); };
+    this.onAssetUpdated = function (layerId) { emitEvent("asset.updated", { assetId: layerId }); };
+    this.onAssetAsyncLoadFinished = function (layerId) { emitEvent("asset.ready", { assetId: layerId }); };
+    this.onAssetRemoved = function (layerId) { emitEvent("asset.removed", { assetId: layerId }); };
+    this.onLayerAdded = function (layerId) { emitEvent("layer.added", getLayerIdentity(layerId)); };
+    this.onLayerRemoved = function (layerId) { emitEvent("layer.removed", { layerId: layerId }); };
+    this.onJSError = function (error) { emitEvent("javascript.error", { message: String(error) }); };
+    this.onAttributeSelectionChanged = function () {
+      emitEvent("selection.attributes.changed", { attributes: api.getSelectedAttributes() || [] });
+    };
+    this.onPointSelectionChanged = function () { emitEvent("selection.points.changed"); };
+    this.onKeySelectionChanged = function () {
+      emitEvent("selection.keyframes.changed", { keyframeIds: api.getSelectedKeyframeIds() || [] });
+    };
+    this.onLicenceUpdated = function () { emitEvent("license.updated"); };
+    this.onCavalryPreferenceChanged = function (key) { emitEvent("preference.changed", { key: key }); };
+    this.onAppStateChanged = function (state) {
+      appState = state;
+      emitEvent("app.state.changed", { state: state });
+    };
+    this.onAttrConnected = function (fromAttr, toAttr) {
+      emitEvent("attribute.connected", { from: fromAttr, to: toAttr });
+    };
+    this.onAttrDisconnected = function (fromAttr, toAttr) {
+      emitEvent("attribute.disconnected", { from: fromAttr, to: toAttr });
+    };
+    this.onToolChanged = function (toolName) {
+      emitEvent("tool.changed", { tool: toolName });
+    };
+  }
+  ui.addCallbackObject(new ApplicationCallbacks());
 
   // ----------------------------------------------------------------------------
   // UI Dialog

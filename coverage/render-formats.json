@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "supportedCavalryVersion": "2.7.2",
+  "definitionValidation": "PASS against installed nodeDefinitions.json",
+  "liveRenderValidation": "BLOCKED because the Cavalry bridge was offline during this audit; no format is claimed live-verified",
+  "formats": {
+    "APNG": { "nodeType": "renderAPNG", "coverage": "Generic attribute control" },
+    "Audio Only": { "nodeType": "renderAudioOnly", "coverage": "Generic attribute control" },
+    "GIF": { "nodeType": "renderGIF", "coverage": "Generic attribute control" },
+    "JPEG": { "nodeType": "renderJPEG", "coverage": "Generic attribute control" },
+    "Lottie": { "nodeType": "renderLottie", "coverage": "Generic attribute control" },
+    "MP4": { "nodeType": "renderMP4", "coverage": "Generic attribute control" },
+    "PNG": { "nodeType": "renderPNG", "coverage": "Generic attribute control" },
+    "QuickTime": { "nodeType": "renderQuicktime", "coverage": "Generic attribute control" },
+    "SVG": { "nodeType": "renderSVG", "coverage": "Generic attribute control" },
+    "Sprite Sheet": { "nodeType": "renderSpriteSheet", "coverage": "Generic attribute control" },
+    "WebP": { "nodeType": "renderWebP", "coverage": "Generic attribute control" },
+    "WebM": { "nodeType": "renderWebM", "coverage": "Generic attribute control" },
+    "HEVC": { "nodeType": "renderHVEC", "coverage": "Generic attribute control", "notes": "Installed Cavalry 2.7.2 metadata uses the node type spelling renderHVEC." },
+    "ProRes": { "nodeType": "renderProRes", "coverage": "Generic attribute control" }
+  },
+  "codecControls": {
+    "ProRes variants": { "coverage": "Generic attribute control", "notes": "Discovered from the active render generator definition." },
+    "alpha and bit depth": { "coverage": "Generic attribute control" },
+    "compression and bitrate": { "coverage": "Generic attribute control" },
+    "audio quality and sample rate": { "coverage": "Generic attribute control" }
+  }
+}

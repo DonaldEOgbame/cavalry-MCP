@@ -93,9 +93,10 @@ To provide low-friction autonomy while maintaining strict stability and safety:
 * Requires explicit environment variable: `CAVALRY_ALLOW_RAW_SCRIPT=true`.
 * Intended exclusively for edge-case Cavalry APIs not yet mapped to structured tools.
 
-### Level 3 — UI Automation Fallback (Extensibility Layer)
-* Reserved for actions impossible via Cavalry's scripting API (such as opening native OS file selectors or interactive modal dialogs).
-* Abstracted behind an adapter interface to allow future OS-level accessibility/automation drivers without refactoring the core MCP.
+### Level 3 — UI Automation Fallback (Not Yet Implemented)
+* Reserved for actions impossible via Cavalry's scripting API (such as Command Search, Workspaces, Tags, Presets, or interactive modal dialogs).
+* The current build deliberately reports these operations as `UNSUPPORTED`; it does not claim an accessibility or vision fallback that has not been verified.
+* `coverage/cavalry-capabilities.json` and `cavalry_parity_audit` are the source of truth for these remaining gaps.
 
 ---
 

@@ -38,6 +38,9 @@ Live Cavalry Scene Graph
   * **Level 3**: Extensibility hooks for future OS-level UI automation.
 * **Stable UUID Layer Identities**: Dual-indexing (`uuid` ↔ `layerId`) prevents broken references when layers are reordered or scenes are reloaded.
 * **Single Round-Trip Batch Execution**: Fail-fast batch engine with `$symbol` reference resolution across dependent operations.
+* **Native Event Stream**: Cavalry application callbacks feed subscribed scene, layer, attribute, asset, selection, tool, licence, and preference events into a bounded queue. Polling those events invalidates MCP caches immediately.
+* **Co-edit Conflict Guard**: `events_status` exposes a scene revision. Pass it as `expectedRevision` to `cavalry_batch` to abort with `EDIT_CONFLICT` if a human edited the scene after the operation was planned.
+* **Measured Parity**: `cavalry_parity_audit` reports structured, raw-script, UI-fallback, render-format, and manual-editor coverage from the checked-in `coverage/` databases. Known gaps are reported rather than described as 100% complete.
 * **Visual Evaluation Loop**: Real-time PNG frame previews, contact-sheet synthesis with burned-in frame badges, and preview video assembly.
 * **Security & Sandboxing**: Tiered permission system and canonical filesystem sandboxing preventing path traversal attacks.
 
@@ -172,6 +175,14 @@ Run unit and bridge tests:
 ```bash
 npm test
 ```
+
+Regenerate the installed Cavalry API manifest (all four shipped metadata catalogs):
+
+```bash
+npm run coverage:api
+```
+
+The generated report must keep `Unexplained API functions: 0`. A method routed only through the guarded raw-script escape hatch is counted separately from a direct bridge implementation.
 
 Run the 22 mandatory acceptance tests against live Cavalry:
 ```bash

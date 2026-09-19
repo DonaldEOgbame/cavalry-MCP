@@ -35,6 +35,21 @@ describe('Cavalry bridge API contract', () => {
     assert.match(source, /client\.post\(target\.path,/);
   });
 
+  it('registers every documented application callback and conflict revision checks', () => {
+    const callbacks = [
+      'onCompChanged', 'onSceneChanged', 'onSelectionChanged', 'onAttrChanged',
+      'onAssetAdded', 'onAssetUpdated', 'onAssetAsyncLoadFinished', 'onAssetRemoved',
+      'onLayerAdded', 'onLayerRemoved', 'onJSError', 'onAttributeSelectionChanged',
+      'onPointSelectionChanged', 'onKeySelectionChanged', 'onLicenceUpdated',
+      'onCavalryPreferenceChanged', 'onAppStateChanged', 'onAttrConnected',
+      'onAttrDisconnected', 'onToolChanged',
+    ];
+    for (const callback of callbacks) assert.match(source, new RegExp(`this\\.${callback}\\s*=`));
+    assert.match(source, /ui\.addCallbackObject\(new ApplicationCallbacks\(\)\)/);
+    assert.match(source, /code:\s*["']EDIT_CONFLICT["']/);
+    assert.match(source, /params\.expectedRevision\s*!==\s*sceneRevision/);
+  });
+
   it('only calls APIs present in the installed Cavalry metadata', (context) => {
     const metadataDir = '/Applications/Cavalry.app/Contents/assets/MetaData';
     const metadataFiles = [

@@ -27,6 +27,7 @@ export interface BridgeResponse<TResult = unknown> {
   warnings?: string[];
   durationMs: number;
   error?: CavalryErrorDetails;
+  sceneRevision?: number;
 }
 
 export interface BatchOperation {
@@ -39,6 +40,7 @@ export interface BatchOperation {
 export interface BatchRequestParams {
   operations: BatchOperation[];
   stopOnError?: boolean;
+  expectedRevision?: number;
 }
 
 export interface BatchStepResult {
