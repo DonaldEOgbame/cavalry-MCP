@@ -1,0 +1,22 @@
+{
+  "slug": "04-word-rise-stagger",
+  "description": "Word-level kinetic typography using Sub-Mesh and Stagger.",
+  "recipe": "word-rise-stagger",
+  "verified": true,
+  "scenePath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/04-word-rise-stagger/04-word-rise-stagger.cv",
+  "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/04-word-rise-stagger/04-word-rise-stagger.png",
+  "inspectionPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/04-word-rise-stagger/04-word-rise-stagger.inspection.json",
+  "nodeCount": 18,
+  "connectionCount": 13,
+  "animatedAttributes": [
+    "shapePosition.y",
+    "on"
+  ],
+  "ingestion": {
+    "added": 0,
+    "updated": 0,
+    "unchanged": 1,
+    "deleted": 0,
+    "failed": []
+  }
+}

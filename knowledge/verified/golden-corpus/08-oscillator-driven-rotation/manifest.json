@@ -1,0 +1,20 @@
+{
+  "slug": "08-oscillator-driven-rotation",
+  "description": "Oscillator procedurally drives a shape rotation.",
+  "verified": true,
+  "scenePath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/08-oscillator-driven-rotation/08-oscillator-driven-rotation.cv",
+  "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/08-oscillator-driven-rotation/08-oscillator-driven-rotation.png",
+  "inspectionPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/08-oscillator-driven-rotation/08-oscillator-driven-rotation.inspection.json",
+  "nodeCount": 13,
+  "connectionCount": 10,
+  "animatedAttributes": [
+    "on"
+  ],
+  "ingestion": {
+    "added": 1,
+    "updated": 0,
+    "unchanged": 0,
+    "deleted": 0,
+    "failed": []
+  }
+}

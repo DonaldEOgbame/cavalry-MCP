@@ -1,0 +1,20 @@
+{
+  "status": "VERIFIED",
+  "renderer": "Cavalry Render Manager",
+  "format": "MP4",
+  "composition": "Knowledge Assisted Radial Reveal",
+  "frameRange": {
+    "start": 0,
+    "end": 90
+  },
+  "resolution": {
+    "width": 960,
+    "height": 540,
+    "scalePercentage": 100
+  },
+  "output": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/end-to-end/radial-logo-reveal/final-render/radial-logo-reveal-final.mp4",
+  "editableProject": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/end-to-end/radial-logo-reveal/radial-logo-reveal-final.cv",
+  "bytes": 162278,
+  "md5": "f039b7659f052d8220bf5c202c82ca75",
+  "qaPassed": true
+}

@@ -1,0 +1,19 @@
+{
+  "goal": "Create a polished radial logo reveal with 16 repeating elements and a staggered clockwise entrance.",
+  "initialScene": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/end-to-end/radial-logo-reveal/radial-logo-reveal-initial.cv",
+  "previews": [
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/end-to-end/radial-logo-reveal/initial-000.png",
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/end-to-end/radial-logo-reveal/initial-015.png",
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/end-to-end/radial-logo-reveal/initial-030.png",
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/end-to-end/radial-logo-reveal/initial-045.png",
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/end-to-end/radial-logo-reveal/initial-060.png"
+  ],
+  "layers": {
+    "dot": "basicShape#1",
+    "radial": "duplicator#1",
+    "stagger": "stagger#1",
+    "mark": "basicShape#2",
+    "title": "textShape#1",
+    "subtitle": "textShape#2"
+  }
+}

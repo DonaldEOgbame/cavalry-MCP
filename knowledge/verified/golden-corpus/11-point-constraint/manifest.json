@@ -1,0 +1,20 @@
+{
+  "slug": "11-point-constraint",
+  "description": "Point Constraint drives a follower position from a target shape.",
+  "verified": true,
+  "scenePath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/11-point-constraint/11-point-constraint.cv",
+  "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/11-point-constraint/11-point-constraint.png",
+  "inspectionPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/11-point-constraint/11-point-constraint.inspection.json",
+  "nodeCount": 23,
+  "connectionCount": 16,
+  "animatedAttributes": [
+    "on"
+  ],
+  "ingestion": {
+    "added": 1,
+    "updated": 0,
+    "unchanged": 0,
+    "deleted": 0,
+    "failed": []
+  }
+}

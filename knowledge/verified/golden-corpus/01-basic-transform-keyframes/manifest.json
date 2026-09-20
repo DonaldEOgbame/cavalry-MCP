@@ -1,0 +1,26 @@
+{
+  "slug": "01-basic-transform-keyframes",
+  "description": "Primitive shape with position, rotation, opacity, and eased keyframes.",
+  "recipe": "shape-scale-pop",
+  "verified": true,
+  "scenePath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/01-basic-transform-keyframes/01-basic-transform-keyframes.cv",
+  "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/01-basic-transform-keyframes/01-basic-transform-keyframes.png",
+  "inspectionPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/01-basic-transform-keyframes/01-basic-transform-keyframes.inspection.json",
+  "nodeCount": 29,
+  "connectionCount": 34,
+  "animatedAttributes": [
+    "scale.x",
+    "position.y",
+    "scale.y",
+    "position.x",
+    "opacity",
+    "on"
+  ],
+  "ingestion": {
+    "added": 0,
+    "updated": 0,
+    "unchanged": 1,
+    "deleted": 0,
+    "failed": []
+  }
+}

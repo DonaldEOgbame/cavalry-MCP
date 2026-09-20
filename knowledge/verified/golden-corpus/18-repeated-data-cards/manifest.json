@@ -1,0 +1,22 @@
+{
+  "slug": "18-repeated-data-cards",
+  "description": "Reusable card-like group repeated in a grid.",
+  "recipe": "repeated-data-cards",
+  "verified": true,
+  "scenePath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/18-repeated-data-cards/18-repeated-data-cards.cv",
+  "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/18-repeated-data-cards/18-repeated-data-cards.png",
+  "inspectionPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/18-repeated-data-cards/18-repeated-data-cards.inspection.json",
+  "nodeCount": 40,
+  "connectionCount": 30,
+  "animatedAttributes": [
+    "opacity",
+    "on"
+  ],
+  "ingestion": {
+    "added": 0,
+    "updated": 0,
+    "unchanged": 1,
+    "deleted": 0,
+    "failed": []
+  }
+}

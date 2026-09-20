@@ -1,0 +1,23 @@
+{
+  "slug": "23-orbit-loop",
+  "description": "Parented satellite follows a closed five-key orbit with a matching first and last sample.",
+  "recipe": "orbit-loop",
+  "verified": true,
+  "scenePath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/23-orbit-loop/23-orbit-loop.cv",
+  "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/23-orbit-loop/23-orbit-loop.png",
+  "inspectionPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/23-orbit-loop/23-orbit-loop.inspection.json",
+  "nodeCount": 32,
+  "connectionCount": 28,
+  "animatedAttributes": [
+    "position.x",
+    "position.y",
+    "on"
+  ],
+  "ingestion": {
+    "added": 0,
+    "updated": 1,
+    "unchanged": 0,
+    "deleted": 0,
+    "failed": []
+  }
+}

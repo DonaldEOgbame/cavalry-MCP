@@ -1,5 +1,5 @@
 import { layerCreate, layerBoundingBox } from '../cavalry/layers.js';
-import { attributeSet, attributeGet } from '../cavalry/attributes.js';
+import { attributeSet, attributeSetMany, attributeGet } from '../cavalry/attributes.js';
 import { executeBatch } from '../cavalry/capabilities.js';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
@@ -25,9 +25,7 @@ export async function textCreate(params: TextCreateParams) {
   // resolved after save/reopen even when Cavalry does not expose text content
   // through layer identity metadata.
   const layer = await layerCreate('textShape', params.name || params.text || 'Text');
-  const updates: Record<string, unknown> = {
-    text: params.text,
-  };
+  const updates: Record<string, unknown> = {};
 
   if (params.fontSize !== undefined) updates.fontSize = params.fontSize;
   if (params.fontFamily) {
@@ -47,16 +45,18 @@ export async function textCreate(params: TextCreateParams) {
   if (params.tracking !== undefined) updates.tracking = params.tracking;
   if (params.lineSpacing !== undefined) updates.lineSpacing = params.lineSpacing;
 
-  await attributeSet(layer.layerId, '', updates);
+  await attributeSetMany(layer.layerId, updates);
+  await attributeSet(layer.layerId, 'text', { text: params.text, overrides: [] });
   return {
     ...layer,
     ...updates,
+    text: params.text,
   };
 }
 
 export async function textSetContent(layerId: string, text: string) {
   const resolved = identityResolver.resolveToLayerId(layerId);
-  return attributeSet(resolved, 'text', text);
+  return attributeSet(resolved, 'text', { text, overrides: [] });
 }
 
 export async function textSetFont(layerId: string, fontFamily: string, fontStyle: string = 'Regular') {

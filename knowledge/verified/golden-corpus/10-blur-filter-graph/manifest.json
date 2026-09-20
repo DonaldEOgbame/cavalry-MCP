@@ -1,0 +1,21 @@
+{
+  "slug": "10-blur-filter-graph",
+  "description": "Blur Filter connected to a moving shape.",
+  "verified": true,
+  "scenePath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/10-blur-filter-graph/10-blur-filter-graph.cv",
+  "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/10-blur-filter-graph/10-blur-filter-graph.png",
+  "inspectionPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/10-blur-filter-graph/10-blur-filter-graph.inspection.json",
+  "nodeCount": 16,
+  "connectionCount": 13,
+  "animatedAttributes": [
+    "position.x",
+    "on"
+  ],
+  "ingestion": {
+    "added": 1,
+    "updated": 0,
+    "unchanged": 0,
+    "deleted": 0,
+    "failed": []
+  }
+}

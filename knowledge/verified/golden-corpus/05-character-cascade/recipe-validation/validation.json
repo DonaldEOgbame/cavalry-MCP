@@ -1,0 +1,13 @@
+{
+  "recipe": "character-cascade",
+  "scene": "05-character-cascade",
+  "status": "VERIFIED",
+  "frames": [
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/05-character-cascade/recipe-validation/frame-000.png",
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/05-character-cascade/recipe-validation/frame-015.png",
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/05-character-cascade/recipe-validation/frame-030.png",
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/05-character-cascade/recipe-validation/frame-045.png",
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/05-character-cascade/recipe-validation/frame-060.png"
+  ],
+  "uniqueRenderedFrames": 5
+}

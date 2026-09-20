@@ -1,0 +1,21 @@
+{
+  "slug": "14-editable-svg-path",
+  "description": "SVG converted to native editable shape and animated.",
+  "verified": true,
+  "scenePath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/14-editable-svg-path/14-editable-svg-path.cv",
+  "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/14-editable-svg-path/14-editable-svg-path.png",
+  "inspectionPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/14-editable-svg-path/14-editable-svg-path.inspection.json",
+  "nodeCount": 14,
+  "connectionCount": 11,
+  "animatedAttributes": [
+    "position.x",
+    "on"
+  ],
+  "ingestion": {
+    "added": 1,
+    "updated": 0,
+    "unchanged": 0,
+    "deleted": 0,
+    "failed": []
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "recipe": "shape-scale-pop",
+  "scene": "01-basic-transform-keyframes",
+  "status": "VERIFIED",
+  "frames": [
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/01-basic-transform-keyframes/recipe-validation/frame-000.png",
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/01-basic-transform-keyframes/recipe-validation/frame-015.png",
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/01-basic-transform-keyframes/recipe-validation/frame-030.png",
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/01-basic-transform-keyframes/recipe-validation/frame-045.png",
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/01-basic-transform-keyframes/recipe-validation/frame-060.png"
+  ],
+  "uniqueRenderedFrames": 4
+}

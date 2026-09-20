@@ -1,0 +1,13 @@
+{
+  "recipe": "directional-wipe-transition",
+  "scene": "19-directional-wipe",
+  "status": "VERIFIED",
+  "frames": [
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/19-directional-wipe/recipe-validation/frame-000.png",
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/19-directional-wipe/recipe-validation/frame-015.png",
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/19-directional-wipe/recipe-validation/frame-030.png",
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/19-directional-wipe/recipe-validation/frame-045.png",
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/19-directional-wipe/recipe-validation/frame-060.png"
+  ],
+  "uniqueRenderedFrames": 4
+}

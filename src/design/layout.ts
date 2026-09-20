@@ -1,4 +1,4 @@
-import { attributeSet, attributeGet } from '../cavalry/attributes.js';
+import { attributeSet, attributeSetMany, attributeGet } from '../cavalry/attributes.js';
 import { layerCreatePrimitive } from '../cavalry/layers.js';
 import { compositionGetActive } from '../cavalry/compositions.js';
 import { identityResolver } from '../utils/ids.js';
@@ -15,8 +15,8 @@ export async function designCreateBackground(color: string = '#121316', name: st
   const height = (comp.resolution as any)?.y || 1080;
 
   const bg = await layerCreatePrimitive('rectangle', name);
-  await attributeSet(bg.layerId, '', {
-    'generator.size': { x: width, y: height },
+  await attributeSetMany(bg.layerId, {
+    'generator.dimensions': { x: width, y: height },
     'material.materialColor': color,
     position: { x: 0, y: 0 },
   });

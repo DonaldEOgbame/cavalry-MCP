@@ -1,0 +1,118 @@
+{
+  "finalScene": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/end-to-end/radial-logo-reveal/radial-logo-reveal-final.cv",
+  "correctedPreview": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/end-to-end/radial-logo-reveal/corrected-preview.png",
+  "finalFrames": [
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/end-to-end/radial-logo-reveal/final-000.png",
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/end-to-end/radial-logo-reveal/final-015.png",
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/end-to-end/radial-logo-reveal/final-030.png",
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/end-to-end/radial-logo-reveal/final-045.png",
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/end-to-end/radial-logo-reveal/final-060.png",
+    "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/end-to-end/radial-logo-reveal/final-090.png"
+  ],
+  "inspection": {
+    "activeComp": "compNode#2",
+    "layerCount": 9,
+    "layers": [
+      {
+        "layerId": "stagger#1",
+        "uuid": "ca73c89b-4aee-46b4-a653-2cba88535f42",
+        "name": "Clockwise Entrance",
+        "type": "stagger",
+        "parent": "",
+        "inConnected": [],
+        "outConnected": [
+          "id"
+        ]
+      },
+      {
+        "layerId": "compNode#1",
+        "uuid": "5be3bda2-b126-44e6-87ee-d4ae35f2ee12",
+        "name": "Composition 1",
+        "type": "compNode",
+        "parent": "",
+        "inConnected": [],
+        "outConnected": []
+      },
+      {
+        "layerId": "basicShape#3",
+        "uuid": "a3740fc2-70aa-4541-b51a-9db6cbb07369",
+        "name": "Midnight Background",
+        "type": "basicShape",
+        "parent": "",
+        "inConnected": [],
+        "outConnected": []
+      },
+      {
+        "layerId": "basicShape#2",
+        "uuid": "adaef03f-57ae-440a-ad82-137de680c8b7",
+        "name": "Core Mark",
+        "type": "basicShape",
+        "parent": "",
+        "inConnected": [],
+        "outConnected": []
+      },
+      {
+        "layerId": "textShape#1",
+        "uuid": "4c7ed291-c6d1-40af-a7c3-c64f7fc02af4",
+        "name": "Brand Title",
+        "type": "textShape",
+        "parent": "",
+        "inConnected": [],
+        "outConnected": []
+      },
+      {
+        "layerId": "textShape#2",
+        "uuid": "fcbbfa5b-29ce-41c4-854e-09abd16e8abd",
+        "name": "Subtitle",
+        "type": "textShape",
+        "parent": "",
+        "inConnected": [],
+        "outConnected": []
+      },
+      {
+        "layerId": "basicShape#1",
+        "uuid": "dca28442-2466-44fb-86cf-b2d7cc86614b",
+        "name": "Radial Dot",
+        "type": "basicShape",
+        "parent": "",
+        "inConnected": [],
+        "outConnected": [
+          "id"
+        ]
+      },
+      {
+        "layerId": "duplicator#1",
+        "uuid": "2c9b4e22-7e27-4c3c-b8e7-66931a624ae6",
+        "name": "16 Point Radial Reveal",
+        "type": "duplicator",
+        "parent": "",
+        "inConnected": [
+          "shapes.0",
+          "shapeTimeOffset"
+        ],
+        "outConnected": []
+      },
+      {
+        "layerId": "compNode#2",
+        "uuid": "41b52fb1-5ce1-4a1b-a5c5-3af2b9dc81c6",
+        "name": "Knowledge Assisted Radial Reveal",
+        "type": "compNode",
+        "parent": "",
+        "inConnected": [],
+        "outConnected": []
+      }
+    ],
+    "markers": [],
+    "assets": [
+      "compNode#2",
+      "compNode#1"
+    ]
+  },
+  "ingestion": {
+    "added": 0,
+    "updated": 0,
+    "unchanged": 1,
+    "deleted": 0,
+    "failed": []
+  }
+}

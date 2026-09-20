@@ -1,0 +1,971 @@
+{
+  "goal": "Create a polished radial logo reveal with 16 repeating elements and a staggered clockwise entrance.",
+  "currentSceneSummary": "Blank project",
+  "availableAssets": [],
+  "strategy": "mask-line-reveal: Reveal a line of type with an animated mask while retaining readable type.",
+  "approach": "CAVALRY_NATIVE_PROCEDURAL",
+  "steps": [
+    "Create text.",
+    "Create a reveal shape sized to the line.",
+    "Connect or parent the mask using the runtime-supported mask system.",
+    "Animate only the mask extent or position."
+  ],
+  "preferredExecution": [
+    "layer_create",
+    "attribute_set",
+    "graph_connect",
+    "keyframe_create"
+  ],
+  "fallback": "none",
+  "runtimeCompatibility": {
+    "cavalryVersion": "2.7.2",
+    "supported": true,
+    "missing": []
+  },
+  "evidence": {
+    "recipes": [
+      {
+        "record": {
+          "id": "motion_recipe:e03644acc295deab9274d5d4",
+          "sourceType": "motion_recipe",
+          "scope": "global",
+          "title": "mask-line-reveal",
+          "section": "kinetic_typography",
+          "content": "Reveal a line of type with an animated mask while retaining readable type.\nCreate text.\nCreate a reveal shape sized to the line.\nConnect or parent the mask using the runtime-supported mask system.\nAnimate only the mask extent or position.",
+          "cavalryVersion": "2.7.2",
+          "entities": [
+            "Reveal",
+            "Create",
+            "Connect",
+            "Animate"
+          ],
+          "operations": [
+            "layer_create",
+            "attribute_set",
+            "graph_connect",
+            "keyframe_create"
+          ],
+          "tags": [
+            "mask-line-reveal",
+            "kinetic_typography",
+            "horizontal wipe",
+            "vertical wipe",
+            "live-validated",
+            "render-verified"
+          ],
+          "status": "verified",
+          "provenance": {
+            "sourceType": "motion_recipe",
+            "source": "builtin:recipes/mask-line-reveal",
+            "contentHash": "f5fae93c1cfc134a4a39bcd0e799f3acc2f85e055484109777e00ae01986617e",
+            "retrievedAt": "2026-09-20T06:53:20.763Z"
+          },
+          "createdAt": "2026-09-20T06:53:20.763Z",
+          "updatedAt": "2026-09-20T07:32:10.352Z",
+          "recipe": {
+            "name": "mask-line-reveal",
+            "category": "kinetic_typography",
+            "description": "Reveal a line of type with an animated mask while retaining readable type.",
+            "requirements": [
+              "Text layer",
+              "mask-compatible shape"
+            ],
+            "construction": [
+              "Create text.",
+              "Create a reveal shape sized to the line.",
+              "Connect or parent the mask using the runtime-supported mask system.",
+              "Animate only the mask extent or position."
+            ],
+            "variants": [
+              "horizontal wipe",
+              "vertical wipe"
+            ],
+            "preferredMcpOperations": [
+              "layer_create",
+              "attribute_set",
+              "graph_connect",
+              "keyframe_create"
+            ],
+            "fallback": "cavalry_raw_script"
+          }
+        },
+        "score": 0.5406781022257383,
+        "relevance": 0.3413608505927754,
+        "authority": 0.75,
+        "versionCompatibility": "same",
+        "confidence": {
+          "level": "HIGH",
+          "reasons": [
+            "motion recipe source",
+            "verified evidence",
+            "runtime version compatible",
+            "5 matching records"
+          ]
+        },
+        "warnings": []
+      },
+      {
+        "record": {
+          "id": "motion_recipe:6a6911d592734fd3213501a6",
+          "sourceType": "motion_recipe",
+          "scope": "global",
+          "title": "grid-duplication-wave",
+          "section": "shape_motion",
+          "content": "Generate a grid from one source and propagate motion with a Stagger or spatial falloff.\nCreate one source shape.\nConnect it to a Duplicator.\nSet Grid Distribution rows and columns.\nDrive timing with Stagger or a spatial field.",
+          "cavalryVersion": "2.7.2",
+          "entities": [
+            "Generate",
+            "Stagger",
+            "Create",
+            "Connect",
+            "Duplicator",
+            "Set",
+            "Grid",
+            "Distribution",
+            "Drive"
+          ],
+          "operations": [
+            "layer_create",
+            "generator_set",
+            "graph_connect",
+            "attribute_set",
+            "keyframe_create"
+          ],
+          "tags": [
+            "grid-duplication-wave",
+            "shape_motion",
+            "row wave",
+            "column wave",
+            "radial falloff",
+            "live-validated",
+            "render-verified"
+          ],
+          "status": "verified",
+          "provenance": {
+            "sourceType": "motion_recipe",
+            "source": "builtin:recipes/grid-duplication-wave",
+            "contentHash": "1a374cac6a3d2430e5c2efcfe64374983d471f35ffcea3ac6b549784c63a1bda",
+            "retrievedAt": "2026-09-20T06:53:20.765Z"
+          },
+          "createdAt": "2026-09-20T06:53:20.765Z",
+          "updatedAt": "2026-09-20T07:32:13.215Z",
+          "recipe": {
+            "name": "grid-duplication-wave",
+            "category": "shape_motion",
+            "description": "Generate a grid from one source and propagate motion with a Stagger or spatial falloff.",
+            "requirements": [
+              "Source shape",
+              "Duplicator",
+              "Grid Distribution"
+            ],
+            "construction": [
+              "Create one source shape.",
+              "Connect it to a Duplicator.",
+              "Set Grid Distribution rows and columns.",
+              "Drive timing with Stagger or a spatial field."
+            ],
+            "variants": [
+              "row wave",
+              "column wave",
+              "radial falloff"
+            ],
+            "preferredMcpOperations": [
+              "layer_create",
+              "generator_set",
+              "graph_connect",
+              "attribute_set",
+              "keyframe_create"
+            ],
+            "fallback": "cavalry_raw_script"
+          }
+        },
+        "score": 0.5333853944515807,
+        "relevance": 0.32677543431817924,
+        "authority": 0.75,
+        "versionCompatibility": "same",
+        "confidence": {
+          "level": "HIGH",
+          "reasons": [
+            "motion recipe source",
+            "verified evidence",
+            "runtime version compatible",
+            "5 matching records"
+          ]
+        },
+        "warnings": []
+      },
+      {
+        "record": {
+          "id": "motion_recipe:30545fb8aa9630e9da06b419",
+          "sourceType": "motion_recipe",
+          "scope": "global",
+          "title": "orbit-loop",
+          "section": "shape_motion",
+          "content": "Create a loopable orbit using a circular distribution or procedural angle driver.\nChoose a circular distribution for multiple objects or a parent pivot for one object.\nAnimate a full-turn angle with linear interpolation.\nMatch first and last samples without duplicating the visible loop frame.",
+          "cavalryVersion": "2.7.2",
+          "entities": [
+            "Create",
+            "Choose",
+            "Animate",
+            "Match"
+          ],
+          "operations": [
+            "layer_create",
+            "graph_connect",
+            "attribute_set",
+            "keyframe_create",
+            "keyframe_set_interpolation"
+          ],
+          "tags": [
+            "orbit-loop",
+            "shape_motion",
+            "single orbit",
+            "multi-orbit",
+            "elliptical",
+            "live-validated",
+            "render-verified"
+          ],
+          "status": "verified",
+          "provenance": {
+            "sourceType": "motion_recipe",
+            "source": "builtin:recipes/orbit-loop",
+            "contentHash": "2adb2f09ef7ba1cf31d111ab5f9cdab23990531e44e20112f29187327dcab9b1",
+            "retrievedAt": "2026-09-20T06:53:20.765Z"
+          },
+          "createdAt": "2026-09-20T06:53:20.765Z",
+          "updatedAt": "2026-09-20T07:32:41.697Z",
+          "recipe": {
+            "name": "orbit-loop",
+            "category": "shape_motion",
+            "description": "Create a loopable orbit using a circular distribution or procedural angle driver.",
+            "requirements": [
+              "Orbiting source",
+              "center or circular distribution"
+            ],
+            "construction": [
+              "Choose a circular distribution for multiple objects or a parent pivot for one object.",
+              "Animate a full-turn angle with linear interpolation.",
+              "Match first and last samples without duplicating the visible loop frame."
+            ],
+            "variants": [
+              "single orbit",
+              "multi-orbit",
+              "elliptical"
+            ],
+            "preferredMcpOperations": [
+              "layer_create",
+              "graph_connect",
+              "attribute_set",
+              "keyframe_create",
+              "keyframe_set_interpolation"
+            ],
+            "fallback": "cavalry_raw_script"
+          }
+        },
+        "score": 0.5233437105018064,
+        "relevance": 0.3066920591933642,
+        "authority": 0.75,
+        "versionCompatibility": "same",
+        "confidence": {
+          "level": "HIGH",
+          "reasons": [
+            "motion recipe source",
+            "verified evidence",
+            "runtime version compatible",
+            "5 matching records"
+          ]
+        },
+        "warnings": []
+      },
+      {
+        "record": {
+          "id": "motion_recipe:938e347a8eb6ae754e131c56",
+          "sourceType": "motion_recipe",
+          "scope": "global",
+          "title": "radial-duplication-wave",
+          "section": "shape_motion",
+          "content": "Repeat one shape around a circle and phase a shared animated property clockwise.\nCreate one source shape.\nFeed it to a Duplicator.\nUse Circle Distribution for radial placement.\nUse Stagger/Falloff for phase variation.\nAnimate one shared scale, position, rotation, or opacity parameter.",
+          "cavalryVersion": "2.7.2",
+          "entities": [
+            "Repeat",
+            "Create",
+            "Feed",
+            "Duplicator",
+            "Use",
+            "Circle",
+            "Distribution",
+            "Stagger",
+            "Falloff",
+            "Animate"
+          ],
+          "operations": [
+            "layer_create",
+            "generator_set",
+            "graph_connect",
+            "attribute_set",
+            "keyframe_create"
+          ],
+          "tags": [
+            "radial-duplication-wave",
+            "shape_motion",
+            "scale wave",
+            "radial offset",
+            "opacity wave",
+            "live-validated",
+            "render-verified"
+          ],
+          "status": "verified",
+          "provenance": {
+            "sourceType": "motion_recipe",
+            "source": "builtin:recipes/radial-duplication-wave",
+            "contentHash": "538d7a90ce7aad797f04e2a8a97945c7a8456737629a28197d3971c06e6cb7ff",
+            "retrievedAt": "2026-09-20T06:53:20.764Z"
+          },
+          "createdAt": "2026-09-20T06:53:20.764Z",
+          "updatedAt": "2026-09-20T07:32:11.720Z",
+          "recipe": {
+            "name": "radial-duplication-wave",
+            "category": "shape_motion",
+            "description": "Repeat one shape around a circle and phase a shared animated property clockwise.",
+            "requirements": [
+              "Source shape",
+              "Duplicator",
+              "Circle Distribution",
+              "Stagger or falloff"
+            ],
+            "construction": [
+              "Create one source shape.",
+              "Feed it to a Duplicator.",
+              "Use Circle Distribution for radial placement.",
+              "Use Stagger/Falloff for phase variation.",
+              "Animate one shared scale, position, rotation, or opacity parameter."
+            ],
+            "animation": {
+              "copies": 16,
+              "direction": "clockwise"
+            },
+            "variants": [
+              "scale wave",
+              "radial offset",
+              "opacity wave"
+            ],
+            "preferredMcpOperations": [
+              "layer_create",
+              "generator_set",
+              "graph_connect",
+              "attribute_set",
+              "keyframe_create"
+            ],
+            "fallback": "cavalry_raw_script"
+          }
+        },
+        "score": 0.5141687449472541,
+        "relevance": 0.28834213568877487,
+        "authority": 0.75,
+        "versionCompatibility": "same",
+        "confidence": {
+          "level": "HIGH",
+          "reasons": [
+            "motion recipe source",
+            "verified evidence",
+            "runtime version compatible",
+            "5 matching records"
+          ]
+        },
+        "warnings": []
+      },
+      {
+        "record": {
+          "id": "motion_recipe:dfde57c47c3a525ded906692",
+          "sourceType": "motion_recipe",
+          "scope": "global",
+          "title": "procedural-burst",
+          "section": "shape_motion",
+          "content": "Build a radial burst from a repeated source instead of independent layers.\nCreate the burst element once.\nDuplicate radially.\nAnimate radius, length, or scale.\nUse Stagger only when sequential timing is intended.",
+          "cavalryVersion": "2.7.2",
+          "entities": [
+            "Build",
+            "Create",
+            "Duplicate",
+            "Animate",
+            "Use",
+            "Stagger"
+          ],
+          "operations": [
+            "layer_create",
+            "generator_set",
+            "graph_connect",
+            "attribute_set",
+            "keyframe_create"
+          ],
+          "tags": [
+            "procedural-burst",
+            "shape_motion",
+            "line burst",
+            "dot burst",
+            "logo accent",
+            "live-validated",
+            "render-verified"
+          ],
+          "status": "verified",
+          "provenance": {
+            "sourceType": "motion_recipe",
+            "source": "builtin:recipes/procedural-burst",
+            "contentHash": "a229b25bdf5983d7aa85ae57c14732ffb2e66a0c90fd0b1d503827b69e67f61b",
+            "retrievedAt": "2026-09-20T06:53:20.767Z"
+          },
+          "createdAt": "2026-09-20T06:53:20.767Z",
+          "updatedAt": "2026-09-20T07:33:10.397Z",
+          "recipe": {
+            "name": "procedural-burst",
+            "category": "shape_motion",
+            "description": "Build a radial burst from a repeated source instead of independent layers.",
+            "requirements": [
+              "Source line or shape",
+              "Duplicator",
+              "Circle Distribution"
+            ],
+            "construction": [
+              "Create the burst element once.",
+              "Duplicate radially.",
+              "Animate radius, length, or scale.",
+              "Use Stagger only when sequential timing is intended."
+            ],
+            "variants": [
+              "line burst",
+              "dot burst",
+              "logo accent"
+            ],
+            "preferredMcpOperations": [
+              "layer_create",
+              "generator_set",
+              "graph_connect",
+              "attribute_set",
+              "keyframe_create"
+            ],
+            "fallback": "cavalry_raw_script"
+          }
+        },
+        "score": 0.5051701252152744,
+        "relevance": 0.270344881339732,
+        "authority": 0.75,
+        "versionCompatibility": "same",
+        "confidence": {
+          "level": "HIGH",
+          "reasons": [
+            "motion recipe source",
+            "verified evidence",
+            "runtime version compatible",
+            "5 matching records"
+          ]
+        },
+        "warnings": []
+      },
+      {
+        "record": {
+          "id": "motion_recipe:68ea38417b657bede02b8b35",
+          "sourceType": "motion_recipe",
+          "scope": "global",
+          "title": "logo-geometric-assembly",
+          "section": "logo_motion",
+          "content": "Assemble a mark from meaningful geometric parts with shared timing controls.\nIdentify a minimal semantic part hierarchy.\nParent related parts.\nUse shared controls for build progress.\nStagger only enough to preserve logo recognition.",
+          "cavalryVersion": "2.7.2",
+          "entities": [
+            "Assemble",
+            "Identify",
+            "Parent",
+            "Use",
+            "Stagger"
+          ],
+          "operations": [
+            "scene_import",
+            "layer_parent",
+            "attribute_set",
+            "keyframe_create"
+          ],
+          "tags": [
+            "logo-geometric-assembly",
+            "logo_motion",
+            "radial assembly",
+            "linear build",
+            "scale reveal",
+            "live-validated",
+            "render-verified"
+          ],
+          "status": "verified",
+          "provenance": {
+            "sourceType": "motion_recipe",
+            "source": "builtin:recipes/logo-geometric-assembly",
+            "contentHash": "d7de2f0029a4f3305dcaede1b1df2188c9a83a06023ba1ff939d3f90f892999c",
+            "retrievedAt": "2026-09-20T06:53:20.768Z"
+          },
+          "createdAt": "2026-09-20T06:53:20.768Z",
+          "updatedAt": "2026-09-20T07:33:13.200Z",
+          "recipe": {
+            "name": "logo-geometric-assembly",
+            "category": "logo_motion",
+            "description": "Assemble a mark from meaningful geometric parts with shared timing controls.",
+            "requirements": [
+              "Separated logo parts or editable paths"
+            ],
+            "construction": [
+              "Identify a minimal semantic part hierarchy.",
+              "Parent related parts.",
+              "Use shared controls for build progress.",
+              "Stagger only enough to preserve logo recognition."
+            ],
+            "variants": [
+              "radial assembly",
+              "linear build",
+              "scale reveal"
+            ],
+            "preferredMcpOperations": [
+              "scene_import",
+              "layer_parent",
+              "attribute_set",
+              "keyframe_create"
+            ],
+            "fallback": "cavalry_raw_script"
+          }
+        },
+        "score": 0.5030959555348088,
+        "relevance": 0.2661965412677405,
+        "authority": 0.75,
+        "versionCompatibility": "same",
+        "confidence": {
+          "level": "HIGH",
+          "reasons": [
+            "motion recipe source",
+            "verified evidence",
+            "runtime version compatible",
+            "5 matching records"
+          ]
+        },
+        "warnings": []
+      }
+    ],
+    "scenes": [],
+    "documentation": [
+      {
+        "record": {
+          "id": "official_docs:00c4a787aaf72ceda937335a",
+          "sourceType": "official_docs",
+          "scope": "global",
+          "title": "API Module",
+          "section": "runProcess(command:string, arguments:[string]) → object​",
+          "content": "This runs a system process and waits for the result which is returned as an object. GUI scripts that try to run this function will trigger a warning asking for users to trust the script. This is a blocking action, the UI will freeze until the process completes. For non blocking processes see `runDetachedProcess` below.",
+          "cavalryVersion": "2.7.2",
+          "entities": [
+            "This",
+            "GUI",
+            "UI",
+            "For",
+            "Proceed",
+            "api.runProcess",
+            "Windows",
+            "The",
+            "Example",
+            "Set",
+            "api.getAppAssetsPath",
+            "Convert",
+            "api.toNativeFilePath",
+            "Run",
+            "Note",
+            "Users",
+            "YourUser",
+            "Desktop",
+            "AudioTest"
+          ],
+          "operations": [],
+          "tags": [
+            "api",
+            "module",
+            "runprocess",
+            "command",
+            "string",
+            "arguments",
+            "object"
+          ],
+          "status": "verified",
+          "provenance": {
+            "sourceType": "official_docs",
+            "source": "https://cavalry.studio/docs/tech-info/scripting/api-module/",
+            "contentHash": "1ccf118ad18729487e5b1c305a1e11f1c10d4458c17be92b11040cddd181dd11",
+            "sourceUrl": "https://cavalry.studio/docs/tech-info/scripting/api-module/",
+            "redistributable": false,
+            "retrievedAt": "2026-09-20T06:55:55.969Z"
+          },
+          "createdAt": "2026-09-20T06:55:55.969Z",
+          "updatedAt": "2026-09-20T06:55:55.969Z"
+        },
+        "score": 0.560203751955636,
+        "relevance": 0.3044127016504908,
+        "authority": 0.94,
+        "versionCompatibility": "same",
+        "confidence": {
+          "level": "HIGH",
+          "reasons": [
+            "official docs source",
+            "verified evidence",
+            "runtime version compatible",
+            "2 matching records"
+          ]
+        },
+        "warnings": []
+      },
+      {
+        "record": {
+          "id": "official_docs:00c7fad411469085db6ba115",
+          "sourceType": "official_docs",
+          "scope": "global",
+          "title": "Duplicator",
+          "section": "UI​",
+          "content": "Shape Advanced Common Attributes + Input Shapes - Connect Shapes to be duplicated. See Input List . Distribution - Determine the layout of the duplicates. See Distribution Types . Shape Position - Set positions on a per duplicate basis. Shape Rotation - Set rotations on a per duplicate basis. Shape Scale - Set scales o",
+          "cavalryVersion": "2.7.2",
+          "entities": [
+            "Shape",
+            "Advanced",
+            "Common",
+            "Attributes",
+            "Input",
+            "Shapes",
+            "Connect",
+            "See",
+            "List",
+            "Distribution",
+            "Determine",
+            "Types",
+            "Position",
+            "Set",
+            "Rotation",
+            "Scale",
+            "Visibility",
+            "Opacity",
+            "Auto",
+            "Id",
+            "Automatically",
+            "Ids",
+            "Time",
+            "Offset",
+            "Tip",
+            "Stagger",
+            "Behaviour",
+            "When",
+            "Minimum",
+            "Use",
+            "Index",
+            "Context",
+            "Duplicator",
+            "This",
+            "Connecting",
+            "Skip",
+            "Invisible",
+            "Duplicates",
+            "Scenes",
+            "Transforms",
+            "In",
+            "Transform",
+            "Skew",
+            "Pivot",
+            "The",
+            "Group",
+            "By",
+            "Intro",
+            "UI"
+          ],
+          "operations": [],
+          "tags": [
+            "duplicator"
+          ],
+          "status": "verified",
+          "provenance": {
+            "sourceType": "official_docs",
+            "source": "https://cavalry.studio/docs/nodes/shapes/duplicator/",
+            "contentHash": "6b6d22998a65474e2bc50b19fc2ac70090b7bed94953b7e3361e9ffb9e8df3df",
+            "sourceUrl": "https://cavalry.studio/docs/nodes/shapes/duplicator/",
+            "redistributable": false,
+            "retrievedAt": "2026-09-20T06:55:55.895Z"
+          },
+          "createdAt": "2026-09-20T06:55:55.895Z",
+          "updatedAt": "2026-09-20T06:55:55.895Z"
+        },
+        "score": 0.5494606361871189,
+        "relevance": 0.28292647013222877,
+        "authority": 0.94,
+        "versionCompatibility": "same",
+        "confidence": {
+          "level": "HIGH",
+          "reasons": [
+            "official docs source",
+            "verified evidence",
+            "runtime version compatible",
+            "2 matching records"
+          ]
+        },
+        "warnings": []
+      },
+      {
+        "record": {
+          "id": "official_docs:eb382b7c05b8467ec3ed26c2",
+          "sourceType": "official_docs",
+          "scope": "global",
+          "title": "API Module",
+          "section": "modifyKeyframeTangent(layerId:string, data:object)​",
+          "content": "Modify the keyframe tangents.\nThe supplied object must include a `frame` key.\nBoth the in and out handle will be affected unless a handle is specified and the handle is not weight and angle locked. \n \n `inHandle` // An optional boolean value used to specify the inHandle to be affected. \n `outHandle` // An optional bool",
+          "cavalryVersion": "2.7.2",
+          "entities": [
+            "Modify",
+            "The",
+            "Both",
+            "An",
+            "Boolean",
+            "Set",
+            "Example",
+            "Make",
+            "api.primitive",
+            "Ellipse",
+            "Create",
+            "api.keyframe",
+            "Get",
+            "api.getKeyframeTimes",
+            "api.modifyKeyframeTangent",
+            "Shapevar",
+            "Store"
+          ],
+          "operations": [],
+          "tags": [
+            "api",
+            "module",
+            "modifykeyframetangent",
+            "layerid",
+            "string",
+            "data",
+            "object"
+          ],
+          "status": "verified",
+          "provenance": {
+            "sourceType": "official_docs",
+            "source": "https://cavalry.studio/docs/tech-info/scripting/api-module/",
+            "contentHash": "01b45bc769f019d2f322acfff2333c674f7057ec9795425cb4babbbae9a39056",
+            "sourceUrl": "https://cavalry.studio/docs/tech-info/scripting/api-module/",
+            "redistributable": false,
+            "retrievedAt": "2026-09-20T06:55:55.967Z"
+          },
+          "createdAt": "2026-09-20T06:55:55.967Z",
+          "updatedAt": "2026-09-20T06:55:55.967Z"
+        },
+        "score": 0.5407498153174042,
+        "relevance": 0.26550482837605643,
+        "authority": 0.94,
+        "versionCompatibility": "same",
+        "confidence": {
+          "level": "HIGH",
+          "reasons": [
+            "official docs source",
+            "verified evidence",
+            "runtime version compatible",
+            "2 matching records"
+          ]
+        },
+        "warnings": []
+      },
+      {
+        "record": {
+          "id": "official_docs:7ebe2790c8c5011970684c2a",
+          "sourceType": "official_docs",
+          "scope": "global",
+          "title": "API Module",
+          "section": "makeFolder(path:string, overwriteExisting:string=false) → bool​",
+          "content": "Create a folder at the location given in `path` and return if the operation was a success. Set the 'overwriteExisting' argument to `true` to override the error and replace the existing file - proceed with caution. \n \n```\n// Update the example path below and uncomment the line// var newFolder = api.makeFolder(\"/path/to/",
+          "cavalryVersion": "2.7.2",
+          "entities": [
+            "Create",
+            "Set",
+            "Update",
+            "api.makeFolder",
+            "New"
+          ],
+          "operations": [],
+          "tags": [
+            "api",
+            "module",
+            "makefolder",
+            "path",
+            "string",
+            "overwriteexisting",
+            "false",
+            "bool"
+          ],
+          "status": "verified",
+          "provenance": {
+            "sourceType": "official_docs",
+            "source": "https://cavalry.studio/docs/tech-info/scripting/api-module/",
+            "contentHash": "1bd72df0574f819ce9f3685cba873a79eb7238e224f8642c63691ada68bb91a2",
+            "sourceUrl": "https://cavalry.studio/docs/tech-info/scripting/api-module/",
+            "redistributable": false,
+            "retrievedAt": "2026-09-20T06:55:55.969Z"
+          },
+          "createdAt": "2026-09-20T06:55:55.969Z",
+          "updatedAt": "2026-09-20T06:55:55.969Z"
+        },
+        "score": 0.536872145794008,
+        "relevance": 0.25774948932824937,
+        "authority": 0.94,
+        "versionCompatibility": "same",
+        "confidence": {
+          "level": "HIGH",
+          "reasons": [
+            "official docs source",
+            "verified evidence",
+            "runtime version compatible",
+            "2 matching records"
+          ]
+        },
+        "warnings": []
+      },
+      {
+        "record": {
+          "id": "official_docs:bf842f2d67a371a8037a2335",
+          "sourceType": "official_docs",
+          "scope": "global",
+          "title": "API Module",
+          "section": "setGenerator(layerId:string, attrId:string, type:string)​",
+          "content": "Some Layers in Cavalry contain Generators, these are discrete feature blocks that are used to extend the functionality of Layers. For example the Basic Shape Layer has a Generator to determine the shape it creates (e.g Ellipse, Rectangle...). Generators can be set with this function. \n \n```\n// Create an Ellipse and set",
+          "cavalryVersion": "2.7.2",
+          "entities": [
+            "Some",
+            "Layers",
+            "Cavalry",
+            "Generators",
+            "For",
+            "Basic",
+            "Shape",
+            "Layer",
+            "Generator",
+            "Ellipse",
+            "Rectangle",
+            "Create",
+            "api.primitive",
+            "api.set",
+            "Duplicatorvar",
+            "api.create",
+            "Duplicator",
+            "Connect",
+            "Duplicatorapi",
+            "Change",
+            "Distribution",
+            "Custom",
+            "Distributionapi",
+            "Set"
+          ],
+          "operations": [],
+          "tags": [
+            "api",
+            "module",
+            "setgenerator",
+            "layerid",
+            "string",
+            "attrid",
+            "type"
+          ],
+          "status": "verified",
+          "provenance": {
+            "sourceType": "official_docs",
+            "source": "https://cavalry.studio/docs/tech-info/scripting/api-module/",
+            "contentHash": "18a71e8664beaf4bbe76a39c3dd8eef74406a88739a2587a934987f7478110f8",
+            "sourceUrl": "https://cavalry.studio/docs/tech-info/scripting/api-module/",
+            "redistributable": false,
+            "retrievedAt": "2026-09-20T06:55:55.967Z"
+          },
+          "createdAt": "2026-09-20T06:55:55.967Z",
+          "updatedAt": "2026-09-20T06:55:55.967Z"
+        },
+        "score": 0.530992244144385,
+        "relevance": 0.24598968602976434,
+        "authority": 0.94,
+        "versionCompatibility": "same",
+        "confidence": {
+          "level": "HIGH",
+          "reasons": [
+            "official docs source",
+            "verified evidence",
+            "runtime version compatible",
+            "2 matching records"
+          ]
+        },
+        "warnings": []
+      },
+      {
+        "record": {
+          "id": "official_docs:faa4fb1aa4edbd405c2a4313",
+          "sourceType": "official_docs",
+          "scope": "global",
+          "title": "API Module",
+          "section": "serialise(layerIds:[string], withConnections:bool)​",
+          "content": "Convert a list of Layers into their 'save file' representation. \n The first argument is an array of strings `[string]` containing the Layers to be serialised. The second argument is `withConnections` - if this is `true`, any input connections will also be serialised. For example, if a Shape in the array is connected to",
+          "cavalryVersion": "2.7.2",
+          "entities": [
+            "Convert",
+            "Layers",
+            "The",
+            "For",
+            "Shape",
+            "Color",
+            "Array",
+            "api.primitive",
+            "My",
+            "Polygon",
+            "api.set",
+            "api.writeToFile",
+            "Users",
+            "Desktop",
+            "api.serialise",
+            "Save",
+            "By",
+            "Scene",
+            "File",
+            "Import",
+            "Files"
+          ],
+          "operations": [],
+          "tags": [
+            "api",
+            "module",
+            "serialise",
+            "layerids",
+            "string",
+            "withconnections",
+            "bool"
+          ],
+          "status": "verified",
+          "provenance": {
+            "sourceType": "official_docs",
+            "source": "https://cavalry.studio/docs/tech-info/scripting/api-module/",
+            "contentHash": "283b586d487fbe3e901134d60a66f30909579b7012bbe5ac9e05ff2e86536ff9",
+            "sourceUrl": "https://cavalry.studio/docs/tech-info/scripting/api-module/",
+            "redistributable": false,
+            "retrievedAt": "2026-09-20T06:55:55.969Z"
+          },
+          "createdAt": "2026-09-20T06:55:55.969Z",
+          "updatedAt": "2026-09-20T06:55:55.969Z"
+        },
+        "score": 0.5296676943234367,
+        "relevance": 0.24334058638761424,
+        "authority": 0.94,
+        "versionCompatibility": "same",
+        "confidence": {
+          "level": "HIGH",
+          "reasons": [
+            "official docs source",
+            "verified evidence",
+            "runtime version compatible",
+            "2 matching records"
+          ]
+        },
+        "warnings": []
+      }
+    ],
+    "previousFailures": []
+  },
+  "safety": "This plan is advisory. Retrieved scripts are never executed by the Knowledge Engine."
+}

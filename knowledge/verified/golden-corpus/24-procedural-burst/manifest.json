@@ -1,0 +1,23 @@
+{
+  "slug": "24-procedural-burst",
+  "description": "Thin rectangular ray repeated around a Circle Distribution and animated as one source.",
+  "recipe": "procedural-burst",
+  "verified": true,
+  "scenePath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/24-procedural-burst/24-procedural-burst.cv",
+  "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/24-procedural-burst/24-procedural-burst.png",
+  "inspectionPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/24-procedural-burst/24-procedural-burst.inspection.json",
+  "nodeCount": 30,
+  "connectionCount": 26,
+  "animatedAttributes": [
+    "on",
+    "scale.y",
+    "opacity"
+  ],
+  "ingestion": {
+    "added": 0,
+    "updated": 0,
+    "unchanged": 1,
+    "deleted": 0,
+    "failed": []
+  }
+}

@@ -1,4 +1,4 @@
-import { describe, it, before } from 'node:test';
+import { describe, it, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -39,13 +39,15 @@ describe('Cavalry Acceptance Tests Suite', () => {
     }
   });
 
-  function runLiveTest(name: string, fn: () => Promise<void>) {
+  after(() => bridgeClient.stopCallbackServer());
+
+  function runLiveTest(name: string, fn: (context?: any) => Promise<void>) {
     it(name, async (t) => {
       if (!isCavalryOnline) {
         t.skip(`BLOCKED: Cavalry application or CavalryBridge script is not active on 127.0.0.1:8080`);
         return;
       }
-      await fn();
+      await fn(t);
     });
   }
 
@@ -390,7 +392,7 @@ describe('Cavalry Acceptance Tests Suite', () => {
   // --------------------------------------------------------------------------
   runLiveTest('TEST 22 — END-TO-END MOTION GRAPHIC: Complete autonomous motion design workflow', async () => {
     // 1. New Composition
-    await Scene.sceneNew();
+    await Scene.sceneNew(true);
     await Comp.compositionCreate({
       name: 'MotionGraphicFinal',
       width: 1920,

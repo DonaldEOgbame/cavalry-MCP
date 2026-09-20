@@ -1,0 +1,20 @@
+{
+  "slug": "16-multi-composition-reference",
+  "description": "Second composition referenced into the active composition.",
+  "verified": true,
+  "scenePath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/16-multi-composition-reference/16-multi-composition-reference.cv",
+  "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/16-multi-composition-reference/16-multi-composition-reference.png",
+  "inspectionPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/16-multi-composition-reference/16-multi-composition-reference.inspection.json",
+  "nodeCount": 21,
+  "connectionCount": 14,
+  "animatedAttributes": [
+    "on"
+  ],
+  "ingestion": {
+    "added": 1,
+    "updated": 0,
+    "unchanged": 0,
+    "deleted": 0,
+    "failed": []
+  }
+}

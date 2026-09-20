@@ -1,0 +1,20 @@
+{
+  "slug": "17-camera-scene",
+  "description": "Native planar camera with foreground and background shapes.",
+  "verified": true,
+  "scenePath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/17-camera-scene/17-camera-scene.cv",
+  "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/17-camera-scene/17-camera-scene.png",
+  "inspectionPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/17-camera-scene/17-camera-scene.inspection.json",
+  "nodeCount": 27,
+  "connectionCount": 21,
+  "animatedAttributes": [
+    "on"
+  ],
+  "ingestion": {
+    "added": 1,
+    "updated": 0,
+    "unchanged": 0,
+    "deleted": 0,
+    "failed": []
+  }
+}

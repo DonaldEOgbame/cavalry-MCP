@@ -1,0 +1,23 @@
+{
+  "slug": "20-logo-geometric-assembly",
+  "description": "Geometric logo parts assembled under one animated parent.",
+  "recipe": "logo-geometric-assembly",
+  "verified": true,
+  "scenePath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/20-logo-geometric-assembly/20-logo-geometric-assembly.cv",
+  "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/20-logo-geometric-assembly/20-logo-geometric-assembly.png",
+  "inspectionPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/20-logo-geometric-assembly/20-logo-geometric-assembly.inspection.json",
+  "nodeCount": 34,
+  "connectionCount": 29,
+  "animatedAttributes": [
+    "opacity",
+    "position.y",
+    "on"
+  ],
+  "ingestion": {
+    "added": 1,
+    "updated": 0,
+    "unchanged": 0,
+    "deleted": 0,
+    "failed": []
+  }
+}
