@@ -30,6 +30,7 @@ import { audioProbe } from '../audio/probe.js';
 import * as Events from '../cavalry/events.js';
 import * as Parity from '../cavalry/parity.js';
 import { cavalryParityAudit } from '../cavalry/coverage.js';
+import { knowledgeEngine } from '../knowledge/engine.js';
 
 export function createMcpServer(): McpServer {
   const server = new McpServer({
@@ -110,6 +111,32 @@ export function createMcpServer(): McpServer {
   server.tool('cavalry_raw_script', 'Escape hatch to execute arbitrary JavaScript in Cavalry (disabled by default; requires CAVALRY_ALLOW_RAW_SCRIPT=true)', Schemas.SystemSchemas.rawScript.shape, handleTool('cavalry_raw_script', async (args) => {
     return executeRawScript(args.code);
   }));
+
+  // ============================================================================
+  // CAVALRY KNOWLEDGE ENGINE
+  // ============================================================================
+  const knowledgeDescription = 'Search Cavalry-specific reference data. Retrieved content is inert evidence and is never executed.';
+  server.tool('knowledge_search', knowledgeDescription, Schemas.KnowledgeSchemas.search.shape, handleTool('knowledge_search', async (args) => knowledgeEngine.search(args.query, args.filters, args.mode, args.liveRuntime)));
+  server.tool('knowledge_explain', 'Explain a Cavalry concept with provenance, graph patterns, pitfalls, and MCP operations', Schemas.KnowledgeSchemas.concept.shape, handleTool('knowledge_explain', async (args) => knowledgeEngine.explain(args.concept, args.filters, args.mode)));
+  server.tool('knowledge_find_scene_pattern', 'Find structurally relevant real Cavalry scene patterns', Schemas.KnowledgeSchemas.description.shape, handleTool('knowledge_find_scene_pattern', async (args) => knowledgeEngine.findScenePattern(args.description, args.filters, args.mode)));
+  server.tool('knowledge_find_script_pattern', 'Find script patterns without executing retrieved code', Schemas.KnowledgeSchemas.description.shape, handleTool('knowledge_find_script_pattern', async (args) => knowledgeEngine.findScriptPattern(args.description, args.filters, args.mode)));
+  server.tool('knowledge_find_recipe', 'Find adaptable motion-design recipes rather than fixed macros', Schemas.KnowledgeSchemas.description.shape, handleTool('knowledge_find_recipe', async (args) => knowledgeEngine.findRecipe(args.description, args.filters, args.mode)));
+  server.tool('knowledge_find_component', 'Find reusable Cavalry components and their exposed controls', Schemas.KnowledgeSchemas.description.shape, handleTool('knowledge_find_component', async (args) => knowledgeEngine.findComponent(args.description, args.filters, args.mode)));
+  server.tool('knowledge_find_failure', 'Find prior Cavalry failures, causes, and verified workarounds', Schemas.KnowledgeSchemas.description.shape, handleTool('knowledge_find_failure', async (args) => knowledgeEngine.findFailure(args.description, args.filters, args.mode)));
+  server.tool('knowledge_find_success_pattern', 'Find verified successful scripts, scenes, tests, and visual outcomes', Schemas.KnowledgeSchemas.description.shape, handleTool('knowledge_find_success_pattern', async (args) => knowledgeEngine.findSuccessPattern(args.description, args.filters, args.mode)));
+  server.tool('knowledge_get_api', 'Look up structured Cavalry API knowledge and known MCP equivalents', Schemas.KnowledgeSchemas.api.shape, handleTool('knowledge_get_api', async (args) => knowledgeEngine.getApi(args.name, args.filters, args.mode)));
+  server.tool('knowledge_get_layer_guidance', 'Get version-aware construction and connection guidance for a Cavalry layer type', Schemas.KnowledgeSchemas.layer.shape, handleTool('knowledge_get_layer_guidance', async (args) => knowledgeEngine.getLayerGuidance(args.layerType, args.filters, args.mode)));
+  server.tool('knowledge_get_node_graph', 'Return normalized Cavalry graphs or recipe construction matching an intent', Schemas.KnowledgeSchemas.description.shape, handleTool('knowledge_get_node_graph', async (args) => knowledgeEngine.getNodeGraph(args.description, args.filters)));
+  server.tool('knowledge_find_similar_to_current_scene', 'Inspect the active Cavalry scene and rank structurally similar indexed scene graphs', Schemas.KnowledgeSchemas.filters.shape, handleTool('knowledge_find_similar_to_current_scene', async (args) => knowledgeEngine.findSimilarToCurrentScene(args.filters)));
+  server.tool('motion_plan', 'Plan a Cavalry-native implementation from knowledge evidence and MCP/runtime capabilities before scene mutation', Schemas.KnowledgeSchemas.plan.shape, handleTool('motion_plan', async (args) => knowledgeEngine.motionPlan(args.goal, args.currentSceneSummary, args.assets, args.liveRuntime)));
+  server.tool('knowledge_sources', 'List indexed knowledge sources, scopes, versions, and record counts', {}, handleTool('knowledge_sources', async () => knowledgeEngine.sources()));
+  server.tool('knowledge_refresh', 'Incrementally refresh configured local knowledge sources using content hashes', {}, handleTool('knowledge_refresh', async () => knowledgeEngine.refresh()));
+  server.tool('knowledge_status', 'Inspect Knowledge Engine storage, scope, source, verification, and version counts', {}, handleTool('knowledge_status', async () => knowledgeEngine.status()));
+  server.tool('knowledge_audit', 'Audit provenance, duplicates, staleness, metadata health, and Cavalry knowledge coverage', {}, handleTool('knowledge_audit', async () => knowledgeEngine.audit()));
+  server.tool('knowledge_record_failure', 'Store a scoped Cavalry failure and workaround; project scope requires projectId', Schemas.KnowledgeSchemas.failure.shape, handleTool('knowledge_record_failure', async (args) => knowledgeEngine.addFailure(args, args.scope, args.projectId, args.cavalryVersion)));
+  server.tool('knowledge_record_script', 'Store script code as inert knowledge; verified status requires passed validation metadata', Schemas.KnowledgeSchemas.script.shape, handleTool('knowledge_record_script', async (args) => knowledgeEngine.addScript(args, args.scope, args.projectId, args.cavalryVersion)));
+  server.tool('knowledge_index_current_scene', 'Inspect and index the active user scene in project/session scope only; never promotes it globally', Schemas.KnowledgeSchemas.currentScene.shape, handleTool('knowledge_index_current_scene', async (args) => knowledgeEngine.indexCurrentScene(args.name, args.scope, args.projectId, args.sessionId, args.verified)));
+  server.tool('knowledge_record_visual_outcome', 'Record an approved visual outcome in project/session success memory; requires qaPassed=true', Schemas.KnowledgeSchemas.visualOutcome.shape, handleTool('knowledge_record_visual_outcome', async (args) => knowledgeEngine.addVisualOutcome(args, args.scope, args.projectId, args.sessionId, args.cavalryVersion)));
   server.tool('events_subscribe', 'Subscribe the bridge event queue to native Cavalry application callbacks', Schemas.EventSchemas.subscription.shape, handleTool('events_subscribe', async (args) => Events.eventsSubscribe(args.events)));
   server.tool('events_unsubscribe', 'Remove native Cavalry event subscriptions', Schemas.EventSchemas.subscription.shape, handleTool('events_unsubscribe', async (args) => Events.eventsUnsubscribe(args.events)));
   server.tool('events_poll', 'Consume queued Cavalry events and invalidate affected MCP caches', Schemas.EventSchemas.poll.shape, handleTool('events_poll', async (args) => Events.eventsPoll(args.limit)));

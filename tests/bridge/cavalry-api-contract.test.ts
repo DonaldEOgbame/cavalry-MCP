@@ -45,7 +45,8 @@ describe('Cavalry bridge API contract', () => {
       'onAttrDisconnected', 'onToolChanged',
     ];
     for (const callback of callbacks) assert.match(source, new RegExp(`this\\.${callback}\\s*=`));
-    assert.match(source, /ui\.addCallbackObject\(new ApplicationCallbacks\(\)\)/);
+    assert.match(source, /const applicationCallbacks = new ApplicationCallbacks\(\)/);
+    assert.match(source, /ui\.addCallbackObject\(applicationCallbacks\)/);
     assert.match(source, /code:\s*["']EDIT_CONFLICT["']/);
     assert.match(source, /params\.expectedRevision\s*!==\s*sceneRevision/);
   });
@@ -72,6 +73,7 @@ describe('Cavalry bridge API contract', () => {
     // function metadata shipped with Cavalry.
     documented.add('WebClient');
     documented.add('WebServer');
+    documented.add('Timer');
 
     const used = [...source.matchAll(/\bapi\.([A-Za-z_][A-Za-z0-9_]*)/g)].map((match) => match[1]);
     const missing = [...new Set(used.filter((name) => !documented.has(name)))].sort();

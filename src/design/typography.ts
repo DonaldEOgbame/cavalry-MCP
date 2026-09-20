@@ -21,7 +21,10 @@ export interface TextCreateParams {
 }
 
 export async function textCreate(params: TextCreateParams) {
-  const layer = await layerCreate('textShape', params.name || 'Text');
+  // Give unnamed text layers a stable, searchable name so they can be
+  // resolved after save/reopen even when Cavalry does not expose text content
+  // through layer identity metadata.
+  const layer = await layerCreate('textShape', params.name || params.text || 'Text');
   const updates: Record<string, unknown> = {
     text: params.text,
   };

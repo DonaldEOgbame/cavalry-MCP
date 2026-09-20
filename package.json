@@ -14,7 +14,18 @@
     "dev": "tsx src/index.ts",
     "test": "tsx --test tests/unit/*.test.ts tests/bridge/*.test.ts",
     "test:integration": "tsx --test tests/integration/*.test.ts",
-    "coverage:api": "node scripts/generate-api-coverage.mjs"
+    "coverage:api": "node scripts/generate-api-coverage.mjs",
+    "knowledge:bootstrap": "tsx src/knowledge/cli.ts bootstrap",
+    "knowledge:ingest-docs": "tsx src/knowledge/cli.ts ingest-docs",
+    "knowledge:ingest-api": "tsx src/knowledge/cli.ts ingest-api",
+    "knowledge:ingest-scenes": "tsx src/knowledge/cli.ts ingest-scenes",
+    "knowledge:ingest-scripts": "tsx src/knowledge/cli.ts ingest-scripts",
+    "knowledge:ingest-recipes": "tsx src/knowledge/cli.ts ingest-recipes",
+    "knowledge:ingest-failures": "tsx src/knowledge/cli.ts ingest-failures",
+    "knowledge:ingest-components": "tsx src/knowledge/cli.ts ingest-components",
+    "knowledge:reindex": "tsx src/knowledge/cli.ts reindex",
+    "knowledge:status": "tsx src/knowledge/cli.ts status",
+    "knowledge:verify": "tsx src/knowledge/cli.ts verify"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",

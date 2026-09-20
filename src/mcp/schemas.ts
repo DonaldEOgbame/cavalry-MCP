@@ -24,6 +24,69 @@ export const SystemSchemas = {
   }),
 };
 
+const KnowledgeSourceTypeSchema = z.enum([
+  'runtime_introspection', 'official_api', 'official_docs', 'verified_script', 'acceptance_test',
+  'real_scene', 'motion_recipe', 'component', 'failure', 'visual_outcome', 'motion_principle',
+  'third_party', 'community',
+]);
+
+const KnowledgeScopeSchema = z.enum(['global', 'project', 'session']);
+const KnowledgeModeSchema = z.enum(['compact', 'normal', 'detailed']);
+
+const KnowledgeFiltersSchema = z.object({
+  sourceTypes: z.array(KnowledgeSourceTypeSchema).optional(),
+  scopes: z.array(KnowledgeScopeSchema).optional(),
+  projectId: z.string().optional(),
+  sessionId: z.string().optional(),
+  layerTypes: z.array(z.string()).optional(),
+  categories: z.array(z.string()).optional(),
+  verifiedOnly: z.boolean().optional(),
+  cavalryVersion: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+  limit: z.number().int().min(1).max(50).optional(),
+});
+
+export const KnowledgeSchemas = {
+  search: z.object({
+    query: z.string().min(1),
+    filters: KnowledgeFiltersSchema.optional(),
+    mode: KnowledgeModeSchema.optional().default('normal'),
+    liveRuntime: z.boolean().optional().default(false).describe('Query the connected Cavalry runtime instead of the local capability manifest'),
+  }),
+  concept: z.object({ concept: z.string().min(1), filters: KnowledgeFiltersSchema.optional(), mode: KnowledgeModeSchema.optional().default('normal') }),
+  description: z.object({ description: z.string().min(1), filters: KnowledgeFiltersSchema.optional(), mode: KnowledgeModeSchema.optional().default('normal') }),
+  api: z.object({ name: z.string().min(1), filters: KnowledgeFiltersSchema.optional(), mode: KnowledgeModeSchema.optional().default('normal') }),
+  layer: z.object({ layerType: z.string().min(1), filters: KnowledgeFiltersSchema.optional(), mode: KnowledgeModeSchema.optional().default('normal') }),
+  filters: z.object({ filters: KnowledgeFiltersSchema.optional() }),
+  plan: z.object({
+    goal: z.string().min(1),
+    currentSceneSummary: z.string().optional(),
+    assets: z.array(z.string()).optional().default([]),
+    liveRuntime: z.boolean().optional().default(false),
+  }),
+  failure: z.object({
+    intent: z.string().min(1), approach: z.string().min(1), mcpOperation: z.string().optional(), error: z.string().min(1),
+    category: z.string().optional(), cause: z.string().optional(), solution: z.string().min(1), verifiedReplacement: z.string().optional(),
+    scope: KnowledgeScopeSchema.optional().default('project'), projectId: z.string().optional(), cavalryVersion: z.string().optional(),
+  }),
+  script: z.object({
+    task: z.string().min(1), status: z.enum(['verified', 'unverified', 'deprecated', 'failed']), script: z.string().min(1),
+    inputAssumptions: z.array(z.string()).optional(), errors: z.array(z.string()).optional(),
+    validation: z.object({ passed: z.boolean(), checks: z.array(z.string()).optional() }).optional(),
+    scope: KnowledgeScopeSchema.optional().default('project'), projectId: z.string().optional(), cavalryVersion: z.string().optional(),
+  }),
+  currentScene: z.object({
+    name: z.string().min(1), scope: z.enum(['project', 'session']).optional().default('project'), projectId: z.string().optional(),
+    sessionId: z.string().optional(), verified: z.boolean().optional().default(false),
+  }),
+  visualOutcome: z.object({
+    intent: z.string().min(1), recipeUsed: z.string().optional(), previewFrames: z.array(z.string()).optional(),
+    timing: z.record(z.string(), z.unknown()).optional(), attributes: z.record(z.string(), z.unknown()).optional(), notes: z.array(z.string()).optional(),
+    qaPassed: z.boolean(), issues: z.array(z.object({ issue: z.string(), fix: z.string().optional() })).optional(),
+    scope: z.enum(['project', 'session']).optional().default('project'), projectId: z.string().optional(), sessionId: z.string().optional(), cavalryVersion: z.string().optional(),
+  }),
+};
+
 export const EventSchemas = {
   subscription: z.object({
     events: z.array(z.string()).optional().describe('Event names; omit to subscribe or unsubscribe the wildcard'),

@@ -265,3 +265,28 @@ This document provides a comprehensive reference for all tools exposed by the **
 | `motion_scale` | `layerId: string`, `startFrame: number`, `duration?: number`, `fromScale?: number`, `toScale?: number`, `easing?: string` | Compiles scale animation. |
 | `motion_pop` | `layerId: string`, `startFrame: number`, `duration?: number` | Compiles overshoot pop animation. |
 | `motion_bounce` | `layerId: string`, `startFrame: number`, `duration?: number`, `height?: number` | Compiles gravity bounce animation. |
+
+---
+
+## 17. Cavalry Knowledge Engine
+
+| Tool | Purpose |
+|---|---|
+| `knowledge_search` | Hybrid search with source, scope, version, verification, category, layer, and tag filters. |
+| `knowledge_explain` | Explains a Cavalry concept with graphs, related layers, pitfalls, evidence, and MCP operations. |
+| `knowledge_find_scene_pattern` | Retrieves normalized real-scene construction patterns. |
+| `knowledge_find_similar_to_current_scene` | Inspects the active scene and runs graph similarity search. |
+| `knowledge_find_script_pattern` | Retrieves inert verified/unverified script evidence without execution. |
+| `knowledge_find_recipe` | Finds adaptable motion recipes. |
+| `knowledge_find_component` | Finds reusable component metadata and limitations. |
+| `knowledge_find_failure` | Finds previous failures, causes, and workarounds. |
+| `knowledge_find_success_pattern` | Finds verified scripts, scenes, tests, and visual outcomes. |
+| `knowledge_get_api` | Returns structured API parameters, results, examples, and MCP equivalents. |
+| `knowledge_get_layer_guidance` | Retrieves layer-specific attributes, connections, examples, and pitfalls. |
+| `knowledge_get_node_graph` | Returns graph structures or recipe construction for an intent. |
+| `motion_plan` | Produces evidence-backed, runtime/MCP-aware implementation guidance before scene mutation. |
+| `knowledge_index_current_scene` | Adds the active scene to project/session scope only. |
+| `knowledge_record_failure` | Adds scoped failure/workaround memory. |
+| `knowledge_record_script` | Adds inert script knowledge; verified status requires passed validation. |
+| `knowledge_record_visual_outcome` | Adds a QA-approved project/session visual outcome. |
+| `knowledge_sources` / `knowledge_status` / `knowledge_audit` / `knowledge_refresh` | Operates and audits the local corpus. |

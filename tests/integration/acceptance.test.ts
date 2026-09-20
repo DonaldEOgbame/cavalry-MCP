@@ -53,7 +53,7 @@ describe('Cavalry Acceptance Tests Suite', () => {
   // TEST 1 — COMPOSITION
   // --------------------------------------------------------------------------
   runLiveTest('TEST 1 — COMPOSITION: Create 1920x1080 30fps 0-149 and verify', async () => {
-    await Scene.sceneNew();
+    await Scene.sceneNew(true);
     const comp = await Comp.compositionCreate({
       name: 'AcceptanceComp',
       width: 1920,

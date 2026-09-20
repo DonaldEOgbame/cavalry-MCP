@@ -9,6 +9,8 @@ An introspection-driven **Model Context Protocol (MCP)** server designed to let 
 
 Instead of hard-coding static endpoints or relying on brittle string-interpolated JavaScript, this server dynamically discovers layer types, attribute definitions, and procedural generator slots from the live Cavalry runtime. It enables agents to inspect, construct, animate, preview, visually evaluate, revise, save, and render complete motion-graphics projects autonomously.
 
+The server also includes a Cavalry-specific Knowledge Engine for provenance-aware documentation/API retrieval, normalized real-scene graphs, graph similarity, motion recipes, verified script patterns, scoped failure memory, runtime-aware recommendations, and pre-mutation motion planning. See [docs/knowledge-engine.md](docs/knowledge-engine.md), [docs/knowledge-sources.md](docs/knowledge-sources.md), and [docs/knowledge-refresh.md](docs/knowledge-refresh.md).
+
 ---
 
 ## Architecture

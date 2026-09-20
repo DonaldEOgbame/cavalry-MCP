@@ -5,3 +5,5 @@ dist/
 .DS_Store
 tmp/
 cavalry-previews/
+knowledge/generated/*
+!knowledge/generated/.gitkeep
