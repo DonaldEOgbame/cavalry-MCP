@@ -140,18 +140,75 @@ confirmed reachable. This is flagged as `WORKFLOW_LIMITATION`, not
 | `coverage/live-layer-types.json` | Raw `api.getAllLayerTypes(true)` snapshot | New this pass — regenerate whenever Cavalry version changes |
 | `coverage/cavalry-node-definition-coverage.json` | Full node/attribute schema reconciliation | New this pass |
 
+## Third-party plugin validation (resolved)
+
+Cavalry ships 12 bundled filter plugins under
+`/Applications/Cavalry.app/Contents/assets/Plugins/*` (Bilateral Blur, Box Blur,
+Bulge, Chroma Key, Directional Blur, Erosion, Gaussian Blur, Grain, Light Sweep,
+Polar Coordinates, Spherise, Zoom Blur). Each ships its own `definitions.json`
+and `.sksl` shader file, and each declares `"superType": "thirdPartyFilter"` in
+Cavalry's own schema — the same packaging format an externally-downloaded
+Cavalry plugin uses. Live Cavalry exposes them as `sceneGroup::<name>` layer
+types (e.g. `sceneGroup::chromaKeyFilter`), discoverable only through the
+generic `layer_types` operation (`getCapabilities().supportedLayerTypes`
+intentionally filters plugin names out of its curated subset — see
+`cavalry_capabilities` in `cavalry/bridge.js`).
+
+`tests/integration/acceptance.test.ts` TEST 21 was rewritten to validate the
+full lifecycle against whichever bundled plugin filter is discovered live, with
+zero hardcoded plugin names:
+
+1. **Runtime discovery** — `layer_types(includeExperimental: true)`, filtered
+   to `sceneGroup::*`, with no project code aware of any specific plugin.
+2. **Instantiation** — `layer_create(pluginType)` creates the plugin node
+   through the fully generic tool.
+3. **Attribute introspection + mutation** — `attribute_list`/`attribute_describe`
+   discover the plugin's own declared attributes (never assumed by name, since
+   different bundled filters expose different controls), and `attribute_set`
+   mutates whichever numeric one is found; `attribute_get` confirms the write.
+4. **Graph wiring** — a layer's `filters` attribute is a `nodeId`-typed array
+   (confirmed via `attribute_describe`), not a plain value slot, so the plugin
+   node is wired in via `attribute_array_add` + `graph_connect(sourceAttr:
+   "id", targetAttr: "filters.0")`, not `attribute_set`.
+5. **Rendered proof** — a small star shape (deliberately smaller than the
+   frame, so its edges are visible against the background) is rendered before
+   and after the filter is wired in; the test asserts the rendered PNG bytes
+   differ. This is the real ground truth: `attribute_get("filters.0")` reads
+   back `null` in Cavalry 2.7.2 even when `graphInspect` confirms the
+   connection is live as an input — so byte-identical output, not the getter,
+   is what the test trusts.
+
+Result: **PASS**, reproduced clean across 2 consecutive live runs.
+
+### A note on how this was actually verified
+
+The first two live attempts at this rewritten test coincided with Cavalry
+becoming unresponsive/exiting (once with a Sentry crash-handler minidump, once
+with no crash artifact at all — it simply stopped responding). Root cause was
+isolated, not left as an unexplained flake: an earlier draft of the test set
+the star shape's `scale` attribute to `{x: 60, y: 60}`, treating `scale` as a
+percentage. Cavalry's `scale` is a 1.0-based multiplier, so this requested a
+6000% scale, which is a plausible trigger for the instability. After correcting
+the test to `{x: 0.6, y: 0.6}`, two consecutive full 22-test live runs
+completed cleanly with Cavalry monitored throughout (process liveness checked
+every 5s, screen state confirmed via screenshot) and no further instability.
+This is recorded here rather than silently fixed, because a scale value that
+destabilizes the host application — even from a scripting mistake rather than
+a malicious input — is worth knowing about if it recurs elsewhere.
+
 ## Open items carried forward
 
 - Render format matrix (`coverage/render-formats.json`) still needs an actual
   live render + ffprobe pass per format; this pass only re-verified the JS
   function and node-schema inventories, not rendered output.
-- The `verifiedLive: false` supertype routes above should be individually
-  live-tested (create a node of each supertype's actual host layer, confirm the
-  `generator_set`/`attribute_set` call succeeds) before being called fully
-  proven rather than structurally inferred.
-- Third-party plugin validation (Objective C) has not been attempted yet. The
-  bundled filter plugins under `/Applications/Cavalry.app/Contents/assets/Plugins/`
-  (Chroma Key, Bulge, Gaussian Blur, etc.) are visible live as
-  `sceneGroup::<name>` layer types and are a plausible substitute for a true
-  third-party plugin if no external one is available — this still needs to be
-  attempted and documented per the plugin-test requirements.
+- The `verifiedLive: false` supertype routes in the node-definition
+  reconciliation above should be individually live-tested (create a node of
+  each supertype's actual host layer, confirm the `generator_set`/
+  `attribute_set` call succeeds) before being called fully proven rather than
+  structurally inferred.
+- Whether Cavalry's own render pipeline (Render Manager / `api.render`)
+  applies the `filters` array the same way `renderPNGFrame` does was not
+  re-verified after switching the plugin test back to the faster preview path;
+  an early debug pass did confirm a real render-queue PNG output for a
+  differently-scaled scene, but that specific comparison was on a since-fixed,
+  full-bleed shape and was inconclusive on its own.

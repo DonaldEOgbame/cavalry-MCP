@@ -376,15 +376,78 @@ describe('Cavalry Acceptance Tests Suite', () => {
   // --------------------------------------------------------------------------
   // TEST 21 — THIRD-PARTY LAYER
   // --------------------------------------------------------------------------
-  runLiveTest('TEST 21 — THIRD-PARTY LAYER: Discover third-party layer if installed', async (t: any) => {
-    const caps = await getCapabilities();
-    const thirdParty = caps.supportedLayerTypes.find(t => t.name.toLowerCase().includes('plugin') || t.name.toLowerCase().includes('ext'));
-    if (!thirdParty) {
-      t.skip('SKIPPED: No third-party plugin/layer detected on this installation.');
+  // Cavalry ships several bundled filter plugins under
+  // /Applications/Cavalry.app/Contents/assets/Plugins/*, each with its own
+  // definitions.json declaring `"superType": "thirdPartyFilter"` and an
+  // `.sksl` shader — the same plugin packaging format a downloaded third-party
+  // filter would use. Runtime discovery below goes through layer_types with no
+  // hardcoded plugin name anywhere in this project, proving the MCP surface
+  // generalizes to unknown/third-party node types rather than special-casing
+  // built-ins. `getCapabilities().supportedLayerTypes` intentionally filters
+  // plugin/extension names out of its curated subset (see cavalry/bridge.js
+  // cavalry_capabilities), so discovery must go through layer_types instead.
+  runLiveTest('TEST 21 — THIRD-PARTY LAYER: Discover, instantiate, mutate, and render a plugin filter', async (t: any) => {
+    const { layerTypes } = await Layer.layerTypes(true);
+    const pluginType = layerTypes.find((entry) => entry.type.startsWith('sceneGroup::'));
+    if (!pluginType) {
+      t.skip('SKIPPED: No third-party-style plugin layer detected on this installation.');
       return;
     }
-    const layer = await Layer.layerCreate(thirdParty.type, 'ThirdPartyLayer');
-    assert.ok(layer.layerId);
+
+    await Scene.sceneNew(true);
+    await Comp.compositionCreate({ name: 'ThirdPartyPluginTest', width: 320, height: 180, fps: 30, startFrame: 0, endFrame: 1 });
+
+    // A star shape sized smaller than the frame (never full-bleed) so its
+    // points create hard edges against the composition background — ANY
+    // plugin filter with a visible effect (blur, chroma-key, color grading,
+    // distortion) is virtually guaranteed to change bytes along those edges,
+    // whereas an edge-to-edge fill would hide edge-only effects entirely.
+    const rect = await Layer.layerCreatePrimitive('star', 'PluginTargetStar');
+    await Attr.attributeSet(rect.layerId, 'scale', { x: 0.6, y: 0.6 });
+    await Attr.attributeSet(rect.layerId, 'material.materialColor', { r: 0, g: 255, b: 0, a: 255 });
+
+    const beforeFrame = await Preview.previewFrame(0, 100, path.join(os.tmpdir(), 'third-party-plugin-before.png'));
+    const beforeBytes = fs.readFileSync(beforeFrame.filePath);
+
+    // Instantiate the plugin node itself via the fully generic layer_create tool.
+    const filterNode = await Layer.layerCreate(pluginType.type, 'ThirdPartyFilterNode');
+    assert.ok(filterNode.layerId, 'plugin node must be creatable through the generic layer_create tool');
+
+    // Introspect the plugin's own attribute list (never hardcode a specific
+    // plugin's attribute name — different bundled filters expose different
+    // controls) and mutate whichever numeric one it declares, proving generic
+    // attribute tools work against a node type with zero bespoke code.
+    const { attributes } = await Attr.attributeList(filterNode.layerId);
+    let mutated = false;
+    for (const attrPath of attributes) {
+      const def = await Attr.attributeDescribe(filterNode.layerId, attrPath).catch(() => null) as any;
+      if (!def || def.definition?.type !== 'double' || def.definition?.isAttrReadOnly) continue;
+      const before = await Attr.attributeGet(filterNode.layerId, attrPath);
+      const probeValue = (typeof before.value === 'number' ? before.value : 0) + 1;
+      await Attr.attributeSet(filterNode.layerId, attrPath, probeValue);
+      const after = await Attr.attributeGet(filterNode.layerId, attrPath);
+      assert.equal(after.value, probeValue, `plugin attribute "${attrPath}" must accept a generic attribute_set write`);
+      mutated = true;
+      break;
+    }
+    assert.ok(mutated, 'plugin node must expose at least one mutable numeric attribute');
+
+    // Wire the plugin filter into the target layer's generic "filters" array
+    // via graph_connect (nodeId-typed array elements are graph connections,
+    // not plain attribute_set values).
+    await Attr.attributeArrayAdd(rect.layerId, 'filters');
+    await Graph.graphConnect({ sourceLayerId: filterNode.layerId, sourceAttr: 'id', targetLayerId: rect.layerId, targetAttr: 'filters.0', force: true });
+
+    const afterFrame = await Preview.previewFrame(0, 100, path.join(os.tmpdir(), 'third-party-plugin-after.png'));
+    const afterBytes = fs.readFileSync(afterFrame.filePath);
+
+    // Ground truth is the rendered pixels, not attribute_get on the nodeId
+    // array element (which reads back null in 2.7.2 even when the connection
+    // is live) — the render is what proves the plugin is actually active.
+    assert.notEqual(Buffer.compare(beforeBytes, afterBytes), 0, 'plugin filter connection must visibly change the rendered frame');
+
+    fs.unlinkSync(beforeFrame.filePath);
+    fs.unlinkSync(afterFrame.filePath);
   });
 
   // --------------------------------------------------------------------------

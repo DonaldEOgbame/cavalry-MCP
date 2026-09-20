@@ -72,5 +72,5 @@ npm run test:integration
 | **TEST 18 — CHECKPOINT** | Create checkpoint, mutate, and restore | Takes in-memory checkpoint, mutates scene, then restores state. |
 | **TEST 19 — BATCH SYMBOL REFERENCES** | Create $A, $B, connect, mutate in 1 round trip | Executes atomic `cavalry_batch` with `$symbol` substitution. |
 | **TEST 20 — ERROR SAFETY** | Test invalid paths and permissions | Verifies clean structured errors for disabled raw scripting and forbidden paths. |
-| **TEST 21 — THIRD-PARTY LAYER** | Dynamic plugin inspection | Discovers third-party plugins if installed; marks `SKIPPED` if none installed. |
+| **TEST 21 — THIRD-PARTY LAYER** | Discover, instantiate, mutate, and render a plugin filter | Discovers any `sceneGroup::*` bundled plugin filter via generic `layer_types` (no hardcoded plugin name), creates it with `layer_create`, mutates a plugin-declared attribute via generic `attribute_set`/`attribute_get`, wires it into a target layer's `filters` array via `graph_connect`, and asserts the rendered frame actually changes. Marks `SKIPPED` only if no plugin-style layer is installed at all. |
 | **TEST 22 — END-TO-END MOTION GRAPHIC** | Complete autonomous project workflow | Constructs comp, background, kinetic text, subtitle, markers, renders preview, saves project. |
