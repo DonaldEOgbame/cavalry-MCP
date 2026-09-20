@@ -32,4 +32,16 @@ describe('parity coverage records', () => {
       .map(([name, value]: any) => `${name}:${value.nodeType}`);
     assert.deepEqual(missing, []);
   });
+
+  it('accounts for every concrete node type in the Cavalry schema (nodeDefinitions.json)', async (context) => {
+    const path = resolve('coverage/cavalry-node-definition-coverage.json');
+    if (!existsSync(path)) {
+      context.skip('Node-definition coverage has not been generated on this host (run npm run coverage:node-definitions)');
+      return;
+    }
+    const data = JSON.parse(await readFile(path, 'utf8'));
+    assert.equal(data.unknownCount, 0);
+    assert.equal(data.nodes.length, data.concreteNodeTypes);
+    assert.ok(data.nodes.every((entry: any) => entry.coverage !== 'UNKNOWN'));
+  });
 });

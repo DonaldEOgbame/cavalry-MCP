@@ -1,0 +1,4377 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-20T13:10:45.013Z",
+  "source": "/Applications/Cavalry.app/Contents/assets/Definitions/nodeDefinitions.json",
+  "method": "Cross-references every concrete node type in nodeDefinitions.json against the live api.getAllLayerTypes() result and a manually verified per-superType reachability map. See docs/coverage.md for the live verification transcript.",
+  "totalNodeTypeEntries": 483,
+  "abstractBaseTypes": 47,
+  "concreteNodeTypes": 436,
+  "liveTopLevelLayerTypes": 274,
+  "counts": {
+    "GENERIC_MCP": 163,
+    "STRUCTURED_MCP": 273
+  },
+  "unknownCount": 0,
+  "nodes": [
+    {
+      "nodeType": "hiddenFolder",
+      "superType": "element",
+      "attributeCount": 1,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create (asset/hiddenFolder/renderQueueItem) or internal keyframe children via keyframe_* ops",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "group",
+      "superType": "shape",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "compNode",
+      "superType": "drawable",
+      "attributeCount": 32,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create (compNode) or generator_set for bone/skeleton/displacement children",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "planarCamera",
+      "superType": "drawable",
+      "attributeCount": 16,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "cameraGuide",
+      "superType": "drawable",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "animationCurveBase",
+      "superType": null,
+      "attributeCount": 14,
+      "liveTopLevelLayer": false,
+      "coverage": "STRUCTURED_MCP",
+      "via": "dedicated ops already exist per node (palette/colorSwatch via asset ops, renderQueue via render_queue_*, timeMarker via marker_*, animationCurveBase via graph_* )",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "animationCurve",
+      "superType": "animationCurveBase",
+      "attributeCount": 3,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "internal children of keyframe/graph attribute ops (graph_get/graph_set)",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "animationPath",
+      "superType": "animationCurveBase",
+      "attributeCount": 2,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "internal children of keyframe/graph attribute ops (graph_get/graph_set)",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "animationControl",
+      "superType": "atomic",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "rigControl",
+      "superType": "atomic",
+      "attributeCount": 6,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "colorSwatch",
+      "superType": null,
+      "attributeCount": 1,
+      "liveTopLevelLayer": false,
+      "coverage": "STRUCTURED_MCP",
+      "via": "dedicated ops already exist per node (palette/colorSwatch via asset ops, renderQueue via render_queue_*, timeMarker via marker_*, animationCurveBase via graph_* )",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "paletteContainer",
+      "superType": null,
+      "attributeCount": 0,
+      "liveTopLevelLayer": false,
+      "coverage": "STRUCTURED_MCP",
+      "via": "dedicated ops already exist per node (palette/colorSwatch via asset ops, renderQueue via render_queue_*, timeMarker via marker_*, animationCurveBase via graph_* )",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "palette",
+      "superType": null,
+      "attributeCount": 0,
+      "liveTopLevelLayer": false,
+      "coverage": "STRUCTURED_MCP",
+      "via": "dedicated ops already exist per node (palette/colorSwatch via asset ops, renderQueue via render_queue_*, timeMarker via marker_*, animationCurveBase via graph_* )",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "audioTrack",
+      "superType": "atomic",
+      "attributeCount": 3,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set or attribute_set depending on host node; audioTrack via cavalry_audio ops",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "assetFromSmartFolder",
+      "superType": "atomic",
+      "attributeCount": 7,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "asset",
+      "superType": "element",
+      "attributeCount": 1,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create (asset/hiddenFolder/renderQueueItem) or internal keyframe children via keyframe_* ops",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "renderQueue",
+      "superType": null,
+      "attributeCount": 0,
+      "liveTopLevelLayer": false,
+      "coverage": "STRUCTURED_MCP",
+      "via": "dedicated ops already exist per node (palette/colorSwatch via asset ops, renderQueue via render_queue_*, timeMarker via marker_*, animationCurveBase via graph_* )",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "renderQueueItem",
+      "superType": "element",
+      "attributeCount": 31,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create (asset/hiddenFolder/renderQueueItem) or internal keyframe children via keyframe_* ops",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "keyframeLayerFolder",
+      "superType": "hiddenFolder",
+      "attributeCount": 0,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "internal grouping node created implicitly by keyframe/marker folder operations",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "keyframeLayer",
+      "superType": "element",
+      "attributeCount": 4,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create (asset/hiddenFolder/renderQueueItem) or internal keyframe children via keyframe_* ops",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "compositionReference",
+      "superType": "shape",
+      "attributeCount": 13,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "colorArray",
+      "superType": "indexableArray",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "renderPNG",
+      "superType": "renderFormat",
+      "attributeCount": 4,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "render_item_set_format (api.setGenerator on the render queue item \"generator\" slot)",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "renderQuicktime",
+      "superType": "renderFormatWithAudio",
+      "attributeCount": 7,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "render_item_set_format (api.setGenerator on the render queue item \"generator\" slot)",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "renderAudioOnly",
+      "superType": "renderFormatWithAudio",
+      "attributeCount": 3,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "render_item_set_format (api.setGenerator on the render queue item \"generator\" slot)",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "renderSpriteSheet",
+      "superType": "renderFormat",
+      "attributeCount": 7,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "render_item_set_format (api.setGenerator on the render queue item \"generator\" slot)",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "renderJPEG",
+      "superType": "renderFormat",
+      "attributeCount": 1,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "render_item_set_format (api.setGenerator on the render queue item \"generator\" slot)",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "renderWebP",
+      "superType": "renderFormat",
+      "attributeCount": 1,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "render_item_set_format (api.setGenerator on the render queue item \"generator\" slot)",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "renderGIF",
+      "superType": "renderFormat",
+      "attributeCount": 4,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "render_item_set_format (api.setGenerator on the render queue item \"generator\" slot)",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "renderAPNG",
+      "superType": "renderFormat",
+      "attributeCount": 1,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "render_item_set_format (api.setGenerator on the render queue item \"generator\" slot)",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "renderProRes",
+      "superType": "renderFormatWithAudio",
+      "attributeCount": 1,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "render_item_set_format (api.setGenerator on the render queue item \"generator\" slot)",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "renderWebM",
+      "superType": "renderFormatWithAudio",
+      "attributeCount": 6,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "render_item_set_format (api.setGenerator on the render queue item \"generator\" slot)",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "renderMP4",
+      "superType": "renderFormatWithAudio",
+      "attributeCount": 6,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "render_item_set_format (api.setGenerator on the render queue item \"generator\" slot)",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "renderHVEC",
+      "superType": "renderFormatWithAudio",
+      "attributeCount": 6,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "render_item_set_format (api.setGenerator on the render queue item \"generator\" slot)",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "renderLottie",
+      "superType": "renderFormat",
+      "attributeCount": 0,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "render_item_set_format (api.setGenerator on the render queue item \"generator\" slot)",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "renderSVG",
+      "superType": "renderFormat",
+      "attributeCount": 1,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "render_item_set_format (api.setGenerator on the render queue item \"generator\" slot)",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "dynamicIndexManager",
+      "superType": "element",
+      "attributeCount": 3,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create (asset/hiddenFolder/renderQueueItem) or internal keyframe children via keyframe_* ops",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "editableShape",
+      "superType": "shape",
+      "attributeCount": 6,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "noise",
+      "superType": "behaviour",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "simplexNoise",
+      "superType": "noiseEngine",
+      "attributeCount": 5,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a shape's \"fill\"/\"stroke\"/\"material\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "flowFieldNoise",
+      "superType": "noiseEngine",
+      "attributeCount": 5,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a shape's \"fill\"/\"stroke\"/\"material\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "cubicNoise",
+      "superType": "noiseEngine",
+      "attributeCount": 5,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a shape's \"fill\"/\"stroke\"/\"material\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "valueNoise",
+      "superType": "noiseEngine",
+      "attributeCount": 5,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a shape's \"fill\"/\"stroke\"/\"material\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "cellularNoise",
+      "superType": "noiseEngine",
+      "attributeCount": 3,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a shape's \"fill\"/\"stroke\"/\"material\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "pathfinder",
+      "superType": "behaviourBase",
+      "attributeCount": 12,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "random",
+      "superType": "behaviour",
+      "attributeCount": 12,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "oscillatorLegacy",
+      "superType": "behaviour",
+      "attributeCount": 13,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "oscillator",
+      "superType": "behaviour",
+      "attributeCount": 18,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "comparison",
+      "superType": "mathBase",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "logic",
+      "superType": "mathBase",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "math",
+      "superType": "mathBase",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "math2",
+      "superType": "mathBase",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "math3",
+      "superType": "mathBase",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "jsmath",
+      "superType": "mathBase",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "javaScript",
+      "superType": "mathBase",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "valueArray",
+      "superType": "indexableArray",
+      "attributeCount": 6,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "value2Array",
+      "superType": "indexableArray",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "value3Array",
+      "superType": "indexableArray",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "textArray",
+      "superType": "indexableArray",
+      "attributeCount": 2,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "attribute_set on generic array-typed attributes",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "ifElse",
+      "superType": "atomic",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "rangeFalloff",
+      "superType": "atomic",
+      "attributeCount": 13,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "falloff",
+      "superType": "drawable",
+      "attributeCount": 18,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "motionStretch",
+      "superType": "behaviour",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "stagger",
+      "superType": "behaviour",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "spreadsheet",
+      "superType": "atomic",
+      "attributeCount": 14,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "spreadsheetLookup",
+      "superType": "atomic",
+      "attributeCount": 6,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "indexToColor",
+      "superType": "atomic",
+      "attributeCount": 6,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "boundingBoxConstraint",
+      "superType": "atomic",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "measureText",
+      "superType": "atomic",
+      "attributeCount": 9,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "visualModifier",
+      "superType": "particleModifier",
+      "attributeCount": 10,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "imageModifier",
+      "superType": "particleModifier",
+      "attributeCount": 8,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "collisionModifier",
+      "superType": "particleModifier",
+      "attributeCount": 3,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set inside a particle system's collision-event slot",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "forceModifier",
+      "superType": "particlePhysicsModifier",
+      "attributeCount": 7,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "magneticModifier",
+      "superType": "particlePhysicsModifier",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "vortexModifier",
+      "superType": "particlePhysicsModifier",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "javaScriptModifier",
+      "superType": "particleModifier",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "pathModifier",
+      "superType": "particlePhysicsModifier",
+      "attributeCount": 16,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "turbulenceModifier",
+      "superType": "particlePhysicsModifier",
+      "attributeCount": 6,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "flowFieldModifier",
+      "superType": "particlePhysicsModifier",
+      "attributeCount": 8,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "speedModifier",
+      "superType": "particlePhysicsModifier",
+      "attributeCount": 7,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "goalModifier",
+      "superType": "particlePhysicsModifier",
+      "attributeCount": 10,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "dataModifier",
+      "superType": "particleModifier",
+      "attributeCount": 14,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "particleShape",
+      "superType": "shape",
+      "attributeCount": 47,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "particleEmitter",
+      "superType": "particleEmitterBase",
+      "attributeCount": 21,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "distributionEmitter",
+      "superType": "particleEmitterBase",
+      "attributeCount": 8,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "javaScriptEmitter",
+      "superType": "particleEmitterBase",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "sound",
+      "superType": "behaviour",
+      "attributeCount": 26,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "flare",
+      "superType": "behaviour",
+      "attributeCount": 6,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "behaviourMixer",
+      "superType": "behaviourBase",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "bend",
+      "superType": "behaviourBase",
+      "attributeCount": 11,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "squashAndStretch",
+      "superType": "behaviourBase",
+      "attributeCount": 13,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "squetch",
+      "superType": "behaviour",
+      "attributeCount": 5,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "frame",
+      "superType": "behaviour",
+      "attributeCount": 9,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "materialBehaviourColor",
+      "superType": "materialBehaviourBase",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "materialBehaviourAlpha",
+      "superType": "materialBehaviourBase",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "materialBehaviourSwapColor",
+      "superType": "materialBehaviourBase",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "materialBehaviourHSV",
+      "superType": "materialBehaviourBase",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "applyDistribution",
+      "superType": "behaviourBase",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "subMesh",
+      "superType": "behaviour",
+      "attributeCount": 24,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "bevel",
+      "superType": "behaviour",
+      "attributeCount": 7,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "boolean",
+      "superType": "behaviourBase",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "colorMaterial",
+      "superType": "material",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "strokeMaterial",
+      "superType": "material",
+      "attributeCount": 28,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "strokeDuplicator",
+      "superType": "material",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "extrude",
+      "superType": "shape",
+      "attributeCount": 9,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "voxelize",
+      "superType": "behaviourBase",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "modulate",
+      "superType": "behaviour",
+      "attributeCount": 8,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "value",
+      "superType": "behaviour",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "value2",
+      "superType": "behaviour",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "value3",
+      "superType": "behaviour",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "areaRange",
+      "superType": "behaviourBase",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "areaRangeBase",
+      "superType": "remapper",
+      "attributeCount": 4,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set inside a range/remap operator chain",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "align",
+      "superType": "behaviour",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "autoCrop",
+      "superType": "behaviour",
+      "attributeCount": 7,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "autoAnimate",
+      "superType": "behaviourBase",
+      "attributeCount": 43,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "lookAt",
+      "superType": "behaviour",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "round",
+      "superType": "behaviour",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "addDivisions",
+      "superType": "behaviourBase",
+      "attributeCount": 7,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "distance",
+      "superType": "behaviour",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "getVector",
+      "superType": "behaviourBase",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "colorBlend",
+      "superType": "behaviour",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "morph",
+      "superType": "behaviour",
+      "attributeCount": 6,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "valueBlend",
+      "superType": "behaviour",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "value2Blend",
+      "superType": "behaviour",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "value3Blend",
+      "superType": "behaviour",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "positionBlend",
+      "superType": "behaviour",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "rubberHoseLimb",
+      "superType": "behaviourBase",
+      "attributeCount": 13,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "materialSampler",
+      "superType": "behaviour",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "imageSampler",
+      "superType": "drawable",
+      "attributeCount": 12,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "skew",
+      "superType": "behaviourBase",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "triangulate",
+      "superType": "behaviourBase",
+      "attributeCount": 0,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "pinch",
+      "superType": "behaviourBase",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "curvesToLines",
+      "superType": "behaviourBase",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "pushAlongVector",
+      "superType": "behaviour",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "blendSubMeshPositionsLegacy",
+      "superType": "behaviourBase",
+      "attributeCount": 6,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "blendSubMeshPositions",
+      "superType": "behaviourBase",
+      "attributeCount": 8,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "manipulator",
+      "superType": "behaviour",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "3dMatrix",
+      "superType": "behaviour",
+      "attributeCount": 10,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "spring",
+      "superType": "behaviour",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "visibility",
+      "superType": "behaviourBase",
+      "attributeCount": 7,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "extendOpenPaths",
+      "superType": "behaviourBase",
+      "attributeCount": 12,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "colorShader",
+      "superType": "shader",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "slaShader",
+      "superType": "shader",
+      "attributeCount": 14,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "skslShader",
+      "superType": "shader",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "multiPointGradientShader",
+      "superType": "shader",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "voronoiShader",
+      "superType": "shader",
+      "attributeCount": 25,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "checkerboardShader",
+      "superType": "shader",
+      "attributeCount": 6,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "gradientShader",
+      "superType": "shader",
+      "attributeCount": 9,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "linearGradientShader",
+      "superType": "gradientOperator",
+      "attributeCount": 6,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a shape's \"fill\"/\"stroke\"/\"material\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "radialGradientShader",
+      "superType": "gradientOperator",
+      "attributeCount": 9,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a shape's \"fill\"/\"stroke\"/\"material\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "shapeGradientShader",
+      "superType": "gradientOperator",
+      "attributeCount": 10,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a shape's \"fill\"/\"stroke\"/\"material\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "sweepGradientShader",
+      "superType": "gradientOperator",
+      "attributeCount": 8,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a shape's \"fill\"/\"stroke\"/\"material\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "imageShader",
+      "superType": "shader",
+      "attributeCount": 24,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "glowFilter",
+      "superType": "filter",
+      "attributeCount": 15,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "thresholdFilter",
+      "superType": "filter",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "grainFilter",
+      "superType": "filter",
+      "attributeCount": 9,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "attribute_set on the generic \"filters\" array attribute present on every layer",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "brightnessAndContrast",
+      "superType": "filter",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "shiftChannels",
+      "superType": "filter",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "blackAndWhite",
+      "superType": "filter",
+      "attributeCount": 7,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "blurFilter",
+      "superType": "filter",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "gaussianBlurFilter",
+      "superType": "filter",
+      "attributeCount": 3,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "attribute_set on the generic \"filters\" array attribute present on every layer",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "backgroundBlurFilter",
+      "superType": "filter",
+      "attributeCount": 6,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "maskBlurFilter",
+      "superType": "filter",
+      "attributeCount": 3,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "attribute_set on the generic \"filters\" array attribute present on every layer",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "dropShadowFilter",
+      "superType": "filter",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "gaussianDropShadowFilter",
+      "superType": "filter",
+      "attributeCount": 4,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "attribute_set on the generic \"filters\" array attribute present on every layer",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "innerShadowFilter",
+      "superType": "filter",
+      "attributeCount": 6,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "conicalGradientShader",
+      "superType": "gradientOperator",
+      "attributeCount": 9,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a shape's \"fill\"/\"stroke\"/\"material\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "conicalGradientShaderLegacy",
+      "superType": "gradientOperator",
+      "attributeCount": 11,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a shape's \"fill\"/\"stroke\"/\"material\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "shapeToShader",
+      "superType": "shader",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "venetianBlinds",
+      "superType": "filter",
+      "attributeCount": 9,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "scrapeFilter",
+      "superType": "filter",
+      "attributeCount": 9,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "triToneFilter",
+      "superType": "filter",
+      "attributeCount": 7,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "stripesFilter",
+      "superType": "filter",
+      "attributeCount": 8,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "attribute_set on the generic \"filters\" array attribute present on every layer",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "pixelSortingFilter",
+      "superType": "filter",
+      "attributeCount": 9,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "levels",
+      "superType": "filter",
+      "attributeCount": 9,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "fill",
+      "superType": "filter",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "linearWipe",
+      "superType": "filter",
+      "attributeCount": 6,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "crtScanLines",
+      "superType": "filter",
+      "attributeCount": 20,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "kitaokaFilter",
+      "superType": "filter",
+      "attributeCount": 17,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "attribute_set on the generic \"filters\" array attribute present on every layer",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "radialWipe",
+      "superType": "filter",
+      "attributeCount": 8,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "hueSaturationLightness",
+      "superType": "filter",
+      "attributeCount": 5,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "attribute_set on the generic \"filters\" array attribute present on every layer",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "invert",
+      "superType": "filter",
+      "attributeCount": 6,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "noiseShader",
+      "superType": "shader",
+      "attributeCount": 23,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "basicShape",
+      "superType": "shape",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "svgShape",
+      "superType": "shape",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "duplicator",
+      "superType": "shape",
+      "attributeCount": 14,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "randomDistribution",
+      "superType": "distribution",
+      "attributeCount": 11,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "gridDistribution",
+      "superType": "distribution",
+      "attributeCount": 5,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "circleDistribution",
+      "superType": "distribution",
+      "attributeCount": 9,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "pointDistribution",
+      "superType": "distribution",
+      "attributeCount": 1,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "mathDistribution",
+      "superType": "distribution",
+      "attributeCount": 3,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "maskDistribution",
+      "superType": "distribution",
+      "attributeCount": 2,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "shuffleDistribution",
+      "superType": "distribution",
+      "attributeCount": 4,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "sortDistribution",
+      "superType": "distribution",
+      "attributeCount": 5,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "arrayDistribution",
+      "superType": "distribution",
+      "attributeCount": 1,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "pathDistribution",
+      "superType": "distribution",
+      "attributeCount": 9,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "shapePointDistribution",
+      "superType": "distribution",
+      "attributeCount": 4,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "shapeEdgeDistribution",
+      "superType": "distribution",
+      "attributeCount": 5,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "epicycloid",
+      "superType": "distribution",
+      "attributeCount": 5,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "roseDistribution",
+      "superType": "distribution",
+      "attributeCount": 4,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "epitrochoid",
+      "superType": "distribution",
+      "attributeCount": 5,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "pointToVector",
+      "superType": "shape",
+      "attributeCount": 3,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create or nested generator_set depending on node (chartShape unresolved, see notes)",
+      "verifiedLive": "partial",
+      "notes": ""
+    },
+    {
+      "nodeType": "shortestPath",
+      "superType": "shape",
+      "attributeCount": 13,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "typeShape",
+      "superType": "shape",
+      "attributeCount": 14,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create or nested generator_set depending on node (chartShape unresolved, see notes)",
+      "verifiedLive": "partial",
+      "notes": ""
+    },
+    {
+      "nodeType": "applyFontSize",
+      "superType": "textStyleBehaviour",
+      "attributeCount": 8,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "applyTypeface",
+      "superType": "textStyleBehaviour",
+      "attributeCount": 9,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "applyCharacterSpacing",
+      "superType": "textStyleBehaviour",
+      "attributeCount": 1,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "applyFontStyle",
+      "superType": "textStyleBehaviour",
+      "attributeCount": 10,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "applyOpenType",
+      "superType": "textStyleBehaviour",
+      "attributeCount": 8,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "applyTextFill",
+      "superType": "textMaterialBehaviour",
+      "attributeCount": 9,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Text layer's fill-behaviour slot",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "applyTextMaterial",
+      "superType": "textMaterialBehaviour",
+      "attributeCount": 14,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "textShape",
+      "superType": "shape",
+      "attributeCount": 47,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "customShape",
+      "superType": "shape",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "isolinesShape",
+      "superType": "shape",
+      "attributeCount": 12,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "celAnimationShape",
+      "superType": "editableShape",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "shapeOffset",
+      "superType": "shape",
+      "attributeCount": 4,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create or nested generator_set depending on node (chartShape unresolved, see notes)",
+      "verifiedLive": "partial",
+      "notes": ""
+    },
+    {
+      "nodeType": "textHash",
+      "superType": "textEngine",
+      "attributeCount": 3,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Text layer's text-source slot",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "textDate",
+      "superType": "textEngine",
+      "attributeCount": 6,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Text layer's text-source slot",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "textBlockUnicode",
+      "superType": "textEngine",
+      "attributeCount": 10,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Text layer's text-source slot",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "textFormatted",
+      "superType": "textEngine",
+      "attributeCount": 2,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Text layer's text-source slot",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "textHex",
+      "superType": "textEngine",
+      "attributeCount": 4,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Text layer's text-source slot",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "textValue",
+      "superType": "textEngine",
+      "attributeCount": 6,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Text layer's text-source slot",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "textNumber",
+      "superType": "textEngine",
+      "attributeCount": 10,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Text layer's text-source slot",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "formattedDateAndTime",
+      "superType": "textEngine",
+      "attributeCount": 2,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Text layer's text-source slot",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "imageToShapes",
+      "superType": "shape",
+      "attributeCount": 6,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "basicLine",
+      "superType": "shape",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "outline",
+      "superType": "shape",
+      "attributeCount": 18,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "linearDistribution",
+      "superType": "distribution",
+      "attributeCount": 4,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "customDistribution",
+      "superType": "distribution",
+      "attributeCount": 1,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "meshDistribution",
+      "superType": "distribution",
+      "attributeCount": 10,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "particleDistribution",
+      "superType": "distribution",
+      "attributeCount": 1,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "fibonacciDistribution",
+      "superType": "distribution",
+      "attributeCount": 3,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "rectangleShape",
+      "superType": "primitive",
+      "attributeCount": 9,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create_primitive with an arbitrary primitiveType string",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "polygonShape",
+      "superType": "primitive",
+      "attributeCount": 3,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create_primitive with an arbitrary primitiveType string",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "ellipseShape",
+      "superType": "primitive",
+      "attributeCount": 4,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create_primitive with an arbitrary primitiveType string",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "circleShape",
+      "superType": "primitive",
+      "attributeCount": 2,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create_primitive with an arbitrary primitiveType string",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "starShape",
+      "superType": "primitive",
+      "attributeCount": 6,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create_primitive with an arbitrary primitiveType string",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "superEllipseShape",
+      "superType": "primitive",
+      "attributeCount": 4,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create_primitive with an arbitrary primitiveType string",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "superShape",
+      "superType": "primitive",
+      "attributeCount": 8,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create_primitive with an arbitrary primitiveType string",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "squircleShape",
+      "superType": "primitive",
+      "attributeCount": 5,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create_primitive with an arbitrary primitiveType string",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "ringShape",
+      "superType": "primitive",
+      "attributeCount": 3,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create_primitive with an arbitrary primitiveType string",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "arcShape",
+      "superType": "primitive",
+      "attributeCount": 6,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create_primitive with an arbitrary primitiveType string",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "capsuleShape",
+      "superType": "primitive",
+      "attributeCount": 8,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create_primitive with an arbitrary primitiveType string",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "connectShape",
+      "superType": "shape",
+      "attributeCount": 18,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "simpleLine",
+      "superType": "lineGenerator",
+      "attributeCount": 2,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Line layer's path-generator slot",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "spiralLine",
+      "superType": "lineGenerator",
+      "attributeCount": 5,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Line layer's path-generator slot",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "bezierLine",
+      "superType": "lineGenerator",
+      "attributeCount": 4,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Line layer's path-generator slot",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "rayLine",
+      "superType": "shape",
+      "attributeCount": 7,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "voxelizeDistribution",
+      "superType": "distribution",
+      "attributeCount": 4,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "patternShape",
+      "superType": "shape",
+      "attributeCount": 7,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create or nested generator_set depending on node (chartShape unresolved, see notes)",
+      "verifiedLive": "partial",
+      "notes": ""
+    },
+    {
+      "nodeType": "boundingBoxShape",
+      "superType": "shape",
+      "attributeCount": 5,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create or nested generator_set depending on node (chartShape unresolved, see notes)",
+      "verifiedLive": "partial",
+      "notes": ""
+    },
+    {
+      "nodeType": "testFft",
+      "superType": "shape",
+      "attributeCount": 1,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create or nested generator_set depending on node (chartShape unresolved, see notes)",
+      "verifiedLive": "partial",
+      "notes": ""
+    },
+    {
+      "nodeType": "backgroundShape",
+      "superType": "shape",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "footageShape",
+      "superType": "shape",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "meshShape",
+      "superType": "shape",
+      "attributeCount": 12,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "trails",
+      "superType": "shape",
+      "attributeCount": 10,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "convexHull",
+      "superType": "shape",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "cornerPinShape",
+      "superType": "shape",
+      "attributeCount": 11,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "pointsToCurve",
+      "superType": "shape",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "quadTreeShape",
+      "superType": "shape",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "transformDistribution",
+      "superType": "connectDistribution",
+      "attributeCount": 1,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Duplicator \"generator\" slot",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "intersectionDistribution",
+      "superType": "connectDistribution",
+      "attributeCount": 1,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Duplicator \"generator\" slot",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "cogwheelShape",
+      "superType": "primitive",
+      "attributeCount": 7,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create_primitive with an arbitrary primitiveType string",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "cogwheelGearShape",
+      "superType": "primitive",
+      "attributeCount": 5,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create_primitive with an arbitrary primitiveType string",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "arrowShape",
+      "superType": "primitive",
+      "attributeCount": 4,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create_primitive with an arbitrary primitiveType string",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "basicArrowHead",
+      "superType": "arrowHead",
+      "attributeCount": 3,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Line/Path layer's arrow-head slot",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "chevronHead",
+      "superType": "arrowHead",
+      "attributeCount": 4,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Line/Path layer's arrow-head slot",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "barbedHead",
+      "superType": "arrowHead",
+      "attributeCount": 3,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Line/Path layer's arrow-head slot",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "circleHead",
+      "superType": "arrowHead",
+      "attributeCount": 3,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Line/Path layer's arrow-head slot",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "boxHead",
+      "superType": "arrowHead",
+      "attributeCount": 3,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Line/Path layer's arrow-head slot",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "textTimecode",
+      "superType": "textEngine",
+      "attributeCount": 4,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Text layer's text-source slot",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "numberRangeBase",
+      "superType": "remapper",
+      "attributeCount": 8,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set inside a range/remap operator chain",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "numberRange",
+      "superType": "behaviourBase",
+      "attributeCount": 9,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "numberRangeToColorBase",
+      "superType": "remapper",
+      "attributeCount": 5,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set inside a range/remap operator chain",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "numberRangeToColor",
+      "superType": "behaviourBase",
+      "attributeCount": 6,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "cleanUp",
+      "superType": "behaviourBase",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "contoursToSubMeshes",
+      "superType": "behaviourBase",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "resamplePath",
+      "superType": "behaviourBase",
+      "attributeCount": 7,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "meshBehaviour",
+      "superType": "behaviourBase",
+      "attributeCount": 2,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "measure",
+      "superType": "atomic",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "pathLength",
+      "superType": "atomic",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "stringManipulator",
+      "superType": "atomic",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "stringGenerator",
+      "superType": "atomic",
+      "attributeCount": 7,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "contextIndex",
+      "superType": "atomic",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "layerSeed",
+      "superType": "atomic",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "secondsToFrames",
+      "superType": "atomic",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "shuffleString",
+      "superType": "stringOperator",
+      "attributeCount": 15,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set inside a String layer's operator chain",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "resizeString",
+      "superType": "stringOperator",
+      "attributeCount": 10,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set inside a String layer's operator chain",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "replaceString",
+      "superType": "stringOperator",
+      "attributeCount": 2,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set inside a String layer's operator chain",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "changeStringCase",
+      "superType": "stringOperator",
+      "attributeCount": 3,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set inside a String layer's operator chain",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "concatenateStringArray",
+      "superType": "stringOperator",
+      "attributeCount": 4,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set inside a String layer's operator chain",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "subString",
+      "superType": "stringOperator",
+      "attributeCount": 3,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set inside a String layer's operator chain",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "regexString",
+      "superType": "stringOperator",
+      "attributeCount": 2,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set inside a String layer's operator chain",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "unicodeManipulator",
+      "superType": "stringOperator",
+      "attributeCount": 11,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set inside a String layer's operator chain",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "transitionString",
+      "superType": "stringOperator",
+      "attributeCount": 5,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set inside a String layer's operator chain",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "string",
+      "superType": "atomic",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "localTime",
+      "superType": "atomic",
+      "attributeCount": 6,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "component",
+      "superType": "group",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "boundingBox",
+      "superType": "atomic",
+      "attributeCount": 7,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "radius",
+      "superType": "atomic",
+      "attributeCount": 8,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "assetArray",
+      "superType": "indexableArray",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "arrayManipulator",
+      "superType": "atomic",
+      "attributeCount": 2,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set or attribute_set depending on host node; audioTrack via cavalry_audio ops",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "resizeArray",
+      "superType": "arrayOperator",
+      "attributeCount": 1,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set inside an array-processing operator chain",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "sortArray",
+      "superType": "arrayOperator",
+      "attributeCount": 3,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set inside an array-processing operator chain",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "shuffleArray",
+      "superType": "arrayOperator",
+      "attributeCount": 1,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set inside an array-processing operator chain",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "manipulateArray",
+      "superType": "arrayOperator",
+      "attributeCount": 1,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set inside an array-processing operator chain",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "fillRule",
+      "superType": "behaviourBase",
+      "attributeCount": 1,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "subdivide",
+      "superType": "behaviourBase",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "compConstraint",
+      "superType": "atomic",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "stringArray",
+      "superType": "indexableArray",
+      "attributeCount": 6,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "flattenShapeLayers",
+      "superType": "behaviourBase",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "pathOffsetBehaviour",
+      "superType": "behaviourBase",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "null",
+      "superType": "drawable",
+      "attributeCount": 15,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "componentConstraint",
+      "superType": "atomic",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "transformConstraint",
+      "superType": "atomic",
+      "attributeCount": 10,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "latticeController",
+      "superType": "atomic",
+      "attributeCount": 9,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "isWithin",
+      "superType": "behaviourBase",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "envilopeDistort",
+      "superType": "behaviourBase",
+      "attributeCount": 3,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "mergeShape",
+      "superType": "shape",
+      "attributeCount": 6,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "getLayerName",
+      "superType": "atomic",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "pointConstraint",
+      "superType": "constraintOperator",
+      "attributeCount": 7,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a constraint slot (same pattern as distribution/fill slots)",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "edgeConstraint",
+      "superType": "constraintOperator",
+      "attributeCount": 8,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a constraint slot (same pattern as distribution/fill slots)",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "shaderArray",
+      "superType": "indexableArray",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "shapeArray",
+      "superType": "indexableArray",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "editablePathArray",
+      "superType": "indexableArray",
+      "attributeCount": 2,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "attribute_set on generic array-typed attributes",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "gradientBuilder",
+      "superType": "atomic",
+      "attributeCount": 6,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set or attribute_set depending on host node; audioTrack via cavalry_audio ops",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "blendShape",
+      "superType": "behaviourBase",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "simpleMeshSolver",
+      "superType": "behaviourBase",
+      "attributeCount": 5,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "simpleValue2Solver",
+      "superType": "behaviourBase",
+      "attributeCount": 14,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "simpleValueSolver",
+      "superType": "behaviourBase",
+      "attributeCount": 14,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "accumulator",
+      "superType": "atomic",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "gradientStopArray",
+      "superType": "indexableArray",
+      "attributeCount": 5,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "attribute_set on generic array-typed attributes",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "growthSolver",
+      "superType": "atomic",
+      "attributeCount": 6,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set or attribute_set depending on host node; audioTrack via cavalry_audio ops",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "lengthContext",
+      "superType": "atomic",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "typeface",
+      "superType": "atomic",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "typefaceArray",
+      "superType": "indexableArray",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "velocityContext",
+      "superType": "atomic",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "velocityMagnitudeContext",
+      "superType": "atomic",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "sequence",
+      "superType": "atomic",
+      "attributeCount": 10,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "horizontalLayout",
+      "superType": "layoutItem",
+      "attributeCount": 8,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create (Layout Group children)",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "verticalLayout",
+      "superType": "layoutItem",
+      "attributeCount": 8,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create (Layout Group children)",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "gridLayout",
+      "superType": "layoutItem",
+      "attributeCount": 12,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create (Layout Group children)",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "layoutShape",
+      "superType": "shape",
+      "attributeCount": 4,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create or nested generator_set depending on node (chartShape unresolved, see notes)",
+      "verifiedLive": "partial",
+      "notes": ""
+    },
+    {
+      "nodeType": "spacerItem",
+      "superType": "shape",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "applyLayout",
+      "superType": "behaviourBase",
+      "attributeCount": 7,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "stringLength",
+      "superType": "atomic",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "lineRectPatternGenerator",
+      "superType": "rectPatternItem",
+      "attributeCount": 6,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set inside a Rectangle Pattern generator chain",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "ringRectPatternGenerator",
+      "superType": "rectPatternItem",
+      "attributeCount": 6,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set inside a Rectangle Pattern generator chain",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "bentoShape",
+      "superType": "shape",
+      "attributeCount": 12,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create or nested generator_set depending on node (chartShape unresolved, see notes)",
+      "verifiedLive": "partial",
+      "notes": ""
+    },
+    {
+      "nodeType": "rectPatternShape",
+      "superType": "shape",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "colorInfo",
+      "superType": "atomic",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "contrastingColor",
+      "superType": "atomic",
+      "attributeCount": 6,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "hsvColor",
+      "superType": "atomic",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "subBoundingBox",
+      "superType": "shape",
+      "attributeCount": 10,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "getSubMeshTransform",
+      "superType": "atomic",
+      "attributeCount": 9,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "countSubMeshes",
+      "superType": "atomic",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "wave",
+      "superType": "behaviour",
+      "attributeCount": 7,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "stitches",
+      "superType": "behaviourBase",
+      "attributeCount": 6,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "knot",
+      "superType": "behaviourBase",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "toonOutlines",
+      "superType": "behaviourBase",
+      "attributeCount": 8,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "chopPath",
+      "superType": "behaviourBase",
+      "attributeCount": 8,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "segmentPath",
+      "superType": "shape",
+      "attributeCount": 9,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "extractSubMeshes",
+      "superType": "shape",
+      "attributeCount": 6,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "forgeDynamicsShape",
+      "superType": "shape",
+      "attributeCount": 28,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "forgeBodyAuxiliary",
+      "superType": "atomic",
+      "attributeCount": 2,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set or attribute_set depending on host node; audioTrack via cavalry_audio ops",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "pinConstraint",
+      "superType": "forgeConstraint",
+      "attributeCount": 16,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "distanceConstraint",
+      "superType": "forgeConstraint",
+      "attributeCount": 15,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "bridgeConstraint",
+      "superType": "forgeConstraint",
+      "attributeCount": 11,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "directionField",
+      "superType": "dynamicField",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "dragField",
+      "superType": "dynamicField",
+      "attributeCount": 1,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "attractorField",
+      "superType": "dynamicField",
+      "attributeCount": 0,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "vortexField",
+      "superType": "dynamicField",
+      "attributeCount": 8,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "buoyancyField",
+      "superType": "dynamicField",
+      "attributeCount": 12,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "pathField",
+      "superType": "dynamicField",
+      "attributeCount": 11,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "colorCollisionEvent",
+      "superType": "collisionEvent",
+      "attributeCount": 13,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "impulseCollisionEvent",
+      "superType": "collisionEvent",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "stickyCollisionEvent",
+      "superType": "collisionEvent",
+      "attributeCount": 6,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "bodySettingCollisionEvent",
+      "superType": "collisionEvent",
+      "attributeCount": 20,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "visibilityCollisionEvent",
+      "superType": "collisionEvent",
+      "attributeCount": 10,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "skslFilter",
+      "superType": "filter",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "pixelateFilter",
+      "superType": "filter",
+      "attributeCount": 6,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "rgbSplitFilter",
+      "superType": "filter",
+      "attributeCount": 15,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "posterizeFilter",
+      "superType": "filter",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "vignetteFilter",
+      "superType": "filter",
+      "attributeCount": 12,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "slitScanFilter",
+      "superType": "filter",
+      "attributeCount": 12,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "gradientMapFilter",
+      "superType": "filter",
+      "attributeCount": 9,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "gradientFilter",
+      "superType": "filter",
+      "attributeCount": 9,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "attribute_set on the generic \"filters\" array attribute present on every layer",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "mirrorFilter",
+      "superType": "filter",
+      "attributeCount": 9,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "hsvAdjustmentFilter",
+      "superType": "filter",
+      "attributeCount": 8,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "gammaCorrectionFilter",
+      "superType": "filter",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "sharpenFilter",
+      "superType": "filter",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "motionBlurFilter",
+      "superType": "filter",
+      "attributeCount": 6,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "attribute_set on the generic \"filters\" array attribute present on every layer",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "edgeDetection",
+      "superType": "filter",
+      "attributeCount": 10,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "frostedGlassFilter",
+      "superType": "filter",
+      "attributeCount": 6,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "attribute_set on the generic \"filters\" array attribute present on every layer",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "halftoneLegacyFilter",
+      "superType": "filter",
+      "attributeCount": 12,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "attribute_set on the generic \"filters\" array attribute present on every layer",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "halftoneFilter",
+      "superType": "filter",
+      "attributeCount": 25,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "blendShader",
+      "superType": "shader",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "ditheringFilter",
+      "superType": "filter",
+      "attributeCount": 22,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "distortionFilter",
+      "superType": "filter",
+      "attributeCount": 17,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "distortEdges",
+      "superType": "filter",
+      "attributeCount": 10,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "chromaticDisplacement",
+      "superType": "filter",
+      "attributeCount": 14,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "attribute_set on the generic \"filters\" array attribute present on every layer",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "displacementUtility",
+      "superType": "drawable",
+      "attributeCount": 4,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create (compNode) or generator_set for bone/skeleton/displacement children",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "chromaticAberrationFilter",
+      "superType": "filter",
+      "attributeCount": 22,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "travel",
+      "superType": "behaviourBase",
+      "attributeCount": 1,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "reversePathUtility",
+      "superType": "behaviourBase",
+      "attributeCount": 1,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "normalizePathUtility",
+      "superType": "behaviourBase",
+      "attributeCount": 2,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "removeContoursUtility",
+      "superType": "behaviourBase",
+      "attributeCount": 2,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "javaScriptShape",
+      "superType": "shape",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "javaScriptDeformer",
+      "superType": "behaviourBase",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "stringFromAsset",
+      "superType": "atomic",
+      "attributeCount": 2,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "timeMarkerFolder",
+      "superType": "hiddenFolder",
+      "attributeCount": 1,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "internal grouping node created implicitly by keyframe/marker folder operations",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "timeMarker",
+      "superType": null,
+      "attributeCount": 13,
+      "liveTopLevelLayer": false,
+      "coverage": "STRUCTURED_MCP",
+      "via": "dedicated ops already exist per node (palette/colorSwatch via asset ops, renderQueue via render_queue_*, timeMarker via marker_*, animationCurveBase via graph_* )",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "keyframe",
+      "superType": "molecule",
+      "attributeCount": 5,
+      "liveTopLevelLayer": false,
+      "coverage": "STRUCTURED_MCP",
+      "via": "keyframe_* ops (keyframe is the base unit those ops already manipulate)",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "schedulingGroup",
+      "superType": "element",
+      "attributeCount": 12,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "layoutGroup",
+      "superType": "layoutGroupBase",
+      "attributeCount": 10,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "gridLayoutGroup",
+      "superType": "layoutGroupBase",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "gridLayoutRow",
+      "superType": "layoutGroupBase",
+      "attributeCount": 5,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "visibilityCurve",
+      "superType": "animationCurveBase",
+      "attributeCount": 3,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "internal children of keyframe/graph attribute ops (graph_get/graph_set)",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "bone",
+      "superType": "drawable",
+      "attributeCount": 9,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create (compNode) or generator_set for bone/skeleton/displacement children",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "inverseKinematicsControl",
+      "superType": "null",
+      "attributeCount": 8,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a Rig Control's IK-control slot (Cavalry's schema literally records this node's superType as the string \"null\")",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "skeleton",
+      "superType": "drawable",
+      "attributeCount": 6,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create (compNode) or generator_set for bone/skeleton/displacement children",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "skinning",
+      "superType": "behaviourBase",
+      "attributeCount": 3,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "timelineCounter",
+      "superType": "atomic",
+      "attributeCount": 15,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "pieChart",
+      "superType": "chartEngine",
+      "attributeCount": 11,
+      "liveTopLevelLayer": false,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create with layerType barChart/pieChart directly",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "barChart",
+      "superType": "chartEngine",
+      "attributeCount": 9,
+      "liveTopLevelLayer": false,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create with layerType barChart/pieChart directly",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "chartShape",
+      "superType": "shape",
+      "attributeCount": 2,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "layer_create or nested generator_set depending on node (chartShape unresolved, see notes)",
+      "verifiedLive": "partial",
+      "notes": ""
+    },
+    {
+      "nodeType": "timeStepFilter",
+      "superType": "filter",
+      "attributeCount": 2,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "attribute_set on the generic \"filters\" array attribute present on every layer",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "sdfShadow",
+      "superType": "filter",
+      "attributeCount": 6,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "attribute_set on the generic \"filters\" array attribute present on every layer",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "luminanceBlur",
+      "superType": "filter",
+      "attributeCount": 7,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "pathRelax",
+      "superType": "behaviour",
+      "attributeCount": 4,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "pathAverage",
+      "superType": "behaviour",
+      "attributeCount": 3,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "pointDisplace",
+      "superType": "behaviour",
+      "attributeCount": 5,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "pathSplit",
+      "superType": "behaviour",
+      "attributeCount": 18,
+      "liveTopLevelLayer": false,
+      "coverage": "GENERIC_MCP",
+      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
+      "verifiedLive": false,
+      "notes": ""
+    },
+    {
+      "nodeType": "meshSolver",
+      "superType": "behaviourBase",
+      "attributeCount": 10,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "lattice",
+      "superType": "behaviour",
+      "attributeCount": 9,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    },
+    {
+      "nodeType": "fourPointWarp",
+      "superType": "behaviour",
+      "attributeCount": 9,
+      "liveTopLevelLayer": true,
+      "coverage": "STRUCTURED_MCP",
+      "via": "layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())",
+      "verifiedLive": true,
+      "notes": ""
+    }
+  ]
+}
