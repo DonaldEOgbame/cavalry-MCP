@@ -2,27 +2,219 @@
   "schemaVersion": 1,
   "supportedCavalryVersion": "2.7.2",
   "definitionValidation": "PASS against installed nodeDefinitions.json",
-  "liveRenderValidation": "BLOCKED because the Cavalry bridge was offline during this audit; no format is claimed live-verified",
+  "liveRenderValidation": "LIVE: 12/14 formats fully verified (rendered + ffprobe/format-specific validation passed), 2 classified as known Cavalry 2.7.2 platform limitations, 0 failed. Generated 2026-09-20T13:56:31.917Z by scripts/live-render-format-sweep.ts. See docs/coverage.md for the HEVC/ProRes audio-export limitation writeup.",
   "formats": {
-    "APNG": { "nodeType": "renderAPNG", "coverage": "Generic attribute control" },
-    "Audio Only": { "nodeType": "renderAudioOnly", "coverage": "Generic attribute control" },
-    "GIF": { "nodeType": "renderGIF", "coverage": "Generic attribute control" },
-    "JPEG": { "nodeType": "renderJPEG", "coverage": "Generic attribute control" },
-    "Lottie": { "nodeType": "renderLottie", "coverage": "Generic attribute control" },
-    "MP4": { "nodeType": "renderMP4", "coverage": "Generic attribute control" },
-    "PNG": { "nodeType": "renderPNG", "coverage": "Generic attribute control" },
-    "QuickTime": { "nodeType": "renderQuicktime", "coverage": "Generic attribute control" },
-    "SVG": { "nodeType": "renderSVG", "coverage": "Generic attribute control" },
-    "Sprite Sheet": { "nodeType": "renderSpriteSheet", "coverage": "Generic attribute control" },
-    "WebP": { "nodeType": "renderWebP", "coverage": "Generic attribute control" },
-    "WebM": { "nodeType": "renderWebM", "coverage": "Generic attribute control" },
-    "HEVC": { "nodeType": "renderHVEC", "coverage": "Generic attribute control", "notes": "Installed Cavalry 2.7.2 metadata uses the node type spelling renderHVEC." },
-    "ProRes": { "nodeType": "renderProRes", "coverage": "Generic attribute control" }
+    "APNG": {
+      "nodeType": "renderAPNG",
+      "coverage": "Generic attribute control",
+      "liveVerified": true,
+      "liveStatus": "PASS",
+      "liveEvidence": {
+        "sizeBytes": 3556,
+        "durationMs": 1388,
+        "container": "apng",
+        "videoCodec": "apng",
+        "width": 320,
+        "height": 180
+      }
+    },
+    "Audio Only": {
+      "nodeType": "renderAudioOnly",
+      "coverage": "Generic attribute control",
+      "liveVerified": true,
+      "liveStatus": "PASS",
+      "liveEvidence": {
+        "sizeBytes": 8961,
+        "durationMs": 1375,
+        "container": "aac",
+        "audioCodec": "aac"
+      }
+    },
+    "GIF": {
+      "nodeType": "renderGIF",
+      "coverage": "Generic attribute control",
+      "liveVerified": true,
+      "liveStatus": "PASS",
+      "liveEvidence": {
+        "sizeBytes": 13245,
+        "durationMs": 1374,
+        "container": "gif",
+        "videoCodec": "gif",
+        "width": 320,
+        "height": 180
+      }
+    },
+    "JPEG": {
+      "nodeType": "renderJPEG",
+      "coverage": "Generic attribute control",
+      "liveVerified": true,
+      "liveStatus": "PASS",
+      "liveEvidence": {
+        "sizeBytes": 6230,
+        "durationMs": 1383,
+        "container": "image2",
+        "videoCodec": "mjpeg",
+        "width": 320,
+        "height": 180
+      }
+    },
+    "Lottie": {
+      "nodeType": "renderLottie",
+      "coverage": "Generic attribute control",
+      "liveVerified": true,
+      "liveStatus": "PASS",
+      "liveEvidence": {
+        "sizeBytes": 1431,
+        "durationMs": 1413,
+        "container": "lottie-json",
+        "width": 320,
+        "height": 180
+      }
+    },
+    "MP4": {
+      "nodeType": "renderMP4",
+      "coverage": "Generic attribute control",
+      "liveVerified": true,
+      "liveStatus": "PASS",
+      "liveEvidence": {
+        "sizeBytes": 15175,
+        "durationMs": 1428,
+        "container": "mov,mp4,m4a,3gp,3g2,mj2",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "width": 320,
+        "height": 180
+      }
+    },
+    "PNG": {
+      "nodeType": "renderPNG",
+      "coverage": "Generic attribute control",
+      "liveVerified": true,
+      "liveStatus": "PASS",
+      "liveEvidence": {
+        "sizeBytes": 231043,
+        "durationMs": 1390,
+        "container": "png_pipe",
+        "videoCodec": "png",
+        "width": 320,
+        "height": 180
+      }
+    },
+    "QuickTime": {
+      "nodeType": "renderQuicktime",
+      "coverage": "Generic attribute control",
+      "liveVerified": true,
+      "liveStatus": "PASS",
+      "liveEvidence": {
+        "sizeBytes": 149070,
+        "durationMs": 1416,
+        "container": "mov,mp4,m4a,3gp,3g2,mj2",
+        "videoCodec": "prores",
+        "audioCodec": "aac",
+        "width": 320,
+        "height": 180
+      }
+    },
+    "SVG": {
+      "nodeType": "renderSVG",
+      "coverage": "Generic attribute control",
+      "liveVerified": true,
+      "liveStatus": "PASS",
+      "liveEvidence": {
+        "sizeBytes": 523,
+        "durationMs": 1342,
+        "container": "svg-xml"
+      }
+    },
+    "Sprite Sheet": {
+      "nodeType": "renderSpriteSheet",
+      "coverage": "Generic attribute control",
+      "liveVerified": true,
+      "liveStatus": "PASS",
+      "liveEvidence": {
+        "sizeBytes": 18181,
+        "durationMs": 1419,
+        "container": "png_pipe",
+        "videoCodec": "png",
+        "width": 1293,
+        "height": 733
+      }
+    },
+    "WebP": {
+      "nodeType": "renderWebP",
+      "coverage": "Generic attribute control",
+      "liveVerified": true,
+      "liveStatus": "PASS",
+      "liveEvidence": {
+        "sizeBytes": 3004,
+        "durationMs": 1427,
+        "container": "webp_pipe",
+        "videoCodec": "webp",
+        "width": 320,
+        "height": 180
+      }
+    },
+    "WebM": {
+      "nodeType": "renderWebM",
+      "coverage": "Generic attribute control",
+      "liveVerified": true,
+      "liveStatus": "PASS",
+      "liveEvidence": {
+        "sizeBytes": 10382,
+        "durationMs": 1473,
+        "container": "matroska,webm",
+        "videoCodec": "vp9",
+        "audioCodec": "vorbis",
+        "width": 320,
+        "height": 180
+      }
+    },
+    "HEVC": {
+      "nodeType": "renderHVEC",
+      "coverage": "Generic attribute control",
+      "notes": "Installed Cavalry 2.7.2 metadata uses the node type spelling renderHVEC.",
+      "liveVerified": false,
+      "liveStatus": "KNOWN_LIMITATION",
+      "liveEvidence": {
+        "sizeBytes": 4553,
+        "durationMs": 1431,
+        "container": "mov,mp4,m4a,3gp,3g2,mj2",
+        "videoCodec": "hevc",
+        "width": 320,
+        "height": 180
+      },
+      "liveNotes": "This generator does not expose exportAudio at runtime in Cavalry 2.7.2, despite inheriting it from the renderFormatWithAudio schema supertype (confirmed via render_item_inspect: MP4/QuickTime/WebM correctly expose and honor generator.exportAudio; HEVC/ProRes generators do not list it among their live attributes at all)."
+    },
+    "ProRes": {
+      "nodeType": "renderProRes",
+      "coverage": "Generic attribute control",
+      "liveVerified": false,
+      "liveStatus": "KNOWN_LIMITATION",
+      "liveEvidence": {
+        "sizeBytes": 181285,
+        "durationMs": 1394,
+        "container": "mov,mp4,m4a,3gp,3g2,mj2",
+        "videoCodec": "prores",
+        "width": 320,
+        "height": 180
+      },
+      "liveNotes": "This generator does not expose exportAudio at runtime in Cavalry 2.7.2, despite inheriting it from the renderFormatWithAudio schema supertype (confirmed via render_item_inspect: MP4/QuickTime/WebM correctly expose and honor generator.exportAudio; HEVC/ProRes generators do not list it among their live attributes at all)."
+    }
   },
   "codecControls": {
-    "ProRes variants": { "coverage": "Generic attribute control", "notes": "Discovered from the active render generator definition." },
-    "alpha and bit depth": { "coverage": "Generic attribute control" },
-    "compression and bitrate": { "coverage": "Generic attribute control" },
-    "audio quality and sample rate": { "coverage": "Generic attribute control" }
-  }
+    "ProRes variants": {
+      "coverage": "Generic attribute control",
+      "notes": "Discovered from the active render generator definition."
+    },
+    "alpha and bit depth": {
+      "coverage": "Generic attribute control"
+    },
+    "compression and bitrate": {
+      "coverage": "Generic attribute control"
+    },
+    "audio quality and sample rate": {
+      "coverage": "Generic attribute control"
+    }
+  },
+  "liveSweepGeneratedAt": "2026-09-20T13:56:31.917Z"
 }

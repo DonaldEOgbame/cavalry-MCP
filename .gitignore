@@ -7,3 +7,4 @@ tmp/
 cavalry-previews/
 knowledge/generated/*
 !knowledge/generated/.gitkeep
+coverage/render-format-sweep-output/

@@ -44,4 +44,19 @@ describe('parity coverage records', () => {
     assert.equal(data.nodes.length, data.concreteNodeTypes);
     assert.ok(data.nodes.every((entry: any) => entry.coverage !== 'UNKNOWN'));
   });
+
+  it('leaves no render format with an unexplained live-verification gap', async (context) => {
+    const matrix = JSON.parse(await readFile(resolve('coverage/render-formats.json'), 'utf8'));
+    const entries = Object.entries(matrix.formats) as [string, any][];
+    if (!entries.some(([, v]) => 'liveStatus' in v)) {
+      context.skip('Render formats have not been live-swept on this host (run npm run coverage:render-sweep)');
+      return;
+    }
+    const unexplained = entries.filter(([, v]) => {
+      if (v.liveStatus === 'PASS') return false;
+      if (v.liveStatus === 'KNOWN_LIMITATION') return typeof v.liveNotes !== 'string' || v.liveNotes.length === 0;
+      return true; // FAIL or NOT_SWEPT both count as unexplained
+    });
+    assert.deepEqual(unexplained.map(([name]) => name), []);
+  });
 });

@@ -1,0 +1,323 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-20T13:56:31.917Z",
+  "cavalryVersion": "2.7.2",
+  "method": "Live render-queue sweep via render_queue_add/render_item_set_output/render_start against a running Cavalry 2.7.2 instance, polling the output directory since 2.7.2 exposes no reliable render-status API. Each output validated with ffprobe.",
+  "total": 14,
+  "passed": 12,
+  "knownLimitation": 2,
+  "failed": 0,
+  "results": [
+    {
+      "label": "APNG",
+      "nodeType": "renderAPNG",
+      "status": "PASS",
+      "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/render-format-sweep-output/sweep-renderAPNG-1789912570701.png",
+      "sizeBytes": 3556,
+      "durationMs": 1388,
+      "ffprobe": {
+        "format": "apng",
+        "durationSec": null,
+        "streams": [
+          {
+            "codec_type": "video",
+            "codec_name": "apng",
+            "width": 320,
+            "height": 180,
+            "pix_fmt": "rgba"
+          }
+        ]
+      },
+      "ffprobeError": null
+    },
+    {
+      "label": "Audio Only",
+      "nodeType": "renderAudioOnly",
+      "status": "PASS",
+      "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/render-format-sweep-output/sweep-renderAudioOnly-1789912572240.aac",
+      "sizeBytes": 8961,
+      "durationMs": 1375,
+      "ffprobe": {
+        "format": "aac",
+        "durationSec": 0.55468,
+        "streams": [
+          {
+            "codec_type": "audio",
+            "codec_name": "aac",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ]
+      },
+      "ffprobeError": null
+    },
+    {
+      "label": "GIF",
+      "nodeType": "renderGIF",
+      "status": "PASS",
+      "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/render-format-sweep-output/sweep-renderGIF-1789912573746.gif",
+      "sizeBytes": 13245,
+      "durationMs": 1374,
+      "ffprobe": {
+        "format": "gif",
+        "durationSec": 0.48,
+        "streams": [
+          {
+            "codec_type": "video",
+            "codec_name": "gif",
+            "width": 320,
+            "height": 180,
+            "pix_fmt": "bgra"
+          }
+        ]
+      },
+      "ffprobeError": null
+    },
+    {
+      "label": "JPEG",
+      "nodeType": "renderJPEG",
+      "status": "PASS",
+      "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/render-format-sweep-output/sweep-renderJPEG-1789912575234.00015.jpg",
+      "sizeBytes": 6230,
+      "durationMs": 1383,
+      "ffprobe": {
+        "format": "image2",
+        "durationSec": 0.04,
+        "streams": [
+          {
+            "codec_type": "video",
+            "codec_name": "mjpeg",
+            "width": 320,
+            "height": 180,
+            "pix_fmt": "yuvj420p"
+          }
+        ]
+      },
+      "ffprobeError": null
+    },
+    {
+      "label": "Lottie",
+      "nodeType": "renderLottie",
+      "status": "PASS",
+      "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/render-format-sweep-output/sweep-renderLottie-1789912576708.json",
+      "sizeBytes": 1431,
+      "durationMs": 1413,
+      "lottie": {
+        "w": 320,
+        "h": 180,
+        "fr": 30,
+        "ip": 0,
+        "op": 15,
+        "layerCount": 2
+      }
+    },
+    {
+      "label": "MP4",
+      "nodeType": "renderMP4",
+      "status": "PASS",
+      "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/render-format-sweep-output/sweep-renderMP4-1789912578168.mp4",
+      "sizeBytes": 15175,
+      "durationMs": 1428,
+      "ffprobe": {
+        "format": "mov,mp4,m4a,3gp,3g2,mj2",
+        "durationSec": 0.533,
+        "streams": [
+          {
+            "codec_type": "video",
+            "codec_name": "h264",
+            "width": 320,
+            "height": 180,
+            "pix_fmt": "yuv420p"
+          },
+          {
+            "codec_type": "audio",
+            "codec_name": "aac",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ]
+      },
+      "ffprobeError": null
+    },
+    {
+      "label": "PNG",
+      "nodeType": "renderPNG",
+      "status": "PASS",
+      "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/render-format-sweep-output/sweep-renderPNG-1789912579733.00015.png",
+      "sizeBytes": 231043,
+      "durationMs": 1390,
+      "ffprobe": {
+        "format": "png_pipe",
+        "durationSec": null,
+        "streams": [
+          {
+            "codec_type": "video",
+            "codec_name": "png",
+            "width": 320,
+            "height": 180,
+            "pix_fmt": "rgba"
+          }
+        ]
+      },
+      "ffprobeError": null
+    },
+    {
+      "label": "QuickTime",
+      "nodeType": "renderQuicktime",
+      "status": "PASS",
+      "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/render-format-sweep-output/sweep-renderQuicktime-1789912581219.mov",
+      "sizeBytes": 149070,
+      "durationMs": 1416,
+      "ffprobe": {
+        "format": "mov,mp4,m4a,3gp,3g2,mj2",
+        "durationSec": 0.533333,
+        "streams": [
+          {
+            "codec_type": "video",
+            "codec_name": "prores",
+            "width": 320,
+            "height": 180,
+            "pix_fmt": "yuv422p10le"
+          },
+          {
+            "codec_type": "audio",
+            "codec_name": "aac",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ]
+      },
+      "ffprobeError": null
+    },
+    {
+      "label": "SVG",
+      "nodeType": "renderSVG",
+      "status": "PASS",
+      "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/render-format-sweep-output/sweep-renderSVG-1789912582761.00015.svg",
+      "sizeBytes": 523,
+      "durationMs": 1342,
+      "svg": {
+        "hasViewBoxOrDims": true,
+        "hasGraphicalElements": true
+      }
+    },
+    {
+      "label": "Sprite Sheet",
+      "nodeType": "renderSpriteSheet",
+      "status": "PASS",
+      "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/render-format-sweep-output/sweep-renderSpriteSheet-1789912584151.png",
+      "sizeBytes": 18181,
+      "durationMs": 1419,
+      "ffprobe": {
+        "format": "png_pipe",
+        "durationSec": null,
+        "streams": [
+          {
+            "codec_type": "video",
+            "codec_name": "png",
+            "width": 1293,
+            "height": 733,
+            "pix_fmt": "rgba"
+          }
+        ]
+      },
+      "ffprobeError": null
+    },
+    {
+      "label": "WebP",
+      "nodeType": "renderWebP",
+      "status": "PASS",
+      "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/render-format-sweep-output/sweep-renderWebP-1789912585726.00015.webp",
+      "sizeBytes": 3004,
+      "durationMs": 1427,
+      "ffprobe": {
+        "format": "webp_pipe",
+        "durationSec": null,
+        "streams": [
+          {
+            "codec_type": "video",
+            "codec_name": "webp",
+            "width": 320,
+            "height": 180,
+            "pix_fmt": "yuv420p"
+          }
+        ]
+      },
+      "ffprobeError": null
+    },
+    {
+      "label": "WebM",
+      "nodeType": "renderWebM",
+      "status": "PASS",
+      "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/render-format-sweep-output/sweep-renderWebM-1789912587300.webm",
+      "sizeBytes": 10382,
+      "durationMs": 1473,
+      "ffprobe": {
+        "format": "matroska,webm",
+        "durationSec": 0.536,
+        "streams": [
+          {
+            "codec_type": "video",
+            "codec_name": "vp9",
+            "width": 320,
+            "height": 180,
+            "pix_fmt": "yuv420p"
+          },
+          {
+            "codec_type": "audio",
+            "codec_name": "vorbis",
+            "sample_rate": "48000",
+            "channels": 2
+          }
+        ]
+      },
+      "ffprobeError": null
+    },
+    {
+      "label": "HEVC",
+      "nodeType": "renderHVEC",
+      "status": "KNOWN_LIMITATION",
+      "reason": "This generator does not expose exportAudio at runtime in Cavalry 2.7.2, despite inheriting it from the renderFormatWithAudio schema supertype (confirmed via render_item_inspect: MP4/QuickTime/WebM correctly expose and honor generator.exportAudio; HEVC/ProRes generators do not list it among their live attributes at all).",
+      "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/render-format-sweep-output/sweep-renderHVEC-1789912588876.mp4",
+      "sizeBytes": 4553,
+      "durationMs": 1431,
+      "ffprobe": {
+        "format": "mov,mp4,m4a,3gp,3g2,mj2",
+        "durationSec": 0.5,
+        "streams": [
+          {
+            "codec_type": "video",
+            "codec_name": "hevc",
+            "width": 320,
+            "height": 180,
+            "pix_fmt": "yuv420p"
+          }
+        ]
+      },
+      "ffprobeError": null
+    },
+    {
+      "label": "ProRes",
+      "nodeType": "renderProRes",
+      "status": "KNOWN_LIMITATION",
+      "reason": "This generator does not expose exportAudio at runtime in Cavalry 2.7.2, despite inheriting it from the renderFormatWithAudio schema supertype (confirmed via render_item_inspect: MP4/QuickTime/WebM correctly expose and honor generator.exportAudio; HEVC/ProRes generators do not list it among their live attributes at all).",
+      "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/render-format-sweep-output/sweep-renderProRes-1789912590414.mov",
+      "sizeBytes": 181285,
+      "durationMs": 1394,
+      "ffprobe": {
+        "format": "mov,mp4,m4a,3gp,3g2,mj2",
+        "durationSec": 0.533333,
+        "streams": [
+          {
+            "codec_type": "video",
+            "codec_name": "prores",
+            "width": 320,
+            "height": 180,
+            "pix_fmt": "yuv422p10le"
+          }
+        ]
+      },
+      "ffprobeError": null
+    }
+  ]
+}

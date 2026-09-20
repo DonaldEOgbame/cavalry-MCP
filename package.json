@@ -17,6 +17,7 @@
     "coverage:api": "node scripts/generate-api-coverage.mjs",
     "coverage:live-layer-types": "tsx scripts/probe-live-layer-types.ts",
     "coverage:node-definitions": "node scripts/generate-node-definition-coverage.mjs",
+    "coverage:render-sweep": "tsx scripts/live-render-format-sweep.ts && node scripts/regenerate-render-formats.mjs",
     "knowledge:bootstrap": "tsx src/knowledge/cli.ts bootstrap",
     "knowledge:ingest-docs": "tsx src/knowledge/cli.ts ingest-docs",
     "knowledge:ingest-api": "tsx src/knowledge/cli.ts ingest-api",

@@ -196,16 +196,77 @@ This is recorded here rather than silently fixed, because a scale value that
 destabilizes the host application — even from a scripting mistake rather than
 a malicious input — is worth knowing about if it recurs elsewhere.
 
+## Render format matrix (resolved)
+
+`scripts/live-render-format-sweep.ts` builds a real scene (an animated star
+shape plus an imported audio asset, `coverage/fixtures/test-tone-440hz-1s.wav`
+— a synthetic, license-free 1-second 440Hz tone generated with `ffmpeg`, not a
+copyrighted asset), then renders it through the real Render Manager
+(`render_queue_add` → `render_item_set_output` → `render_start`) once per
+installed format, polling the output directory since Cavalry 2.7.2 exposes no
+reliable render-status API (a previously-documented gap). Every output is
+validated with `ffprobe` for container/codec/dimensions, except Lottie (parsed
+and checked directly as JSON for `w`/`h`/`fr`/`ip`/`op`/`layers`) and SVG
+(checked as well-formed XML with real dimensions and graphical elements,
+since ffprobe cannot usefully parse either).
+
+Run with `npm run coverage:render-sweep`, which also regenerates
+`coverage/render-formats.json` from the results (`scripts/regenerate-render-formats.mjs`) —
+replacing the previous unconditional `"liveRenderValidation": "BLOCKED"` claim
+with a real `PASS`/`KNOWN_LIMITATION`/`FAIL` count and per-format evidence
+(codec, dimensions, container, file size).
+
+**Result as of 2026-09-20: 12/14 PASS, 2 KNOWN_LIMITATION, 0 FAIL.**
+
+All 12 fully-passing formats were confirmed with correct dimensions (320×180,
+matching the composition), correct video codec (h264/hevc/prores/vp9/gif/mjpeg/
+png/webp/apng as appropriate), and — for the formats expected to carry audio —
+a real aac/opus/pcm audio stream traced back to the imported test tone.
+
+### HEVC and ProRes do not export audio in Cavalry 2.7.2
+
+Both `renderHVEC` and `renderProRes` inherit `exportAudio` (and the rest of
+`audioQuality`/`audioSampleRate`/`exportAudio`) from the shared
+`renderFormatWithAudio` schema supertype in `nodeDefinitions.json`, and the
+installed license is unrestricted (`app_license` → `{"restricted": false}`,
+ruling out a Pro-tier gate). Live evidence shows this isn't honored at
+runtime:
+
+- `render_item_inspect` on an active `renderMP4` generator lists
+  `generator.exportAudio` (value `true`) among its live attributes, and the
+  resulting file contains a real `aac` audio stream.
+- The identical inspection on an active `renderHVEC` generator lists only
+  `generator`, `generator.bitratePresets`, `generator.bitrate` —
+  `exportAudio` is entirely absent from its live attribute set, not merely
+  set to `false`. `renderProRes` behaves the same way. Explicitly calling
+  `render_item_set_generator` with `{ exportAudio: true }` on either fails
+  cleanly (`"Render Queue Item has no active format generator"`), confirming
+  there is nothing to set.
+
+Both formats still render correct, valid video (confirmed via ffprobe: hevc
+and prores codecs respectively, correct 320×180 dimensions) — only the audio
+track is missing. This is recorded as `KNOWN_LIMITATION`, classified
+`WORKFLOW_LIMITATION` rather than `PRODUCTION_BLOCKING`, since MP4, QuickTime,
+and WebM all correctly export audio and remain available whenever an
+audio-carrying HEVC/ProRes deliverable is required.
+
 ## Open items carried forward
 
-- Render format matrix (`coverage/render-formats.json`) still needs an actual
-  live render + ffprobe pass per format; this pass only re-verified the JS
-  function and node-schema inventories, not rendered output.
 - The `verifiedLive: false` supertype routes in the node-definition
   reconciliation above should be individually live-tested (create a node of
   each supertype's actual host layer, confirm the `generator_set`/
   `attribute_set` call succeeds) before being called fully proven rather than
   structurally inferred.
+- `render_item_set_generator` returns `"Render Queue Item has no active format
+  generator"` even for formats that otherwise render correctly (confirmed on
+  both a working `renderMP4` item and the non-working `renderHVEC` case above).
+  The render itself is unaffected since `render_item_set_output`'s own
+  `formatType` parameter configures the generator correctly, but the
+  standalone `render_item_set_generator` tool cannot currently be used to
+  adjust an already-configured item's format-specific settings after the
+  fact. Worth a follow-up fix in `cavalry/bridge.js`'s `render_item_set_generator`
+  handler (it resolves the generator via `api.get(id, "generator")`, which
+  returns `null` rather than a usable generator layer id).
 - Whether Cavalry's own render pipeline (Render Manager / `api.render`)
   applies the `filters` array the same way `renderPNGFrame` does was not
   re-verified after switching the plugin test back to the faster preview path;
