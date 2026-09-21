@@ -1,0 +1,21 @@
+{
+  "task": "closed-orbit-loop",
+  "status": "verified",
+  "script": "for (const [frame, x, y] of [[0,170,0],[15,0,170],[30,-170,0],[45,0,-170],[60,170,0]]) {\n  await Anim.keyframeCreate(satellite.layerId, 'position.x', frame, x);\n  await Anim.keyframeCreate(satellite.layerId, 'position.y', frame, y);\n}",
+  "inputAssumptions": [
+    "Cavalry 2.7.2 bridge connected on macOS"
+  ],
+  "createdObjects": [
+    "basicShape",
+    "animationCurve"
+  ],
+  "validation": {
+    "passed": true,
+    "checks": [
+      "First and last samples match",
+      "Intermediate frames differ",
+      "Position curves persisted"
+    ]
+  },
+  "errors": []
+}

@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-21T13:53:50.107Z",
+  "platform": "macOS",
+  "cavalryVersion": "2.7.2",
+  "checks": [
+    {
+      "name": "font discovery and missing-font detection",
+      "status": "PASS",
+      "installedCount": 6,
+      "testedFont": "Helvetica"
+    },
+    {
+      "name": "Unicode and RTL text construction and rendered glyph output",
+      "status": "PASS",
+      "unicodeText": "Cavalry — Café 日本語 😀",
+      "rtlText": "مرحبا بالعالم",
+      "visualProbeText": "VISIBLE مرحبا بالعالم 日本語",
+      "cavalryRenderPath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/compatibility/preview-rtl.png",
+      "unicodeCopyPath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/compatibility/Unicode Path – اختبار/preview مرحبا.png",
+      "previewLumaRange": {
+        "low": 36,
+        "high": 235
+      }
+    },
+    {
+      "name": "large procedural scene and timeline",
+      "status": "PASS",
+      "instances": 1000,
+      "endFrame": 3000
+    },
+    {
+      "name": "large asset and ICC profile inspection",
+      "status": "PASS",
+      "assetId": "asset#2",
+      "profile": "sRGB IEC61966-2.1",
+      "path": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/compatibility/Unicode Path – اختبار/large asset 2048.png"
+    },
+    {
+      "name": "Unicode path save, reopen, structural persistence, and preview render",
+      "status": "PASS",
+      "scenePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/compatibility/Unicode Path – اختبار/Cavalry scene 日本語.cv",
+      "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/compatibility/Unicode Path – اختبار/preview مرحبا.png",
+      "reopenedNodeCount": 46,
+      "previewBytes": 7729,
+      "previewLumaRange": {
+        "low": 36,
+        "high": 235
+      }
+    }
+  ],
+  "passed": true,
+  "note": "RTL persistence and rendered glyph output are verified; language-aware shaping quality remains dependent on the selected host font and Cavalry text engine."
+}

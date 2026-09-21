@@ -41,8 +41,25 @@ describe('parity coverage records', () => {
     }
     const data = JSON.parse(await readFile(path, 'utf8'));
     assert.equal(data.unknownCount, 0);
+    assert.equal(data.verifiedLiveFalseCount, 0);
     assert.equal(data.nodes.length, data.concreteNodeTypes);
     assert.ok(data.nodes.every((entry: any) => entry.coverage !== 'UNKNOWN'));
+  });
+
+  it('reconciles every Cavalry runtime surface with zero unknowns', async (context) => {
+    const path = resolve('coverage/cavalry-surface-audit.json');
+    if (!existsSync(path)) {
+      context.skip('Cross-surface audit has not been generated on this host (run npm run coverage:surface-audit)');
+      return;
+    }
+    const data = JSON.parse(await readFile(path, 'utf8'));
+    assert.equal(data.counts.unknown, 0);
+    assert.equal(data.counts.mcpTools, 340);
+    assert.equal(data.counts.capabilityGroups, 62);
+    assert.equal(data.counts.concreteNodeTypes, 436);
+    assert.equal(data.counts.nodeAttributes, 3168);
+    assert.ok(data.capabilityGroups.every((entry: any) => entry.coverage !== 'UNKNOWN' && entry.missingTools.length === 0));
+    assert.ok(data.apiSurface.every((entry: any) => entry.coverage !== 'UNKNOWN'));
   });
 
   it('leaves no render format with an unexplained live-verification gap', async (context) => {

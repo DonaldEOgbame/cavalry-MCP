@@ -1,0 +1,30 @@
+{
+  "name": "geometric-logo-assembly",
+  "path": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/components/geometric-logo-assembly.cvc",
+  "description": "Parented geometric logo parts with shared entrance position and opacity timing.",
+  "requiredInputs": [
+    "part colors",
+    "entrance timing"
+  ],
+  "exposedAttributes": [
+    "position.y",
+    "opacity",
+    "material.materialColor"
+  ],
+  "aspectRatios": [
+    "16:9"
+  ],
+  "expectedDurationFrames": 90,
+  "editableProperties": [
+    "position.y",
+    "opacity",
+    "material.materialColor"
+  ],
+  "visualStyle": [
+    "logo motion",
+    "geometric"
+  ],
+  "limitations": [
+    "Validated against Cavalry 2.7.2 on macOS."
+  ]
+}

@@ -1439,7 +1439,26 @@
     },
     render_item_attributes: function (params) { const id = resolveLayerId(params.itemId); return { itemId: id, attributes: api.getAttributes(id) || [] }; },
     render_item_set: function (params) { const id = resolveLayerId(params.itemId); api.set(id, params.settings || {}); api.processEvents(); return handlers.render_item_inspect({ itemId: id }); },
-    render_item_set_generator: function (params) { const id = resolveLayerId(params.itemId); const generatorId = api.get(id, "generator"); if (!generatorId) throw new Error("Render Queue Item has no active format generator"); api.set(generatorId, params.settings || {}); api.processEvents(); return { itemId: id, generatorId: generatorId, attributes: api.getAttributes(generatorId) || [] }; },
+    render_item_set_generator: function (params) {
+      const id = resolveLayerId(params.itemId);
+      const available = api.getAttributes(id) || [];
+      const settings = params.settings || {};
+      const applied = {};
+      const missing = [];
+      for (let key in settings) {
+        const path = key.indexOf("generator.") === 0 ? key : "generator." + key;
+        if (available.indexOf(path) === -1) missing.push(path);
+        else applied[path] = settings[key];
+      }
+      if (missing.length) {
+        throw new Error("Active render format does not expose: " + missing.join(", "));
+      }
+      api.set(id, applied);
+      api.processEvents();
+      const values = {};
+      for (let path in applied) { try { values[path] = api.get(id, path); } catch (e) {} }
+      return { itemId: id, applied: applied, values: values };
+    },
     render_item_set_output: function (params) { const id = resolveLayerId(params.itemId); const settings = { filePath: params.filePath }; if (params.fileName !== undefined) settings.fileName = params.fileName; api.set(id, settings); if (params.formatType) api.setGenerator(id, "generator", params.formatType); api.processEvents(); return handlers.render_item_inspect({ itemId: id }); },
     render_item_delete: function (params) { const id = resolveLayerId(params.itemId); api.deleteLayer(id); api.processEvents(); return { itemId: id, deleted: true }; },
     render_item_duplicate: function (params) { const id = resolveLayerId(params.itemId); const duplicateId = api.duplicate(id, false); api.processEvents(); return { sourceItemId: id, item: getLayerIdentity(duplicateId) }; },

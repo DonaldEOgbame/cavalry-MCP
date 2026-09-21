@@ -1,0 +1,4934 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-21T14:04:37.468Z",
+  "cavalryVersion": "2.7.2",
+  "sources": {
+    "metadataFiles": [
+      "/Applications/Cavalry.app/Contents/assets/MetaData/api_function_metadata.json",
+      "/Applications/Cavalry.app/Contents/assets/MetaData/core_api_function_metadata.json",
+      "/Applications/Cavalry.app/Contents/assets/MetaData/gui_api_function_metadata.json",
+      "/Applications/Cavalry.app/Contents/assets/MetaData/widget_api_function_metadata.json"
+    ],
+    "nodeDefinitions": "/Applications/Cavalry.app/Contents/assets/Definitions/nodeDefinitions.json",
+    "bridge": "/Users/macbook/Documents/GitHub/calvary-MCP/cavalry/bridge.js",
+    "mcpServer": "/Users/macbook/Documents/GitHub/calvary-MCP/src/mcp/server.ts"
+  },
+  "counts": {
+    "mcpTools": 340,
+    "callableApiMethodsUniqueByName": 358,
+    "callableApiMethodsQualified": 359,
+    "apiProperties": 9,
+    "apiClasses": 7,
+    "concreteNodeTypes": 436,
+    "nodeAttributes": 3168,
+    "concreteNodeAttributes": 2992,
+    "capabilityGroups": 62,
+    "manualEditorFeatures": 19,
+    "callbacks": 22,
+    "unknown": 0
+  },
+  "apiBreakdown": {
+    "STRUCTURED": 183,
+    "RAW_SCRIPT": 130,
+    "CONTEXT_ONLY": 27,
+    "SCRIPT_UI_BRIDGE": 4,
+    "SCRIPT_UI": 31
+  },
+  "namespaceBreakdown": {
+    "@JS_GUI_API": {
+      "runtime": "api",
+      "functions": 279,
+      "properties": 0,
+      "classes": 0,
+      "total": 279
+    },
+    "@JS_CORE_API": {
+      "runtime": "cavalry",
+      "functions": 27,
+      "properties": 0,
+      "classes": 7,
+      "total": 34
+    },
+    "@JS_CTX": {
+      "runtime": "ctx",
+      "functions": 5,
+      "properties": 5,
+      "classes": 0,
+      "total": 10
+    },
+    "@JS_DEFORMER": {
+      "runtime": "def",
+      "functions": 16,
+      "properties": 1,
+      "classes": 0,
+      "total": 17
+    },
+    "@JS_WIDGET_API": {
+      "runtime": "ui",
+      "functions": 32,
+      "properties": 3,
+      "classes": 0,
+      "total": 35
+    }
+  },
+  "capabilityBreakdown": {
+    "STRUCTURED": 43,
+    "GENERIC_ATTRIBUTE": 5,
+    "UNSUPPORTED": 13,
+    "RAW_SCRIPT": 1
+  },
+  "infrastructure": [
+    {
+      "qualifiedName": "api.WebServer",
+      "coverage": "STRUCTURED",
+      "evidence": "Bridge request server"
+    },
+    {
+      "qualifiedName": "api.WebClient",
+      "coverage": "STRUCTURED",
+      "evidence": "Bridge callback client"
+    },
+    {
+      "qualifiedName": "api.Timer",
+      "coverage": "STRUCTURED",
+      "evidence": "Bridge callback/event scheduling"
+    },
+    {
+      "qualifiedName": "ui.addCallbackObject",
+      "coverage": "SCRIPT_UI_BRIDGE",
+      "evidence": "Native event callback registration"
+    }
+  ],
+  "callbacks": [
+    "onAppStateChanged",
+    "onAssetAdded",
+    "onAssetAsyncLoadFinished",
+    "onAssetRemoved",
+    "onAssetUpdated",
+    "onAttrChanged",
+    "onAttrConnected",
+    "onAttrDisconnected",
+    "onAttributeSelectionChanged",
+    "onCavalryPreferenceChanged",
+    "onCompChanged",
+    "onJSError",
+    "onKeySelectionChanged",
+    "onLayerAdded",
+    "onLayerRemoved",
+    "onLicenceUpdated",
+    "onPointSelectionChanged",
+    "onPost",
+    "onSceneChanged",
+    "onSelectionChanged",
+    "onTimeout",
+    "onToolChanged"
+  ],
+  "capabilityGroups": [
+    {
+      "name": "Application.NativeCallbacks",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "events_subscribe",
+        "events_poll",
+        "events_get_recent"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Application.State",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "app_state",
+        "app_is_active",
+        "app_active_tool"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Application.ProcessEvents",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "bridge_flush_events"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Coediting.OptimisticConflictDetection",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "events_status",
+        "cavalry_batch"
+      ],
+      "missingTools": [],
+      "notes": "Native callbacks advance sceneRevision; batches with expectedRevision abort as EDIT_CONFLICT when human edits intervene."
+    },
+    {
+      "name": "EditableShape.PathReadWrite",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "path_get_editable",
+        "path_set_editable"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "EditableShape.PointSelection",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "path_select_points",
+        "path_deselect_points",
+        "path_get_selected_points"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "EditableShape.PointTransform",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "path_move_selected_points",
+        "path_set_point_position",
+        "path_set_handle_position"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "EditableShape.ContourEditing",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "path_add_contour",
+        "path_remove_contour",
+        "path_add_point",
+        "path_remove_point",
+        "path_close_contour",
+        "path_open_contour"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "EditableShape.PathAnimation",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "path_keyframe_create",
+        "path_keyframe_set",
+        "path_keyframe_resync",
+        "path_morph"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Selection.Layers",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "layer_select",
+        "layer_get_selection"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Selection.Attributes",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "attribute_get_selection",
+        "attribute_select",
+        "attribute_deselect"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Selection.Keyframes",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "keyframe_get_selected_ids",
+        "keyframe_select",
+        "keyframe_deselect_all"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Selection.PointsAndHandles",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "path_get_selected_points",
+        "path_select_points"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Selection.Assets",
+      "coverage": "GENERIC_ATTRIBUTE",
+      "tools": [],
+      "missingTools": [],
+      "notes": "Asset Window objects are inspectable; the public API has no independent asset-selection setter."
+    },
+    {
+      "name": "Transform.MoveFreezeResetPivot",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "transform_move",
+        "transform_freeze",
+        "transform_reset",
+        "transform_center_pivot"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Transform.Query3D",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "transform_has_3d"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Transform.Toggle2_5D",
+      "coverage": "UNSUPPORTED",
+      "tools": [],
+      "missingTools": [],
+      "notes": "Cavalry 2.7.2 documents has3dTransforms() but no public enable/disable operation."
+    },
+    {
+      "name": "Camera.PlanarCamera",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "camera_create",
+        "camera_list",
+        "camera_inspect",
+        "camera_set_type"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Camera.ActiveCamera",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "camera_get_active",
+        "camera_has_active"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Camera.Guides",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "camera_create_guide",
+        "camera_sequence_guides"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "RulerGuides",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "guide_list",
+        "guide_create_horizontal",
+        "guide_create_vertical",
+        "guide_delete",
+        "guide_clear"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "ControlCentre.AddRemove",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "control_centre_add_attribute",
+        "control_centre_remove_attribute"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "ControlCentre.ListDescribe",
+      "coverage": "UNSUPPORTED",
+      "tools": [],
+      "missingTools": [],
+      "notes": "The public API exposes add/remove only; the tools return a specific unsupported error."
+    },
+    {
+      "name": "Attribute.LimitOverrides",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "attribute_limits_get",
+        "attribute_limits_set",
+        "attribute_limits_clear"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "GraphAttribute.Edit",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "graph_attribute_get",
+        "graph_attribute_set",
+        "graph_attribute_apply_preset"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Beat.NativeTiming",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "beat_get_nth",
+        "beat_generate_markers"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Beat.SyncUtilities",
+      "coverage": "GENERIC_ATTRIBUTE",
+      "tools": [],
+      "missingTools": [],
+      "notes": "Use beat_get_nth plus batch keyframe/layer operations; there is no distinct Cavalry sync API."
+    },
+    {
+      "name": "Layer.UserData",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "metadata_set",
+        "metadata_get",
+        "metadata_has"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "MCP.PersistentState",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "mcp_state_get",
+        "mcp_state_set"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Preferences.ReadWrite",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "preferences_get",
+        "preferences_set"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Preferences.EnumerateKnown",
+      "coverage": "UNSUPPORTED",
+      "tools": [],
+      "missingTools": [],
+      "notes": "Cavalry exposes keyed get/set but not enumeration of Preferences.json keys."
+    },
+    {
+      "name": "Viewport.Capture",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "viewport_capture"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Viewport.ActiveTool",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "viewport_active_tool",
+        "tool_get_active"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Viewport.SetTool",
+      "coverage": "UNSUPPORTED",
+      "tools": [],
+      "missingTools": [],
+      "notes": "No documented setActiveTool API and no UI driver is shipped yet."
+    },
+    {
+      "name": "Viewport.QAProfiles",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "viewport_prepare_for_visual_qa",
+        "viewport_restore"
+      ],
+      "missingTools": [],
+      "notes": "Profiles take explicit version-appropriate preference settings and always return the prior values for restoration."
+    },
+    {
+      "name": "Project.Paths",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "project_get",
+        "project_paths",
+        "project_set",
+        "project_clear"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Assets.GroupsSequencesCloudData",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "asset_group_create",
+        "asset_sequence_inspect",
+        "asset_google_sheet_inspect",
+        "asset_google_sheet_replace"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Assets.SmartFolders",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "asset_smart_folder_create"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Color.AssetICC",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "color_asset_profile"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Color.WorkingAndViewportSpaces",
+      "coverage": "GENERIC_ATTRIBUTE",
+      "tools": [],
+      "missingTools": [],
+      "notes": "Available only when exposed by current composition/preferences definitions."
+    },
+    {
+      "name": "DynamicRendering",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "render_dynamic_index_get",
+        "render_dynamic_index_connect",
+        "render_dynamic_offset"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "RenderQueue.GenericItems",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "render_item_create",
+        "render_item_inspect",
+        "render_item_set",
+        "render_item_set_range",
+        "render_item_set_output"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Render.BackgroundStart",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "render_background_start"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Render.Cancel",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "render_cancel"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Render.StatusAndWait",
+      "coverage": "UNSUPPORTED",
+      "tools": [],
+      "missingTools": [],
+      "notes": "No documented Cavalry 2.7.2 active-render status query exists, so reliable wait cannot be implemented."
+    },
+    {
+      "name": "Render.ScriptsAndMetadata",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "render_script_get",
+        "render_script_set_setup",
+        "render_script_set_pre",
+        "render_script_set_post",
+        "render_metadata_enable",
+        "render_metadata_add",
+        "render_metadata_format"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Render.FormatsAndCodecs",
+      "coverage": "GENERIC_ATTRIBUTE",
+      "tools": [
+        "render_item_set_format",
+        "render_item_set_audio"
+      ],
+      "missingTools": [],
+      "notes": "Installed render generators and codec attributes are discovered and set generically."
+    },
+    {
+      "name": "Layer.SuperTypes",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "layer_get_supertypes"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Shape.FillStrokeState",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "shape_has_fill",
+        "shape_enable_fill",
+        "shape_disable_fill",
+        "shape_has_stroke",
+        "shape_enable_stroke",
+        "shape_disable_stroke"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Layer.StackActions",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "layer_bring_forward",
+        "layer_bring_to_front",
+        "layer_send_backward",
+        "layer_send_to_back"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Scene.ComponentExport",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "scene_export_copy",
+        "component_export_selected"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "Clipboard.Text",
+      "coverage": "STRUCTURED",
+      "tools": [
+        "clipboard_get_text",
+        "clipboard_set_text"
+      ],
+      "missingTools": [],
+      "notes": ""
+    },
+    {
+      "name": "NativeDialogs",
+      "coverage": "UNSUPPORTED",
+      "tools": [],
+      "missingTools": [],
+      "notes": "Blocking native dialogs are deliberately not exposed for unattended automation."
+    },
+    {
+      "name": "UI.CommandSearch",
+      "coverage": "UNSUPPORTED",
+      "tools": [],
+      "missingTools": [],
+      "notes": "No accessibility driver is currently implemented; do not claim UI fallback coverage."
+    },
+    {
+      "name": "UI.Shortcuts",
+      "coverage": "UNSUPPORTED",
+      "tools": [],
+      "missingTools": [],
+      "notes": "No accessibility driver is currently implemented; do not claim UI fallback coverage."
+    },
+    {
+      "name": "UI.VisionFallback",
+      "coverage": "UNSUPPORTED",
+      "tools": [],
+      "missingTools": [],
+      "notes": "No verified vision interaction driver is currently implemented."
+    },
+    {
+      "name": "Presets",
+      "coverage": "UNSUPPORTED",
+      "tools": [],
+      "missingTools": [],
+      "notes": "Preset application is not exposed in the documented API and no UI driver is shipped."
+    },
+    {
+      "name": "Tags",
+      "coverage": "UNSUPPORTED",
+      "tools": [],
+      "missingTools": [],
+      "notes": "Experimental Tag controls have no documented structured API and no UI driver is shipped."
+    },
+    {
+      "name": "WorkspacesAndWindows",
+      "coverage": "UNSUPPORTED",
+      "tools": [],
+      "missingTools": [],
+      "notes": "Editor-only operations require a future accessibility driver."
+    },
+    {
+      "name": "ThirdParty.SceneNodes",
+      "coverage": "GENERIC_ATTRIBUTE",
+      "tools": [],
+      "missingTools": [],
+      "notes": "Dynamic type, attribute, generator, and connection inspection covers plugin scene nodes."
+    },
+    {
+      "name": "ThirdParty.CustomUI",
+      "coverage": "UNSUPPORTED",
+      "tools": [],
+      "missingTools": [],
+      "notes": "Custom plugin UI outside node attributes requires a future accessibility driver."
+    },
+    {
+      "name": "RawScript.EscapeHatch",
+      "coverage": "RAW_SCRIPT",
+      "tools": [
+        "cavalry_raw_script"
+      ],
+      "missingTools": [],
+      "notes": "Disabled by default and requires CAVALRY_ALLOW_RAW_SCRIPT=true."
+    }
+  ],
+  "manualEditorFeatures": {
+    "Scene Window": {
+      "coverage": "Structured MCP",
+      "notes": "Hierarchy, selection, visibility, stack order, and generic nodes are covered."
+    },
+    "Time Editor": {
+      "coverage": "Structured MCP",
+      "notes": "Timeline, keyframes, markers, and key selection are covered."
+    },
+    "Graph Editor": {
+      "coverage": "Structured MCP",
+      "notes": "Key tangents/velocity and Graph attribute presets are covered; editor layout is not."
+    },
+    "Viewport": {
+      "coverage": "Structured MCP",
+      "notes": "Capture and active-tool reads are covered; UI-only display profiles are not."
+    },
+    "Attribute Editor": {
+      "coverage": "Structured MCP",
+      "notes": "Discovery, values, limits, expressions, and selection are covered."
+    },
+    "Dependency Graph": {
+      "coverage": "Structured MCP",
+      "notes": "Connections and generic node inspection are covered."
+    },
+    "Assets": {
+      "coverage": "Structured MCP",
+      "notes": "Files, groups, sequences, cloud sheets, smart folders, ICC data, and async callbacks are covered."
+    },
+    "Control Centre": {
+      "coverage": "Not Automatable",
+      "notes": "Add/remove are structured; listing/description have no public API."
+    },
+    "Render Manager": {
+      "coverage": "Raw Script",
+      "notes": "Queue basics are structured; format-specific attributes vary by installed definitions."
+    },
+    "Animation Utilities": {
+      "coverage": "Structured MCP"
+    },
+    "Tags": {
+      "coverage": "Not Automatable",
+      "notes": "No documented structured API and no accessibility fallback yet."
+    },
+    "Presets": {
+      "coverage": "Not Automatable",
+      "notes": "No documented structured API and no accessibility fallback yet."
+    },
+    "Workspaces": {
+      "coverage": "Not Automatable",
+      "notes": "No accessibility fallback yet."
+    },
+    "Shortcuts": {
+      "coverage": "Not Automatable",
+      "notes": "No accessibility fallback yet."
+    },
+    "Preferences": {
+      "coverage": "Structured MCP",
+      "notes": "Explicit keyed read/write only."
+    },
+    "Tool Settings": {
+      "coverage": "Raw Script",
+      "notes": "Scene-backed settings use attributes; editor-only settings remain unavailable."
+    },
+    "Camera": {
+      "coverage": "Structured MCP",
+      "notes": "Planar cameras and Camera Guides are covered; 2.5D activation is not exposed."
+    },
+    "JavaScript": {
+      "coverage": "Raw Script",
+      "notes": "Explicit opt-in only."
+    },
+    "Third-party plugins": {
+      "coverage": "Raw Script",
+      "notes": "Scene-node attributes are generic; custom plugin UI remains unavailable."
+    }
+  },
+  "apiSurface": [
+    {
+      "qualifiedName": "api.addArrayIndex",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Adds an index to an array attribute in a specified layer."
+    },
+    {
+      "qualifiedName": "api.addAssetToComp",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Adds an Asset (or array of Assets) to the active Composition returning the ids of the newly created layers."
+    },
+    {
+      "qualifiedName": "api.addDynamic",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Adds a dynamic attribute to a specified layer."
+    },
+    {
+      "qualifiedName": "api.addGuide",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Adds a guide line to a composition and returns its ID."
+    },
+    {
+      "qualifiedName": "api.addPreCompOverride",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Adds a pre-composition override for a specified attribute in a layer."
+    },
+    {
+      "qualifiedName": "api.addRenderQueueItem",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Adds a Composition to the render queue."
+    },
+    {
+      "qualifiedName": "api.addToControlCentre",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Adds a specified attribute of a specified layer to the Control Centre."
+    },
+    {
+      "qualifiedName": "api.areAttributeValuesEqual",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns true if two attributes are identical in value, expression and custom name (if set)."
+    },
+    {
+      "qualifiedName": "api.backgroundRender",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Starts background rendering of a specific item in the render queue."
+    },
+    {
+      "qualifiedName": "api.backgroundRenderAll",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Starts rendering all items in the render queue in the background."
+    },
+    {
+      "qualifiedName": "api.bringForward",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Move the selected layers up the layer stack by one place."
+    },
+    {
+      "qualifiedName": "api.bringToFront",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Move the selected layers to the top of the layer stack."
+    },
+    {
+      "qualifiedName": "api.cancelRender",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Asks Cavalry to cancel the current render."
+    },
+    {
+      "qualifiedName": "api.centrePivot",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Centers the pivot of a layer, with an option to use the centroid for centering."
+    },
+    {
+      "qualifiedName": "api.clearAttributeDefinitionOverrides",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Clear all definition overrides for an attribute"
+    },
+    {
+      "qualifiedName": "api.clearAttributeEditor",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Clear the Attribute Editor UI."
+    },
+    {
+      "qualifiedName": "api.clearGuides",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Clears all guide lines from a composition."
+    },
+    {
+      "qualifiedName": "api.clearKeyframeVelocity",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Clears all speed and influence overrides from keyframes, reverting them to"
+    },
+    {
+      "qualifiedName": "api.clearProject",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Clears the current Project."
+    },
+    {
+      "qualifiedName": "api.compareVersions",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns true if first version is less than second version."
+    },
+    {
+      "qualifiedName": "api.connect",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Creates a connection between two Attributes identified by their respective layer IDs and attribute IDs. Forcing a connection will overwrite any existing connection."
+    },
+    {
+      "qualifiedName": "api.connectDynamicIndex",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Connects the Dynamic Rendering index to a specified attribute in a node."
+    },
+    {
+      "qualifiedName": "api.convertSVGToLayers",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Converts an SVG file to layers."
+    },
+    {
+      "qualifiedName": "api.copyFilePath",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Copy a file from one specified path to another. Creates the destination location if needed."
+    },
+    {
+      "qualifiedName": "api.create",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Creates a layer of the specified type and optionally names it. Returns the new layer id."
+    },
+    {
+      "qualifiedName": "api.createAssetGroup",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Creates an asset group and names it."
+    },
+    {
+      "qualifiedName": "api.createComp",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Creates a new Composition and names it, returning the new Composition's ID."
+    },
+    {
+      "qualifiedName": "api.createCompReference",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Creates a reference for a specified Composition, this is how you can create an empty Pre-Composition."
+    },
+    {
+      "qualifiedName": "api.createEditable",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Creates an editable shape from a given object and names it. Returns the new layer id."
+    },
+    {
+      "qualifiedName": "api.createTimeMarker",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Creates a time marker at a specified time."
+    },
+    {
+      "qualifiedName": "api.deleteAnimation",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Deletes the animation for a specified Attribute in a layer."
+    },
+    {
+      "qualifiedName": "api.deleteFilePath",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Deletes the file at the specified path."
+    },
+    {
+      "qualifiedName": "api.deleteGuide",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Deletes a guide line from a composition based on its ID."
+    },
+    {
+      "qualifiedName": "api.deleteKeyframe",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Deletes a keyframe at a specified frame for a given Attribute in a layer."
+    },
+    {
+      "qualifiedName": "api.deleteLayer",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Deletes a specified layer."
+    },
+    {
+      "qualifiedName": "api.deselectAttribute",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Deselects attributes by their full paths."
+    },
+    {
+      "qualifiedName": "api.deserialise",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Deserialises a string to recreate layers and connections."
+    },
+    {
+      "qualifiedName": "api.disconnect",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Disconnects a connection between two Attributes identified by their respective layer IDs and attribute IDs."
+    },
+    {
+      "qualifiedName": "api.disconnectInput",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Disconnects the input connection of a specified Attribute in a layer."
+    },
+    {
+      "qualifiedName": "api.disconnectOutputs",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Disconnects all output connections of a specified Attribute in a layer."
+    },
+    {
+      "qualifiedName": "api.duplicate",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Duplicates a layer with the specified ID, with an option to also duplicate it's input connected layers."
+    },
+    {
+      "qualifiedName": "api.editComponent",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Sets the editing mode for a Component."
+    },
+    {
+      "qualifiedName": "api.encodeBinary",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Encodes a binary file to a base64 string."
+    },
+    {
+      "qualifiedName": "api.encrypt",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Encrypts the given content and returns it as a string."
+    },
+    {
+      "qualifiedName": "api.encryptFile",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Encrypts the given file, and saves it to the specified location."
+    },
+    {
+      "qualifiedName": "api.exec",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Executes a given script string with a script ID."
+    },
+    {
+      "qualifiedName": "api.exportSceneAs",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Export the current Scene to a specified file path."
+    },
+    {
+      "qualifiedName": "api.exportSelected",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Export any selected (and connected) Layers to a specified file path."
+    },
+    {
+      "qualifiedName": "api.filePathExists",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Checks if the provided file path exists."
+    },
+    {
+      "qualifiedName": "api.flipGraph",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Flips the graph of a specified attribute in a layer, the flipType can be \"horizontal\" or \"vertical\"."
+    },
+    {
+      "qualifiedName": "api.framesToTimecode",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Converts a given number of frames into an equivalent timecode by using an FPS value."
+    },
+    {
+      "qualifiedName": "api.freezeTransform",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Freezes the transform properties of a specified layer."
+    },
+    {
+      "qualifiedName": "api.get",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the value of a specified Attribute in a layer."
+    },
+    {
+      "qualifiedName": "api.getAbsolutePath",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns an absolute, canonical path string (resolving relative paths ../../)."
+    },
+    {
+      "qualifiedName": "api.getActiveCamera",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the ID of the active camera in the current Composition."
+    },
+    {
+      "qualifiedName": "api.getActiveComp",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the ID of the currently active Composition."
+    },
+    {
+      "qualifiedName": "api.getActiveTool",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Returns the viewport's active tool."
+    },
+    {
+      "qualifiedName": "api.getAllLayerTypes",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Provides a list of all layer types used in the current scene."
+    },
+    {
+      "qualifiedName": "api.getAllSceneLayers",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Returns a list of all layer IDs in the current scene."
+    },
+    {
+      "qualifiedName": "api.getAnimatedAttributes",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Retrieves a list of animated attributes for a given layer."
+    },
+    {
+      "qualifiedName": "api.getAppAssetsPath",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns the path to the application's assets directory."
+    },
+    {
+      "qualifiedName": "api.getAppDataFolder",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns the path to the Cavalry's data directory."
+    },
+    {
+      "qualifiedName": "api.getArrayCount",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Retrieves the count of indices in an array attribute."
+    },
+    {
+      "qualifiedName": "api.getAssetFilePath",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the file path of a specified asset."
+    },
+    {
+      "qualifiedName": "api.getAssetPath",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the path of the assets directory in the current project."
+    },
+    {
+      "qualifiedName": "api.getAssetType",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the type of a specified asset."
+    },
+    {
+      "qualifiedName": "api.getAssetWindowLayers",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves layer IDs from the asset window, optionally only top-level layers."
+    },
+    {
+      "qualifiedName": "api.getAttrChildren",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the child attributes of a specified attribute in a layer."
+    },
+    {
+      "qualifiedName": "api.getAttributeDefinition",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Returns an object containing detailed information about an Attribute."
+    },
+    {
+      "qualifiedName": "api.getAttributeDefinitionOverride",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Get a definition override for an attribute"
+    },
+    {
+      "qualifiedName": "api.getAttributeExpression",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Returns an Attribute's expression."
+    },
+    {
+      "qualifiedName": "api.getAttributeFromKeyframeId",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the attribute id associated with a given keyframe ID."
+    },
+    {
+      "qualifiedName": "api.getAttributeNiceName",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Retrieves the 'nice' name of an Attribute based on its ID."
+    },
+    {
+      "qualifiedName": "api.getAttributes",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves a list of all attributes for a given layer."
+    },
+    {
+      "qualifiedName": "api.getAttrParent",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Retrieves the parent attribute of a specified attribute in a layer."
+    },
+    {
+      "qualifiedName": "api.getAttrType",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Retrieves the type of a specified Attribute in a layer."
+    },
+    {
+      "qualifiedName": "api.getBoundingBox",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the bounding box of a specified Shape and its children in local or world space."
+    },
+    {
+      "qualifiedName": "api.getCavalryPreference",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Get a Cavalry preference. Returns null if there is no preference with the given key, or the preference type is unsupported."
+    },
+    {
+      "qualifiedName": "api.getCavalryVersion",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the current version of Cavalry."
+    },
+    {
+      "qualifiedName": "api.getChildren",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the child layers of a specified layer."
+    },
+    {
+      "qualifiedName": "api.getClipboardText",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the current text from the clipboard."
+    },
+    {
+      "qualifiedName": "api.getCompFromReference",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the origin Composition ID from a pre-Composition."
+    },
+    {
+      "qualifiedName": "api.getCompLayers",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves layer IDs from the active Composition, optionally only top-level layers."
+    },
+    {
+      "qualifiedName": "api.getCompLayersOfType",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves layer IDs of a specific type in the Composition, optionally only top-level layers."
+    },
+    {
+      "qualifiedName": "api.getComps",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the IDs of all Compositions in the scene."
+    },
+    {
+      "qualifiedName": "api.getCurrentGenerator",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Gets the generator for an attribute on a layer, returns an empty string if there isn't one."
+    },
+    {
+      "qualifiedName": "api.getCurrentGeneratorType",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Gets the type of the specified generator."
+    },
+    {
+      "qualifiedName": "api.getCustomAttributeName",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Retrieves the custom name of a specified attribute in a layer."
+    },
+    {
+      "qualifiedName": "api.getDesktopFolder",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns the path to the user's desktop directory."
+    },
+    {
+      "qualifiedName": "api.getDownloadsFolder",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns the path to the user's downloads directory."
+    },
+    {
+      "qualifiedName": "api.getDrawInstructionsForSelection",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Retrieves JavaScript drawing instructions for the currently selected Shapes."
+    },
+    {
+      "qualifiedName": "api.getDropdownNiceName",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns the name of the given index in an dropdown attribute."
+    },
+    {
+      "qualifiedName": "api.getDynamicIndex",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the current value of the Dynamic Rendering index."
+    },
+    {
+      "qualifiedName": "api.getEditablePath",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the editable path of a specified layer, with an option to return point coordinates in world space."
+    },
+    {
+      "qualifiedName": "api.getEffectiveAttributeDefinition",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Get the attribute definition including any overrides"
+    },
+    {
+      "qualifiedName": "api.getExtensionFromPath",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Retrieves the file extension from a given file path."
+    },
+    {
+      "qualifiedName": "api.getFileModifiedDate",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Gets the last modified time of the file in milliseconds since epoch."
+    },
+    {
+      "qualifiedName": "api.getFileNameFromPath",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Extracts the file name from a given file path, with an option to include the file extension."
+    },
+    {
+      "qualifiedName": "api.getFileSize",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Gets the file size in kilobytes (KB)."
+    },
+    {
+      "qualifiedName": "api.getFolderFromPath",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Extracts the folder path from a given file path."
+    },
+    {
+      "qualifiedName": "api.getFontAssetFamilyName",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns the name of the font family associated with a Font Asset."
+    },
+    {
+      "qualifiedName": "api.getFontAssetStyleName",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns the name of the font style associated with a Font Asset."
+    },
+    {
+      "qualifiedName": "api.getFontsFolder",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns the path to the user's fonts directory."
+    },
+    {
+      "qualifiedName": "api.getFrame",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the current frame of the active Composition."
+    },
+    {
+      "qualifiedName": "api.getGenerators",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves a list of generator attribute Ids associated with a specific layer."
+    },
+    {
+      "qualifiedName": "api.getGoogleSheetAssetURL",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Returns the URL for the given Google Sheet Asset"
+    },
+    {
+      "qualifiedName": "api.getGuideInfo",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves information about all guide lines in a composition."
+    },
+    {
+      "qualifiedName": "api.getHomeFolder",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Retrieves the path to the user's home directory."
+    },
+    {
+      "qualifiedName": "api.getImageSequenceFilePaths",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves all the file paths from an image sequence Asset."
+    },
+    {
+      "qualifiedName": "api.getInConnectedAttributes",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves a list of attributes with input connections."
+    },
+    {
+      "qualifiedName": "api.getInConnection",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the input connection of a specific attribute on a layer."
+    },
+    {
+      "qualifiedName": "api.getInFrame",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the in-frame (first visible frame) of a specified layer."
+    },
+    {
+      "qualifiedName": "api.getInOutKeyframeIds",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns an array of objects containing the keyframe ids for all in and out points on this layer."
+    },
+    {
+      "qualifiedName": "api.getKeyframeIdsForAttribute",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves keyframe IDs for a specific attribute on a layer."
+    },
+    {
+      "qualifiedName": "api.getKeyframeTimes",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the keyframe times for a specified Attribute in a layer."
+    },
+    {
+      "qualifiedName": "api.getLayerFromUUID",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the layer ID associated with a specified UUID."
+    },
+    {
+      "qualifiedName": "api.getLayerType",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the type of a specified layer."
+    },
+    {
+      "qualifiedName": "api.getLayerVersion",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Retrieves the version of a specified layer. This is useful for third party developers."
+    },
+    {
+      "qualifiedName": "api.getNiceName",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the 'nice' name of a layer based on its ID."
+    },
+    {
+      "qualifiedName": "api.getNthBeat",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the time of the nth beat based on the current Composition BPM settings."
+    },
+    {
+      "qualifiedName": "api.getOutConnectedAttributes",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves a list of attributes which have output connections."
+    },
+    {
+      "qualifiedName": "api.getOutConnections",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves output connections of a specific attribute on a layer."
+    },
+    {
+      "qualifiedName": "api.getOutFrame",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the out-frame (last visible frame) of a specified layer."
+    },
+    {
+      "qualifiedName": "api.getPalettesPath",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the path of the palettes directory in the current project."
+    },
+    {
+      "qualifiedName": "api.getParent",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the parent layer ID of a specified layer."
+    },
+    {
+      "qualifiedName": "api.getParentComp",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Retrieves the ID of the parent Composition for a given layer."
+    },
+    {
+      "qualifiedName": "api.getPivotPosition",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Returns the position of a specified Layer's pivot in local or world space."
+    },
+    {
+      "qualifiedName": "api.getPlatform",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Returns the name of the operating system platform (e.g. \"macOS\" or \"Windows\")."
+    },
+    {
+      "qualifiedName": "api.getPreference",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Retrieves the preference value for a specified key."
+    },
+    {
+      "qualifiedName": "api.getPreferenceObject",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the preference value for a specified key."
+    },
+    {
+      "qualifiedName": "api.getPreferencesFolder",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns the path to the Cavalry's preferences directory."
+    },
+    {
+      "qualifiedName": "api.getPreferencesPath",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Provides the path to the preferences directory."
+    },
+    {
+      "qualifiedName": "api.getPresetsPath",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Provides the path to the presets directory."
+    },
+    {
+      "qualifiedName": "api.getProfileName",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Returns the ICC profile name of an image asset. Returns empty string for sRGB or untagged images."
+    },
+    {
+      "qualifiedName": "api.getProjectPath",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the path of the current project."
+    },
+    {
+      "qualifiedName": "api.getRelativePath",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Computes the relative path from one location to another."
+    },
+    {
+      "qualifiedName": "api.getRenderPath",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the path of the renders directory in the current project."
+    },
+    {
+      "qualifiedName": "api.getRenderQueueItems",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the items in the render queue."
+    },
+    {
+      "qualifiedName": "api.getSceneFilePath",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the file path of the current Scene. Returns an empty string if the scene is unsaved."
+    },
+    {
+      "qualifiedName": "api.getScenesPath",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the path of the scenes directory in the current project."
+    },
+    {
+      "qualifiedName": "api.getSelectedAttributes",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Returns the selected attributes."
+    },
+    {
+      "qualifiedName": "api.getSelectedKeyframeIds",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the IDs of the currently selected keyframes."
+    },
+    {
+      "qualifiedName": "api.getSelectedKeyframes",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Gets the selected keyframes. Returns a dictionary of attribute ids and frame numbers."
+    },
+    {
+      "qualifiedName": "api.getSelection",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the IDs of currently selected layers, optionally in hierarchy order."
+    },
+    {
+      "qualifiedName": "api.getSelectionBoundingBox",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Retrieves the bounding box of the current selection (and child layers of the selection) in world space."
+    },
+    {
+      "qualifiedName": "api.getSuperTypes",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the SuperTypes of a specified layer."
+    },
+    {
+      "qualifiedName": "api.getSystemInfo",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Provides information about the system Cavalry is running on."
+    },
+    {
+      "qualifiedName": "api.getTempFolder",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns the path to the system's temporary files directory."
+    },
+    {
+      "qualifiedName": "api.getTimeMarkers",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves all time marker IDs."
+    },
+    {
+      "qualifiedName": "api.getUserDataKey",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Retrieves the value of a specified key from the user data of a specified layer."
+    },
+    {
+      "qualifiedName": "api.graphPreset",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Applies a graph preset to a specified attribute in a layer."
+    },
+    {
+      "qualifiedName": "api.has3dTransforms",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Returns true if a specified layer has it's 3d transform Attributes activated."
+    },
+    {
+      "qualifiedName": "api.hasActiveCamera",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Checks if the current Composition has an active camera."
+    },
+    {
+      "qualifiedName": "api.hasAttribute",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Checks if a specific layer has a given attribute."
+    },
+    {
+      "qualifiedName": "api.hasAttributeDefinitionOverrides",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Check if an attribute has any definition overrides"
+    },
+    {
+      "qualifiedName": "api.hasAttributeExpression",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns true if the given attribute has an expression."
+    },
+    {
+      "qualifiedName": "api.hasCustomAttributeName",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns true if the specified attribute has a custom name."
+    },
+    {
+      "qualifiedName": "api.hasFill",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Checks if a specified layer has a fill."
+    },
+    {
+      "qualifiedName": "api.hasPreferenceObject",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Checks if a preference key exists."
+    },
+    {
+      "qualifiedName": "api.hasStroke",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Checks if a specified layer has a stroke."
+    },
+    {
+      "qualifiedName": "api.hasUserDataKey",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Checks if a specified key exists in the user data of a specified layer."
+    },
+    {
+      "qualifiedName": "api.importScene",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Imports a Scene from a specified file path."
+    },
+    {
+      "qualifiedName": "api.invertSelection",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Inverts the current layer selection."
+    },
+    {
+      "qualifiedName": "api.isAltHeld",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Checks if the Option/Alt key is currently held down."
+    },
+    {
+      "qualifiedName": "api.isAnimatedAttribute",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Checks if a given attribute on a specific layer is animated."
+    },
+    {
+      "qualifiedName": "api.isAttrDefault",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns true if an attribute value matches its default value."
+    },
+    {
+      "qualifiedName": "api.isControlHeld",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Checks if the Control key (Windows) or Command key (macOS) is currently held down."
+    },
+    {
+      "qualifiedName": "api.isDirectory",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns true if the path exists and is a directory."
+    },
+    {
+      "qualifiedName": "api.isFile",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns true if the path exists and is a regular file."
+    },
+    {
+      "qualifiedName": "api.isFileAsset",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Returns true if the Asset is a file asset (image, video, audio, Smart Folder etc.). A Google Sheet, Composition or Group will return false."
+    },
+    {
+      "qualifiedName": "api.isGoogleSheetAsset",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Returns true if the Asset is a Google Sheet."
+    },
+    {
+      "qualifiedName": "api.isGuiSession",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Determines if the current session is a GUI session."
+    },
+    {
+      "qualifiedName": "api.isMetaHeld",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Checks if the Meta key (Control on macOS or the Windows key on Windows) is currently held down."
+    },
+    {
+      "qualifiedName": "api.isProLayerType",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns `true` if the specified layer requires a Pro licence to use."
+    },
+    {
+      "qualifiedName": "api.isReferenced",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns true if the layer has been imported with a Reference."
+    },
+    {
+      "qualifiedName": "api.isRestrictedLicence",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Returns true if a free licence is in use."
+    },
+    {
+      "qualifiedName": "api.isShape",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Checks if a specified layer is a Shape."
+    },
+    {
+      "qualifiedName": "api.isShiftHeld",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Checks if the Shift key is currently held down."
+    },
+    {
+      "qualifiedName": "api.isThirdPartyLayer",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns true if the layer in question is a 3rd party layer."
+    },
+    {
+      "qualifiedName": "api.isTransform",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns true if a specified layer has transform Attributes (e.g. Position and Scale)."
+    },
+    {
+      "qualifiedName": "api.isVisible",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Checks if a specified layer is visible, with an option to test hierarchy visibility."
+    },
+    {
+      "qualifiedName": "api.jsonFromAsset",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Converts the content of a specified asset to JSON format."
+    },
+    {
+      "qualifiedName": "api.keyframe",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Adds a keyframe to an Attribute of a layer at a specified frame with a given value."
+    },
+    {
+      "qualifiedName": "api.layerExists",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Checks if a layer with the specified ID exists."
+    },
+    {
+      "qualifiedName": "api.listDirectory",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns an array of all file and folder paths directly under the given directory."
+    },
+    {
+      "qualifiedName": "api.listDirectoryPaths",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns all visible file paths in a directory, optionally including subdirectories."
+    },
+    {
+      "qualifiedName": "api.listDirectoryRecursive",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns an array of all file and folder paths under the given directory (recursive)."
+    },
+    {
+      "qualifiedName": "api.listPreCompOverrides",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Lists pre-composition overrides for a specified layer."
+    },
+    {
+      "qualifiedName": "api.load",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Loads and executes a script from a file path."
+    },
+    {
+      "qualifiedName": "api.loadAsset",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Loads an Asset from a file path, optionally as an image sequence."
+    },
+    {
+      "qualifiedName": "api.loadGoogleSheet",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Loads a Google Sheet and returns the asset ID."
+    },
+    {
+      "qualifiedName": "api.loadSmartFolderAsset",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Loads a Smart Folder Asset from a file path, the type can be 'image' or 'audio'."
+    },
+    {
+      "qualifiedName": "api.magicEasing",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Apply Magic Easing to an Attribute's keyframe and optionally add an expression."
+    },
+    {
+      "qualifiedName": "api.makeEditable",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Makes a layer editable, with an option to create a copy of the layer."
+    },
+    {
+      "qualifiedName": "api.makeFirstPoint",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Sets the first point of an editable shape layer, based on the current point selection."
+    },
+    {
+      "qualifiedName": "api.makeFolder",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Creates a new folder at the specified path, with an option to overwrite if it already exists."
+    },
+    {
+      "qualifiedName": "api.modifyKeyframe",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Modifies keyframes for a specified layer based on provided parameters."
+    },
+    {
+      "qualifiedName": "api.modifyKeyframeTangent",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Modifies the tangent properties of keyframes for a given layer."
+    },
+    {
+      "qualifiedName": "api.move",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Moves the current selection by given x and y coordinates."
+    },
+    {
+      "qualifiedName": "api.moveBackward",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Move the selected layers down the layer stack by one place."
+    },
+    {
+      "qualifiedName": "api.movePoint",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Moves selected points in an Editable Shape by a specified amount in x and y directions, with an option to use local space coordinates."
+    },
+    {
+      "qualifiedName": "api.moveToBack",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Move the selected layers to the bottom of the layer stack."
+    },
+    {
+      "qualifiedName": "api.newScene",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Opens a new scene, discarding changes."
+    },
+    {
+      "qualifiedName": "api.offsetLayerTime",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Offsets the timing of a layer by a specified time delta."
+    },
+    {
+      "qualifiedName": "api.openScene",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Opens a scene from a specified file path, with an option to force open (lose unsaved changes)."
+    },
+    {
+      "qualifiedName": "api.openURL",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Opens a URL in the default web browser."
+    },
+    {
+      "qualifiedName": "api.parent",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Sets the parent of a layer to the specified layer."
+    },
+    {
+      "qualifiedName": "api.play",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Starts playback."
+    },
+    {
+      "qualifiedName": "api.preCompose",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Creates a pre-Composition from selected layers and optionally names it."
+    },
+    {
+      "qualifiedName": "api.presentChooseFolder",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Presents a dialog for the user to select a folder."
+    },
+    {
+      "qualifiedName": "api.presentOpenFile",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Presents a dialog to open a file, starting in a specified directory."
+    },
+    {
+      "qualifiedName": "api.presentSaveFile",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Presents a dialog to save a file, starting in a specified directory."
+    },
+    {
+      "qualifiedName": "api.primitive",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Creates a primitive shape. Returns the resulting layer id."
+    },
+    {
+      "qualifiedName": "api.processEvents",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Processes all pending GUI events."
+    },
+    {
+      "qualifiedName": "api.readFromFile",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Reads and returns the content of a specified file."
+    },
+    {
+      "qualifiedName": "api.reloadAsset",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Reloads a specified Asset (including Smart Folder Assets)."
+    },
+    {
+      "qualifiedName": "api.removeArrayIndex",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Removes an index from an array attribute in the specified layer."
+    },
+    {
+      "qualifiedName": "api.removeFromControlCentre",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Removes a specified attribute of a specified layer from the Control Centre."
+    },
+    {
+      "qualifiedName": "api.removePreCompOverride",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Removes a pre-composition override from a specified attribute in a layer."
+    },
+    {
+      "qualifiedName": "api.removeTimeMarker",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Removes a specified time marker."
+    },
+    {
+      "qualifiedName": "api.rename",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Renames a specified layer to a new name."
+    },
+    {
+      "qualifiedName": "api.renameAttribute",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Renames a specified attribute in a layer."
+    },
+    {
+      "qualifiedName": "api.render",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Renders a specific item in the render queue."
+    },
+    {
+      "qualifiedName": "api.renderAll",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Renders all items in the render queue."
+    },
+    {
+      "qualifiedName": "api.renderPNGFrame",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Renders a PNG frame to a specified file path with a given scale percentage."
+    },
+    {
+      "qualifiedName": "api.renderSVGFrame",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Renders an SVG frame to a specified file path with a given scale percentage and option to skip composition backgrounds."
+    },
+    {
+      "qualifiedName": "api.reorder",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Reorder layers in the hierarchy, reparenting if required."
+    },
+    {
+      "qualifiedName": "api.reorderArrayAttr",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Reorders an Array attribute from a given index, to a given index."
+    },
+    {
+      "qualifiedName": "api.replaceAsset",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Replaces an asset with one located at a new file path."
+    },
+    {
+      "qualifiedName": "api.replaceGoogleSheet",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Replaces a Google Sheet asset with a new one using specified file and sheet IDs."
+    },
+    {
+      "qualifiedName": "api.resetAttribute",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Resets a specified attribute in a layer to its default value."
+    },
+    {
+      "qualifiedName": "api.resetLayerAttributes",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Resets all attributes of a specified layer to their default values, optionally ignoring transform Attributes."
+    },
+    {
+      "qualifiedName": "api.resetTransform",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Resets the transform properties of a specified layer to their default values."
+    },
+    {
+      "qualifiedName": "api.resyncPathKeyframes",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Resynchronise path keyframe data, run this if you use api.set() on a path keyframe."
+    },
+    {
+      "qualifiedName": "api.runDetachedProcess",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Runs a system process in a detached mode with specified command and arguments."
+    },
+    {
+      "qualifiedName": "api.runProcess",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Runs a system process with specified command and arguments, returns output and error."
+    },
+    {
+      "qualifiedName": "api.saveScene",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Saves the current scene."
+    },
+    {
+      "qualifiedName": "api.saveSceneAs",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Saves the current Scene to a specified file path."
+    },
+    {
+      "qualifiedName": "api.saveViewportContentsAsImage",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Saves the contents of the viewport to a PNG."
+    },
+    {
+      "qualifiedName": "api.sceneHasUnsavedChanges",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Checks if the current scene has unsaved changes."
+    },
+    {
+      "qualifiedName": "api.select",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Selects layers based on their IDs."
+    },
+    {
+      "qualifiedName": "api.selectAttribute",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Selects attributes by their full paths (e.g., \"layerId.attrId.subAttr\"). Pass an empty array to clear the selection."
+    },
+    {
+      "qualifiedName": "api.serialise",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Serialises selected layers, optionally including connections, into a string."
+    },
+    {
+      "qualifiedName": "api.set",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Sets the value of attributes for a specified layer based on a provided dictionary."
+    },
+    {
+      "qualifiedName": "api.setActiveComp",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Activates the specified Composition."
+    },
+    {
+      "qualifiedName": "api.setAttributeDefinitionOverride",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Set a definition override for an attribute (keys: \"hardMin\", \"hardMax\", \"softMin\", \"softMax\", \"step\")"
+    },
+    {
+      "qualifiedName": "api.setAttributeExpression",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Sets an expression for a specified attribute of a layer."
+    },
+    {
+      "qualifiedName": "api.setCavalryPreference",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Sets a Cavalry preference."
+    },
+    {
+      "qualifiedName": "api.setClipboardText",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Sets the clipboard text."
+    },
+    {
+      "qualifiedName": "api.setDynamicIndexOffset",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Set the Dynamic Rendering Index Offset."
+    },
+    {
+      "qualifiedName": "api.setEditablePath",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Sets the editable path of a specified layer using a given path object, with an option to interpret coordinates in world space"
+    },
+    {
+      "qualifiedName": "api.setFill",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Toggles the fill visibility on or off for a specified layer."
+    },
+    {
+      "qualifiedName": "api.setFrame",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Sets the current frame in the active Composition."
+    },
+    {
+      "qualifiedName": "api.setGenerator",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Sets a generator of a specific type to an attribute on a layer."
+    },
+    {
+      "qualifiedName": "api.setGradientFromColors",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Sets the colours on a gradient attribute from an array of hex color strings."
+    },
+    {
+      "qualifiedName": "api.setGradientInterpolation",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Sets the interpolation for every stop on a gradient: Linear = 0, Step = 1, Smooth = 2, Crush = 3, Smooth Blend = 4, Contrast = 5."
+    },
+    {
+      "qualifiedName": "api.setInFrame",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Sets the in-frame (first visible frame) of a specified layer."
+    },
+    {
+      "qualifiedName": "api.setKeyframeVelocity",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Sets speed and influence values on keyframes for a given layer. Keys in the"
+    },
+    {
+      "qualifiedName": "api.setOutFrame",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Sets the out-frame (last visible frame) of a specified layer."
+    },
+    {
+      "qualifiedName": "api.setPointPosition",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Sets the positions selected points in an Editable Shape, with options for local space coordinates and including handle positions."
+    },
+    {
+      "qualifiedName": "api.setPreference",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Sets a preference value for a specified key."
+    },
+    {
+      "qualifiedName": "api.setPreferenceObject",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Sets a preference value for a specified key."
+    },
+    {
+      "qualifiedName": "api.setProject",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Sets the Project."
+    },
+    {
+      "qualifiedName": "api.setSelectedKeyframeIds",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Sets the selected keyframes based on an array of keyframe IDs."
+    },
+    {
+      "qualifiedName": "api.setStroke",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Toggles the stroke visibility on or off for a specified layer."
+    },
+    {
+      "qualifiedName": "api.setUserData",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Sets a user data value for a specified key on a specified layer."
+    },
+    {
+      "qualifiedName": "api.showInAttributeEditor",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Shows the given layer in the Attribute Editor."
+    },
+    {
+      "qualifiedName": "api.soloLayers",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Solos the specified layers."
+    },
+    {
+      "qualifiedName": "api.sortLayerIdsByHierarchy",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns the IDs of the given layers in hierarchy order."
+    },
+    {
+      "qualifiedName": "api.stop",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Stops playback."
+    },
+    {
+      "qualifiedName": "api.textFromAsset",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Retrieves the text content of a specified asset."
+    },
+    {
+      "qualifiedName": "api.timecodeToFrames",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Converts a given timecode into an equivalent number of frames by using an FPS value."
+    },
+    {
+      "qualifiedName": "api.toNativeFilePath",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Converts a file path to the native file system format."
+    },
+    {
+      "qualifiedName": "api.unParent",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Removes the parent of a specified layer, making it a top-level layer."
+    },
+    {
+      "qualifiedName": "api.unzip",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Unzips a zip file to a given location, returning a list of extracted top level files."
+    },
+    {
+      "qualifiedName": "api.updateAppTitleBar",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Force the app's title bar to update. This can be used to e.g. trigger Restricted Mode for Starter users when Pro features are added to a Comp."
+    },
+    {
+      "qualifiedName": "api.uuid",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Returns a UUIDv4 string."
+    },
+    {
+      "qualifiedName": "api.writeEncodedToBinaryFile",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "Script UI global api",
+      "description": "Writes a base64-encoded string to a binary file."
+    },
+    {
+      "qualifiedName": "api.writeToFile",
+      "runtime": "api",
+      "namespace": "@JS_GUI_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
+      "availability": "Script UI global api",
+      "description": "Writes content to a file at a specified path, with an option to overwrite exiting files."
+    },
+    {
+      "qualifiedName": "cavalry.angleFromVector",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Calculates the angle (in radians) from a vector (x, y)."
+    },
+    {
+      "qualifiedName": "cavalry.clamp",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Clamps a value between a minimum and a maximum number."
+    },
+    {
+      "qualifiedName": "cavalry.degreesToRadians",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Converts an angle in degrees to radians."
+    },
+    {
+      "qualifiedName": "cavalry.dist",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Calculates the distance between two points (x1, y1) and (x2, y2)."
+    },
+    {
+      "qualifiedName": "cavalry.fontExists",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Checks if a font with the given family and style exists."
+    },
+    {
+      "qualifiedName": "cavalry.getFontFamilies",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Retrieves a list of available font families."
+    },
+    {
+      "qualifiedName": "cavalry.getFontStyles",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Retrieves a list of available styles for a given font family."
+    },
+    {
+      "qualifiedName": "cavalry.hexToHsv",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Converts a hex color value to its HSV representation."
+    },
+    {
+      "qualifiedName": "cavalry.hexToRgba",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Converts a hex color value to its RGBA representation, optionally scaled to the range of 0-1."
+    },
+    {
+      "qualifiedName": "cavalry.hsvToHex",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Converts HSV color values to their hex color string representation."
+    },
+    {
+      "qualifiedName": "cavalry.hsvToRgba",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Converts HSV color values to their RGBA representation."
+    },
+    {
+      "qualifiedName": "cavalry.lerp",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Performs linear interpolation between values min and max."
+    },
+    {
+      "qualifiedName": "cavalry.Line",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "class",
+      "callable": false,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": ""
+    },
+    {
+      "qualifiedName": "cavalry.map",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Re-maps a number from one range to another."
+    },
+    {
+      "qualifiedName": "cavalry.Material",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "class",
+      "callable": false,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": ""
+    },
+    {
+      "qualifiedName": "cavalry.Matrix",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "class",
+      "callable": false,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": ""
+    },
+    {
+      "qualifiedName": "cavalry.measureText",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Measures the dimensions of the given text with specified font settings."
+    },
+    {
+      "qualifiedName": "cavalry.Mesh",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "class",
+      "callable": false,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": ""
+    },
+    {
+      "qualifiedName": "cavalry.nameThatColor",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Returns a W3C color name that's the closest match to the specified hex color."
+    },
+    {
+      "qualifiedName": "cavalry.noise1d",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Sample 1d Simplex Noise at the given X coodrinate."
+    },
+    {
+      "qualifiedName": "cavalry.noise2d",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Sample 2d Simplex Noise at the given XY coodrinate."
+    },
+    {
+      "qualifiedName": "cavalry.noise3d",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Sample 3d Simplex Noise at the given XYZ coodrinate."
+    },
+    {
+      "qualifiedName": "cavalry.norm",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Normalizes a number within a range."
+    },
+    {
+      "qualifiedName": "cavalry.Path",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "class",
+      "callable": false,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": ""
+    },
+    {
+      "qualifiedName": "cavalry.Point",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "class",
+      "callable": false,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": ""
+    },
+    {
+      "qualifiedName": "cavalry.PointCloud",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "class",
+      "callable": false,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": ""
+    },
+    {
+      "qualifiedName": "cavalry.radiansToDegrees",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Converts an angle in radians to degrees."
+    },
+    {
+      "qualifiedName": "cavalry.random",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Create a random number."
+    },
+    {
+      "qualifiedName": "cavalry.rgbaToHex",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Converts RGBA color values to their hex color string representation."
+    },
+    {
+      "qualifiedName": "cavalry.rgbToHex",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Converts RGB color values to their hex color string representation."
+    },
+    {
+      "qualifiedName": "cavalry.rgbToHsv",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Converts RGB color values to their HSV representation."
+    },
+    {
+      "qualifiedName": "cavalry.uniform",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Create a uniformly distributed random number."
+    },
+    {
+      "qualifiedName": "cavalry.vectorFromAngle",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Creates a vector from an angle in radians."
+    },
+    {
+      "qualifiedName": "cavalry.versionLessThan",
+      "runtime": "cavalry",
+      "namespace": "@JS_CORE_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer/expression global cavalry",
+      "description": "Compares the given version string with the Cavalry version."
+    },
+    {
+      "qualifiedName": "ctx.attributeId",
+      "runtime": "ctx",
+      "namespace": "@JS_CTX",
+      "kind": "property",
+      "callable": false,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer evaluation context ctx",
+      "description": "The id of the Attribute being calculated."
+    },
+    {
+      "qualifiedName": "ctx.count",
+      "runtime": "ctx",
+      "namespace": "@JS_CTX",
+      "kind": "property",
+      "callable": false,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer evaluation context ctx",
+      "description": "The number of shapes being calculated (in, for example, a Duplicator)."
+    },
+    {
+      "qualifiedName": "ctx.globalTransformationMatrix",
+      "runtime": "ctx",
+      "namespace": "@JS_CTX",
+      "kind": "function",
+      "callable": true,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer evaluation context ctx",
+      "description": "Returns the upstream global transformation matrix, or null if there isn't one."
+    },
+    {
+      "qualifiedName": "ctx.hasObject",
+      "runtime": "ctx",
+      "namespace": "@JS_CTX",
+      "kind": "function",
+      "callable": true,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer evaluation context ctx",
+      "description": "Checks if an object with the specified name exists and can be loaded."
+    },
+    {
+      "qualifiedName": "ctx.index",
+      "runtime": "ctx",
+      "namespace": "@JS_CTX",
+      "kind": "property",
+      "callable": false,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer evaluation context ctx",
+      "description": "The index of the object (in, for example, a Duplicator)."
+    },
+    {
+      "qualifiedName": "ctx.layerId",
+      "runtime": "ctx",
+      "namespace": "@JS_CTX",
+      "kind": "property",
+      "callable": false,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer evaluation context ctx",
+      "description": "The layer id being calculated."
+    },
+    {
+      "qualifiedName": "ctx.loadObject",
+      "runtime": "ctx",
+      "namespace": "@JS_CTX",
+      "kind": "function",
+      "callable": true,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer evaluation context ctx",
+      "description": "Loads an object which has been previously saved."
+    },
+    {
+      "qualifiedName": "ctx.niceName",
+      "runtime": "ctx",
+      "namespace": "@JS_CTX",
+      "kind": "property",
+      "callable": false,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer evaluation context ctx",
+      "description": "The nice name of the layer being calculated."
+    },
+    {
+      "qualifiedName": "ctx.saveObject",
+      "runtime": "ctx",
+      "namespace": "@JS_CTX",
+      "kind": "function",
+      "callable": true,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer evaluation context ctx",
+      "description": "Saves an object which can then be retreived on future calculations."
+    },
+    {
+      "qualifiedName": "ctx.transformationMatrix",
+      "runtime": "ctx",
+      "namespace": "@JS_CTX",
+      "kind": "function",
+      "callable": true,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Layer evaluation context ctx",
+      "description": "Returns the upstream local transformation matrix, or null if there isn't one."
+    },
+    {
+      "qualifiedName": "def.centrePivotAtDepthAtIndex",
+      "runtime": "def",
+      "namespace": "@JS_DEFORMER",
+      "kind": "function",
+      "callable": true,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Deformer definition context def",
+      "description": "Centers the pivot of a mesh at a specific depth and index."
+    },
+    {
+      "qualifiedName": "def.clearTransformAtDepthAtIndex",
+      "runtime": "def",
+      "namespace": "@JS_DEFORMER",
+      "kind": "function",
+      "callable": true,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Deformer definition context def",
+      "description": "Clears the transform of a mesh at a specific depth and index."
+    },
+    {
+      "qualifiedName": "def.getBoundingBox",
+      "runtime": "def",
+      "namespace": "@JS_DEFORMER",
+      "kind": "function",
+      "callable": true,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Deformer definition context def",
+      "description": "Returns an object representing the bounding box of the shape being deformed."
+    },
+    {
+      "qualifiedName": "def.getFalloffAtPoint",
+      "runtime": "def",
+      "namespace": "@JS_DEFORMER",
+      "kind": "function",
+      "callable": true,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Deformer definition context def",
+      "description": "Returns the falloff value (0-1) at the given local position, multiplied by strength."
+    },
+    {
+      "qualifiedName": "def.getMeshAtDepthAtIndex",
+      "runtime": "def",
+      "namespace": "@JS_DEFORMER",
+      "kind": "function",
+      "callable": true,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Deformer definition context def",
+      "description": "Returns a Mesh at the given depth and index."
+    },
+    {
+      "qualifiedName": "def.getMeshesAtDepth",
+      "runtime": "def",
+      "namespace": "@JS_DEFORMER",
+      "kind": "function",
+      "callable": true,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Deformer definition context def",
+      "description": "Returns an array of Mesh objects."
+    },
+    {
+      "qualifiedName": "def.getPoints",
+      "runtime": "def",
+      "namespace": "@JS_DEFORMER",
+      "kind": "function",
+      "callable": true,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Deformer definition context def",
+      "description": "Retrieves an array of point objects from all meshes."
+    },
+    {
+      "qualifiedName": "def.getRootMesh",
+      "runtime": "def",
+      "namespace": "@JS_DEFORMER",
+      "kind": "function",
+      "callable": true,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Deformer definition context def",
+      "description": "Returns the root Mesh with its full hierarchy of child meshes for recursive traversal."
+    },
+    {
+      "qualifiedName": "def.highestDepthWithPath",
+      "runtime": "def",
+      "namespace": "@JS_DEFORMER",
+      "kind": "function",
+      "callable": true,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Deformer definition context def",
+      "description": "Returns the highest depth with a path"
+    },
+    {
+      "qualifiedName": "def.meshCountAtDepth",
+      "runtime": "def",
+      "namespace": "@JS_DEFORMER",
+      "kind": "function",
+      "callable": true,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Deformer definition context def",
+      "description": "Returns the mesh count at the given depth."
+    },
+    {
+      "qualifiedName": "def.meshDepth",
+      "runtime": "def",
+      "namespace": "@JS_DEFORMER",
+      "kind": "property",
+      "callable": false,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Deformer definition context def",
+      "description": "The maximum mesh depth."
+    },
+    {
+      "qualifiedName": "def.setMaterialAtDepthAtIndex",
+      "runtime": "def",
+      "namespace": "@JS_DEFORMER",
+      "kind": "function",
+      "callable": true,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Deformer definition context def",
+      "description": "Sets the material of a mesh at a specific depth and index."
+    },
+    {
+      "qualifiedName": "def.setMeshAtDepthAtIndex",
+      "runtime": "def",
+      "namespace": "@JS_DEFORMER",
+      "kind": "function",
+      "callable": true,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Deformer definition context def",
+      "description": "Replaces a mesh at a specific depth and index with the provided mesh object."
+    },
+    {
+      "qualifiedName": "def.setMeshesAtDepth",
+      "runtime": "def",
+      "namespace": "@JS_DEFORMER",
+      "kind": "function",
+      "callable": true,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Deformer definition context def",
+      "description": "Sets an array of meshes at the given depth."
+    },
+    {
+      "qualifiedName": "def.setPoints",
+      "runtime": "def",
+      "namespace": "@JS_DEFORMER",
+      "kind": "function",
+      "callable": true,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Deformer definition context def",
+      "description": "Sets the positions of points in all meshes using an array of point objects."
+    },
+    {
+      "qualifiedName": "def.setRootMesh",
+      "runtime": "def",
+      "namespace": "@JS_DEFORMER",
+      "kind": "function",
+      "callable": true,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Deformer definition context def",
+      "description": "Sets the root Mesh, replacing the entire mesh hierarchy."
+    },
+    {
+      "qualifiedName": "def.setTransformAtDepthAtIndex",
+      "runtime": "def",
+      "namespace": "@JS_DEFORMER",
+      "kind": "function",
+      "callable": true,
+      "coverage": "CONTEXT_ONLY",
+      "usedByBridge": false,
+      "availability": "JavaScript Deformer definition context def",
+      "description": "Applies a transformation to a mesh at a specific depth and index."
+    },
+    {
+      "qualifiedName": "ui.add",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI_BRIDGE",
+      "usedByBridge": true,
+      "availability": "Script UI global ui",
+      "description": "Adds a widget to the root layout."
+    },
+    {
+      "qualifiedName": "ui.addCallbackObject",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI_BRIDGE",
+      "usedByBridge": true,
+      "availability": "Script UI global ui",
+      "description": "Sets the callback object for the window. This can be used to trigger methods when certain app events happen."
+    },
+    {
+      "qualifiedName": "ui.addMenuItem",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Adds a menu item to the context menu."
+    },
+    {
+      "qualifiedName": "ui.addSpacing",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Adds a fixed amount of space to the root layout."
+    },
+    {
+      "qualifiedName": "ui.addStretch",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Adds a stretchable space to the root layout."
+    },
+    {
+      "qualifiedName": "ui.addSubMenu",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Adds a submenu to the context menu."
+    },
+    {
+      "qualifiedName": "ui.chooseFileToOpen",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Returns the chosen file path, this is empty if the user presses cancel from the dialog box. The file filter string should follow the format \"Palettes (*.pal *.ase *.theme)\""
+    },
+    {
+      "qualifiedName": "ui.chooseFileToSave",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Returns the chosen file path to create or empty if the user presses cancel from the dialog box. The file filter string should follow the format \"Palettes (*.pal *.ase *.theme)\""
+    },
+    {
+      "qualifiedName": "ui.chooseFolderPath",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Returns the chosen folder path or empty if the user presses cancel from the dialog box."
+    },
+    {
+      "qualifiedName": "ui.clearContextMenu",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Clears all items from the context menu."
+    },
+    {
+      "qualifiedName": "ui.fieldHeight",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "property",
+      "callable": false,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Gets the default height for a numeric field."
+    },
+    {
+      "qualifiedName": "ui.fieldWidth",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "property",
+      "callable": false,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Get's the default width for a numeric field."
+    },
+    {
+      "qualifiedName": "ui.getThemeColor",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Returns the theme colour for the given key."
+    },
+    {
+      "qualifiedName": "ui.openSceneDialog",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Opens a file browser for opening Cavalry Scenes"
+    },
+    {
+      "qualifiedName": "ui.registerDragDropMimeType",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Registers a drop mime type (e.g layerIds, color, text) for the window."
+    },
+    {
+      "qualifiedName": "ui.runFileScript",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Runs a GUI script from a file, returning true on success."
+    },
+    {
+      "qualifiedName": "ui.scriptLocation",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "property",
+      "callable": false,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Gets the folder path of the current script."
+    },
+    {
+      "qualifiedName": "ui.setBackgroundColor",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Sets the spacing between elements in the layout."
+    },
+    {
+      "qualifiedName": "ui.setCallbacksActive",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "This can be used to temporarily disable UI callbacks."
+    },
+    {
+      "qualifiedName": "ui.setFixedHeight",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Sets a fixed height for the window."
+    },
+    {
+      "qualifiedName": "ui.setFixedSize",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Sets a fixed size for the window."
+    },
+    {
+      "qualifiedName": "ui.setFixedWidth",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Sets a fixed width for the window."
+    },
+    {
+      "qualifiedName": "ui.setMargins",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Sets the margins of the root layout."
+    },
+    {
+      "qualifiedName": "ui.setMaximumHeight",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Sets the maximum height for the window."
+    },
+    {
+      "qualifiedName": "ui.setMaximumWidth",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Sets the maximum width for the window."
+    },
+    {
+      "qualifiedName": "ui.setMinimumHeight",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Sets the minimum height for the window."
+    },
+    {
+      "qualifiedName": "ui.setMinimumWidth",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Sets the minimum width for the window."
+    },
+    {
+      "qualifiedName": "ui.setSpaceBetween",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Sets the spacing between elements in the layout."
+    },
+    {
+      "qualifiedName": "ui.setTitle",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI_BRIDGE",
+      "usedByBridge": true,
+      "availability": "Script UI global ui",
+      "description": "Sets the window title."
+    },
+    {
+      "qualifiedName": "ui.setToolbar",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Marks the widget as a toolbar."
+    },
+    {
+      "qualifiedName": "ui.setVerticalToolbar",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Sets the toolbar orientation to vertical."
+    },
+    {
+      "qualifiedName": "ui.show",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI_BRIDGE",
+      "usedByBridge": true,
+      "availability": "Script UI global ui",
+      "description": "Shows the window."
+    },
+    {
+      "qualifiedName": "ui.showContextMenu",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Shows the context menu at the current cursor position."
+    },
+    {
+      "qualifiedName": "ui.showContextMenuOnRightClick",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Enables showing the context menu on right-click events."
+    },
+    {
+      "qualifiedName": "ui.size",
+      "runtime": "ui",
+      "namespace": "@JS_WIDGET_API",
+      "kind": "function",
+      "callable": true,
+      "coverage": "SCRIPT_UI",
+      "usedByBridge": false,
+      "availability": "Script UI global ui",
+      "description": "Returns the size of the window."
+    }
+  ],
+  "unknown": []
+}

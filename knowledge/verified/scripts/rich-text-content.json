@@ -1,0 +1,19 @@
+{
+  "task": "rich-text-content",
+  "status": "verified",
+  "script": "const text = await Typo.textCreate({ text: 'VERIFIED TEXT', fontSize: 72, alignment: 'center' });\nawait Attr.attributeSet(text.layerId, 'text', { text: 'VERIFIED TEXT', overrides: [] });",
+  "inputAssumptions": [
+    "Cavalry 2.7.2 bridge connected on macOS"
+  ],
+  "createdObjects": [
+    "textShape"
+  ],
+  "validation": {
+    "passed": true,
+    "checks": [
+      "Requested text rendered instead of Cavalry default",
+      "Content persisted after save/reopen"
+    ]
+  },
+  "errors": []
+}

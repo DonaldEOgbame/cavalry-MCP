@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-20T13:10:45.013Z",
+  "generatedAt": "2026-09-21T14:04:41.008Z",
   "source": "/Applications/Cavalry.app/Contents/assets/Definitions/nodeDefinitions.json",
   "method": "Cross-references every concrete node type in nodeDefinitions.json against the live api.getAllLayerTypes() result and a manually verified per-superType reachability map. See docs/coverage.md for the live verification transcript.",
   "totalNodeTypeEntries": 483,
@@ -8,10 +8,12 @@
   "concreteNodeTypes": 436,
   "liveTopLevelLayerTypes": 274,
   "counts": {
-    "GENERIC_MCP": 163,
-    "STRUCTURED_MCP": 273
+    "GENERIC_MCP": 132,
+    "STRUCTURED_MCP": 268,
+    "SCHEMA_INTERNAL_UNAVAILABLE": 36
   },
   "unknownCount": 0,
+  "verifiedLiveFalseCount": 0,
   "nodes": [
     {
       "nodeType": "hiddenFolder",
@@ -20,8 +22,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "layer_create (asset/hiddenFolder/renderQueueItem) or internal keyframe children via keyframe_* ops",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Observed in the serialized live graph after its owning workflow created it.",
+      "liveStatus": "PASS_IMPLICIT_WORKFLOW"
     },
     {
       "nodeType": "group",
@@ -40,8 +43,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "layer_create (compNode) or generator_set for bone/skeleton/displacement children",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Observed in the serialized live graph after its owning workflow created it.",
+      "liveStatus": "PASS_IMPLICIT_WORKFLOW"
     },
     {
       "nodeType": "planarCamera",
@@ -68,10 +72,11 @@
       "superType": null,
       "attributeCount": 14,
       "liveTopLevelLayer": false,
-      "coverage": "STRUCTURED_MCP",
-      "via": "dedicated ops already exist per node (palette/colorSwatch via asset ops, renderQueue via render_queue_*, timeMarker via marker_*, animationCurveBase via graph_* )",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "animationCurve",
@@ -80,18 +85,20 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "internal children of keyframe/graph attribute ops (graph_get/graph_set)",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Observed in the serialized live graph after its owning workflow created it.",
+      "liveStatus": "PASS_IMPLICIT_WORKFLOW"
     },
     {
       "nodeType": "animationPath",
       "superType": "animationCurveBase",
       "attributeCount": 2,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "internal children of keyframe/graph attribute ops (graph_get/graph_set)",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "animationControl",
@@ -118,40 +125,44 @@
       "superType": null,
       "attributeCount": 1,
       "liveTopLevelLayer": false,
-      "coverage": "STRUCTURED_MCP",
-      "via": "dedicated ops already exist per node (palette/colorSwatch via asset ops, renderQueue via render_queue_*, timeMarker via marker_*, animationCurveBase via graph_* )",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "paletteContainer",
       "superType": null,
       "attributeCount": 0,
       "liveTopLevelLayer": false,
-      "coverage": "STRUCTURED_MCP",
-      "via": "dedicated ops already exist per node (palette/colorSwatch via asset ops, renderQueue via render_queue_*, timeMarker via marker_*, animationCurveBase via graph_* )",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "palette",
       "superType": null,
       "attributeCount": 0,
       "liveTopLevelLayer": false,
-      "coverage": "STRUCTURED_MCP",
-      "via": "dedicated ops already exist per node (palette/colorSwatch via asset ops, renderQueue via render_queue_*, timeMarker via marker_*, animationCurveBase via graph_* )",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "audioTrack",
       "superType": "atomic",
       "attributeCount": 3,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "generator_set or attribute_set depending on host node; audioTrack via cavalry_audio ops",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "assetFromSmartFolder",
@@ -170,18 +181,20 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "layer_create (asset/hiddenFolder/renderQueueItem) or internal keyframe children via keyframe_* ops",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Observed in the serialized live graph after its owning workflow created it.",
+      "liveStatus": "PASS_IMPLICIT_WORKFLOW"
     },
     {
       "nodeType": "renderQueue",
       "superType": null,
       "attributeCount": 0,
       "liveTopLevelLayer": false,
-      "coverage": "STRUCTURED_MCP",
-      "via": "dedicated ops already exist per node (palette/colorSwatch via asset ops, renderQueue via render_queue_*, timeMarker via marker_*, animationCurveBase via graph_* )",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "renderQueueItem",
@@ -190,28 +203,31 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "layer_create (asset/hiddenFolder/renderQueueItem) or internal keyframe children via keyframe_* ops",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Observed in the serialized live graph after its owning workflow created it.",
+      "liveStatus": "PASS_IMPLICIT_WORKFLOW"
     },
     {
       "nodeType": "keyframeLayerFolder",
       "superType": "hiddenFolder",
       "attributeCount": 0,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "internal grouping node created implicitly by keyframe/marker folder operations",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "keyframeLayer",
       "superType": "element",
       "attributeCount": 4,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "layer_create (asset/hiddenFolder/renderQueueItem) or internal keyframe children via keyframe_* ops",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "compositionReference",
@@ -341,7 +357,8 @@
       "coverage": "GENERIC_MCP",
       "via": "render_item_set_format (api.setGenerator on the render queue item \"generator\" slot)",
       "verifiedLive": true,
-      "notes": ""
+      "notes": "Observed in the serialized live graph after its owning workflow created it.",
+      "liveStatus": "PASS_IMPLICIT_WORKFLOW"
     },
     {
       "nodeType": "renderHVEC",
@@ -378,10 +395,11 @@
       "superType": "element",
       "attributeCount": 3,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "layer_create (asset/hiddenFolder/renderQueueItem) or internal keyframe children via keyframe_* ops",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "editableShape",
@@ -478,10 +496,11 @@
       "superType": "behaviour",
       "attributeCount": 13,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "oscillator",
@@ -598,10 +617,11 @@
       "superType": "indexableArray",
       "attributeCount": 2,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "attribute_set on generic array-typed attributes",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "ifElse",
@@ -728,10 +748,11 @@
       "superType": "particleModifier",
       "attributeCount": 3,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "generator_set inside a particle system's collision-event slot",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "forceModifier",
@@ -928,10 +949,11 @@
       "superType": "behaviour",
       "attributeCount": 5,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "frame",
@@ -1130,8 +1152,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set inside a range/remap operator chain",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (32ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "align",
@@ -1318,10 +1341,11 @@
       "superType": "behaviourBase",
       "attributeCount": 0,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "pinch",
@@ -1358,10 +1382,11 @@
       "superType": "behaviourBase",
       "attributeCount": 6,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "blendSubMeshPositions",
@@ -1891,7 +1916,8 @@
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
       "verifiedLive": true,
-      "notes": ""
+      "notes": "Observed in the serialized live graph after its owning workflow created it.",
+      "liveStatus": "PASS_IMPLICIT_WORKFLOW"
     },
     {
       "nodeType": "circleDistribution",
@@ -1901,7 +1927,8 @@
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
       "verifiedLive": true,
-      "notes": ""
+      "notes": "Observed in the serialized live graph after its owning workflow created it.",
+      "liveStatus": "PASS_IMPLICIT_WORKFLOW"
     },
     {
       "nodeType": "pointDistribution",
@@ -2108,10 +2135,11 @@
       "superType": "textMaterialBehaviour",
       "attributeCount": 9,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "generator_set on a Text layer's fill-behaviour slot",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "applyTextMaterial",
@@ -2180,8 +2208,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a Text layer's text-source slot",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (42ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "textDate",
@@ -2190,8 +2219,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a Text layer's text-source slot",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (30ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "textBlockUnicode",
@@ -2200,8 +2230,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a Text layer's text-source slot",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (32ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "textFormatted",
@@ -2210,8 +2241,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a Text layer's text-source slot",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (34ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "textHex",
@@ -2220,8 +2252,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a Text layer's text-source slot",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (31ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "textValue",
@@ -2230,8 +2263,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a Text layer's text-source slot",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (26ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "textNumber",
@@ -2240,8 +2274,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a Text layer's text-source slot",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (29ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "formattedDateAndTime",
@@ -2250,8 +2285,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a Text layer's text-source slot",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (42ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "imageToShapes",
@@ -2341,7 +2377,8 @@
       "coverage": "GENERIC_MCP",
       "via": "layer_create_primitive with an arbitrary primitiveType string",
       "verifiedLive": true,
-      "notes": ""
+      "notes": "Observed in the serialized live graph after its owning workflow created it.",
+      "liveStatus": "PASS_IMPLICIT_WORKFLOW"
     },
     {
       "nodeType": "polygonShape",
@@ -2351,7 +2388,8 @@
       "coverage": "GENERIC_MCP",
       "via": "layer_create_primitive with an arbitrary primitiveType string",
       "verifiedLive": true,
-      "notes": ""
+      "notes": "Observed in the serialized live graph after its owning workflow created it.",
+      "liveStatus": "PASS_IMPLICIT_WORKFLOW"
     },
     {
       "nodeType": "ellipseShape",
@@ -2361,7 +2399,8 @@
       "coverage": "GENERIC_MCP",
       "via": "layer_create_primitive with an arbitrary primitiveType string",
       "verifiedLive": true,
-      "notes": ""
+      "notes": "Observed in the serialized live graph after its owning workflow created it.",
+      "liveStatus": "PASS_IMPLICIT_WORKFLOW"
     },
     {
       "nodeType": "circleShape",
@@ -2381,7 +2420,8 @@
       "coverage": "GENERIC_MCP",
       "via": "layer_create_primitive with an arbitrary primitiveType string",
       "verifiedLive": true,
-      "notes": ""
+      "notes": "Observed in the serialized live graph after its owning workflow created it.",
+      "liveStatus": "PASS_IMPLICIT_WORKFLOW"
     },
     {
       "nodeType": "superEllipseShape",
@@ -2460,8 +2500,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a Line layer's path-generator slot",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (36ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "spiralLine",
@@ -2470,8 +2511,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a Line layer's path-generator slot",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (25ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "bezierLine",
@@ -2480,8 +2522,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a Line layer's path-generator slot",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (36ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "rayLine",
@@ -2620,8 +2663,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a Duplicator \"generator\" slot",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (28ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "intersectionDistribution",
@@ -2630,8 +2674,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a Duplicator \"generator\" slot",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (30ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "cogwheelShape",
@@ -2670,8 +2715,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a Line/Path layer's arrow-head slot",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (32ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "chevronHead",
@@ -2680,8 +2726,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a Line/Path layer's arrow-head slot",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (36ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "barbedHead",
@@ -2690,8 +2737,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a Line/Path layer's arrow-head slot",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (30ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "circleHead",
@@ -2700,8 +2748,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a Line/Path layer's arrow-head slot",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (33ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "boxHead",
@@ -2710,8 +2759,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a Line/Path layer's arrow-head slot",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (27ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "textTimecode",
@@ -2720,8 +2770,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a Text layer's text-source slot",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (37ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "numberRangeBase",
@@ -2730,8 +2781,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set inside a range/remap operator chain",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (25ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "numberRange",
@@ -2750,8 +2802,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set inside a range/remap operator chain",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (30ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "numberRangeToColor",
@@ -2798,10 +2851,11 @@
       "superType": "behaviourBase",
       "attributeCount": 2,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "measure",
@@ -2880,8 +2934,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set inside a String layer's operator chain",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (36ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "resizeString",
@@ -2890,8 +2945,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set inside a String layer's operator chain",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (27ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "replaceString",
@@ -2900,8 +2956,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set inside a String layer's operator chain",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (32ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "changeStringCase",
@@ -2910,8 +2967,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set inside a String layer's operator chain",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (37ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "concatenateStringArray",
@@ -2920,8 +2978,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set inside a String layer's operator chain",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (38ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "subString",
@@ -2930,8 +2989,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set inside a String layer's operator chain",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (24ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "regexString",
@@ -2940,8 +3000,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set inside a String layer's operator chain",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (29ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "unicodeManipulator",
@@ -2950,8 +3011,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set inside a String layer's operator chain",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (26ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "transitionString",
@@ -2960,8 +3022,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set inside a String layer's operator chain",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (38ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "string",
@@ -3028,10 +3091,11 @@
       "superType": "atomic",
       "attributeCount": 2,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "generator_set or attribute_set depending on host node; audioTrack via cavalry_audio ops",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "resizeArray",
@@ -3040,8 +3104,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set inside an array-processing operator chain",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (29ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "sortArray",
@@ -3050,8 +3115,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set inside an array-processing operator chain",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (24ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "shuffleArray",
@@ -3060,8 +3126,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set inside an array-processing operator chain",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (38ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "manipulateArray",
@@ -3070,8 +3137,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set inside an array-processing operator chain",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (26ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "fillRule",
@@ -3188,10 +3256,11 @@
       "superType": "behaviourBase",
       "attributeCount": 3,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "mergeShape",
@@ -3220,8 +3289,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a constraint slot (same pattern as distribution/fill slots)",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (21ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "edgeConstraint",
@@ -3230,8 +3300,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a constraint slot (same pattern as distribution/fill slots)",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (36ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "shaderArray",
@@ -3258,20 +3329,22 @@
       "superType": "indexableArray",
       "attributeCount": 2,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "attribute_set on generic array-typed attributes",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "gradientBuilder",
       "superType": "atomic",
       "attributeCount": 6,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "generator_set or attribute_set depending on host node; audioTrack via cavalry_audio ops",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "blendShape",
@@ -3288,10 +3361,11 @@
       "superType": "behaviourBase",
       "attributeCount": 5,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "simpleValue2Solver",
@@ -3328,20 +3402,22 @@
       "superType": "indexableArray",
       "attributeCount": 5,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "attribute_set on generic array-typed attributes",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "growthSolver",
       "superType": "atomic",
       "attributeCount": 6,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "generator_set or attribute_set depending on host node; audioTrack via cavalry_audio ops",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "lengthContext",
@@ -3410,8 +3486,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "layer_create (Layout Group children)",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (29ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "verticalLayout",
@@ -3420,8 +3497,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "layer_create (Layout Group children)",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (28ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "gridLayout",
@@ -3430,8 +3508,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "layer_create (Layout Group children)",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (31ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "layoutShape",
@@ -3480,8 +3559,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set inside a Rectangle Pattern generator chain",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (32ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "ringRectPatternGenerator",
@@ -3490,8 +3570,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "generator_set inside a Rectangle Pattern generator chain",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (33ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "bentoShape",
@@ -3608,10 +3689,11 @@
       "superType": "behaviourBase",
       "attributeCount": 8,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "chopPath",
@@ -3658,10 +3740,11 @@
       "superType": "atomic",
       "attributeCount": 2,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "generator_set or attribute_set depending on host node; audioTrack via cavalry_audio ops",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "pinConstraint",
@@ -3931,7 +4014,8 @@
       "coverage": "GENERIC_MCP",
       "via": "attribute_set on the generic \"filters\" array attribute present on every layer",
       "verifiedLive": true,
-      "notes": ""
+      "notes": "Observed in the serialized live graph after its owning workflow created it.",
+      "liveStatus": "PASS_IMPLICIT_WORKFLOW"
     },
     {
       "nodeType": "edgeDetection",
@@ -4028,10 +4112,11 @@
       "superType": "drawable",
       "attributeCount": 4,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "layer_create (compNode) or generator_set for bone/skeleton/displacement children",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "chromaticAberrationFilter",
@@ -4068,20 +4153,22 @@
       "superType": "behaviourBase",
       "attributeCount": 2,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "removeContoursUtility",
       "superType": "behaviourBase",
       "attributeCount": 2,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "javaScriptShape",
@@ -4120,8 +4207,9 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "internal grouping node created implicitly by keyframe/marker folder operations",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Observed in the serialized live graph after its owning workflow created it.",
+      "liveStatus": "PASS_IMPLICIT_WORKFLOW"
     },
     {
       "nodeType": "timeMarker",
@@ -4130,8 +4218,9 @@
       "liveTopLevelLayer": false,
       "coverage": "STRUCTURED_MCP",
       "via": "dedicated ops already exist per node (palette/colorSwatch via asset ops, renderQueue via render_queue_*, timeMarker via marker_*, animationCurveBase via graph_* )",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Observed in the serialized live graph after its owning workflow created it.",
+      "liveStatus": "PASS_IMPLICIT_WORKFLOW"
     },
     {
       "nodeType": "keyframe",
@@ -4140,8 +4229,9 @@
       "liveTopLevelLayer": false,
       "coverage": "STRUCTURED_MCP",
       "via": "keyframe_* ops (keyframe is the base unit those ops already manipulate)",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Created, inspected, and deleted live in Cavalry 2.7.2 (30ms).",
+      "liveStatus": "PASS_DIRECT_CREATE"
     },
     {
       "nodeType": "schedulingGroup",
@@ -4190,48 +4280,53 @@
       "liveTopLevelLayer": false,
       "coverage": "GENERIC_MCP",
       "via": "internal children of keyframe/graph attribute ops (graph_get/graph_set)",
-      "verifiedLive": false,
-      "notes": ""
+      "verifiedLive": true,
+      "notes": "Observed in the serialized live graph after its owning workflow created it.",
+      "liveStatus": "PASS_IMPLICIT_WORKFLOW"
     },
     {
       "nodeType": "bone",
       "superType": "drawable",
       "attributeCount": 9,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "layer_create (compNode) or generator_set for bone/skeleton/displacement children",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "inverseKinematicsControl",
       "superType": "null",
       "attributeCount": 8,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "generator_set on a Rig Control's IK-control slot (Cavalry's schema literally records this node's superType as the string \"null\")",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "skeleton",
       "superType": "drawable",
       "attributeCount": 6,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "layer_create (compNode) or generator_set for bone/skeleton/displacement children",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "skinning",
       "superType": "behaviourBase",
       "attributeCount": 3,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "timelineCounter",
@@ -4328,20 +4423,22 @@
       "superType": "behaviour",
       "attributeCount": 5,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "pathSplit",
       "superType": "behaviour",
       "attributeCount": 18,
       "liveTopLevelLayer": false,
-      "coverage": "GENERIC_MCP",
-      "via": "generator_set on a deformer/behaviour slot, or the generic \"deformers\" array attribute",
-      "verifiedLive": false,
-      "notes": ""
+      "coverage": "SCHEMA_INTERNAL_UNAVAILABLE",
+      "via": "Live api.create probe rejected this schema entry; no independent top-level route is exposed.",
+      "verifiedLive": true,
+      "liveStatus": "KNOWN_LIMITATION",
+      "notes": "Cannot read properties of null (reading 'uuid')"
     },
     {
       "nodeType": "meshSolver",

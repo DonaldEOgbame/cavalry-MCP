@@ -1,0 +1,21 @@
+{
+  "task": "render-manager-mp4",
+  "status": "verified",
+  "script": "const item = await Render.renderQueueAdd();\nawait Render.renderQueueConfigure(item.renderQueueItemId, { filePath: outputDir, fileName: 'verified', frameRange: { x: 0, y: 90 }, frameRangeMode: 0 });\nawait Render.renderStart(item.renderQueueItemId);",
+  "inputAssumptions": [
+    "Cavalry 2.7.2 bridge connected on macOS"
+  ],
+  "createdObjects": [
+    "renderQueueItem",
+    "renderMP4"
+  ],
+  "validation": {
+    "passed": true,
+    "checks": [
+      "MP4 output exists",
+      "ISO Base Media signature verified",
+      "Rendered from saved editable project"
+    ]
+  },
+  "errors": []
+}

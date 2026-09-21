@@ -1,0 +1,37 @@
+{
+  "name": "radial-wave",
+  "path": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/components/radial-wave.cvc",
+  "description": "Sixteen-copy radial Duplicator with a Circle Distribution and shared staggered entrance.",
+  "requiredInputs": [
+    "source color",
+    "copy count",
+    "radius",
+    "stagger range"
+  ],
+  "exposedAttributes": [
+    "material.materialColor",
+    "generator.count",
+    "generator.radius",
+    "minimum",
+    "maximum"
+  ],
+  "aspectRatios": [
+    "16:9"
+  ],
+  "expectedDurationFrames": 90,
+  "editableProperties": [
+    "material.materialColor",
+    "generator.count",
+    "generator.radius",
+    "minimum",
+    "maximum"
+  ],
+  "visualStyle": [
+    "radial",
+    "procedural",
+    "staggered"
+  ],
+  "limitations": [
+    "Validated against Cavalry 2.7.2 on macOS."
+  ]
+}

@@ -1,0 +1,168 @@
+{
+ "activeComp": "",
+ "assets": [
+  {
+   "data": { "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/soak/soak-current.png" },
+   "nodeId": "asset#2",
+   "type": "file"
+  }
+ ],
+ "connections": [
+  { "from": "keyframe#10.id", "to": "visibilityCurve#5.keyframes.1" },
+  { "from": "keyframe#9.id", "to": "visibilityCurve#5.keyframes.0" },
+  { "from": "compNode#2.outActiveAnimationLayer", "to": "visibilityCurve#5.activeAnimationLayer" },
+  { "from": "compNode#2.time", "to": "visibilityCurve#5.time" },
+  { "from": "colorMaterial#5.id", "to": "editableShape#1.material" },
+  { "from": "visibilityCurve#5.out", "to": "editableShape#1.on" }
+ ],
+ "labelColors": "Pastel",
+ "nodeMeta": [
+  {
+   "children": [ "keyframe#10", "keyframe#9" ],
+   "nodeId": "visibilityCurve#5"
+  },
+  {
+   "children": [ "asset#2", "compNode#2", "compNode#1" ],
+   "nodeId": "asset#1"
+  },
+  {
+   "children": [ "visibilityCurve#5" ],
+   "nodeId": "hiddenFolder#5"
+  },
+  {
+   "children": [ "colorMaterial#5" ],
+   "nodeId": "hiddenFolder#6"
+  },
+  {
+   "children": [ "hiddenFolder#6", "hiddenFolder#5" ],
+   "nodeId": "editableShape#1"
+  }
+ ],
+ "nodes": [
+  {
+   "attributes": {
+    "keyframes": {
+     "list": [
+      { "varType": "nodeId" },
+      { "varType": "nodeId" }
+     ]
+    }
+   },
+   "nodeId": "visibilityCurve#5",
+   "nodeType": "visibilityCurve"
+  },
+  {
+   "attributes": {
+    "data": {
+     "value": { "numValue": -1.0 },
+     "varType": "keyData"
+    },
+    "timeOffset": { "value": 7.0, "varType": "double" },
+    "uuid": { "value": "16bd2d15-dc47-4381-8508-81c0ec3ac925", "varType": "string" }
+   },
+   "nodeId": "keyframe#10",
+   "nodeType": "keyframe"
+  },
+  {
+   "attributes": {
+    "data": {
+     "value": { "numValue": 1.0 },
+     "varType": "keyData"
+    },
+    "uuid": { "value": "a2a26b73-f177-4282-bf32-415be1c1a6fa", "varType": "string" }
+   },
+   "nodeId": "keyframe#9",
+   "nodeType": "keyframe"
+  },
+  {
+   "attributes": {
+    "niceName": { "value": "subUINodes", "varType": "string" },
+    "uuid": { "value": "c8843d2e-f087-4a84-92f9-8a4538efd384", "varType": "string" }
+   },
+   "nodeId": "hiddenFolder#5",
+   "nodeType": "hiddenFolder"
+  },
+  {
+   "attributes": {
+    "niceName": { "value": "Hidden Folder", "varType": "string" },
+    "uuid": { "value": "243f3435-754d-45c5-9508-eed5e1a91535", "varType": "string" }
+   },
+   "nodeId": "hiddenFolder#6",
+   "nodeType": "hiddenFolder"
+  },
+  {
+   "attributes": {
+    "colorId": { "value": 6, "varType": "int" },
+    "niceName": { "value": "Fill 5", "varType": "string" },
+    "showInProjectWindow": { "value": false, "varType": "bool" },
+    "uuid": { "value": "8e33c614-51e8-4b6a-9651-4e259226051e", "varType": "string" }
+   },
+   "nodeId": "colorMaterial#5",
+   "nodeType": "colorMaterial"
+  },
+  {
+   "attributes": {
+    "inputPath": {
+     "value": {
+      "contours": [
+       {
+        "closed": true,
+        "points": [
+         {
+          "gradientLocked": true,
+          "points": [
+           { "x": -100.0, "y": -100.0 },
+           { "x": -100.0, "y": -100.0 },
+           { "x": -100.0, "y": -100.0 }
+          ],
+          "weightLocked": true
+         },
+         {
+          "gradientLocked": true,
+          "points": [
+           { "x": 100.0, "y": -100.0 },
+           { "x": 100.0, "y": -100.0 },
+           { "x": 100.0, "y": -100.0 }
+          ],
+          "weightLocked": true
+         },
+         {
+          "gradientLocked": true,
+          "points": [
+           { "x": 100.0, "y": 100.0 },
+           { "x": 100.0, "y": 100.0 },
+           { "x": 100.0, "y": 100.0 }
+          ],
+          "weightLocked": true
+         },
+         {
+          "gradientLocked": true,
+          "points": [
+           { "x": -100.0, "y": 100.0 },
+           { "x": -100.0, "y": 100.0 },
+           { "x": -100.0, "y": 100.0 }
+          ],
+          "weightLocked": true
+         }
+        ]
+       }
+      ],
+      "fillType": 0,
+      "version": 1.0
+     },
+     "varType": "editablePath2"
+    },
+    "niceName": { "value": "Sweep Editable Path [Editable]", "varType": "string" },
+    "uuid": { "value": "5ce46cfa-5404-4208-8895-88dd8af543de", "varType": "string" }
+   },
+   "nodeId": "editableShape#1",
+   "nodeType": "editableShape"
+  }
+ ],
+ "other": {
+  "viewport": { "backgroundMode": 0, "rulers": {} }
+ },
+ "referenceData": {},
+ "resourceType": "cavalry.component.export",
+ "version": "1.0.62"
+}

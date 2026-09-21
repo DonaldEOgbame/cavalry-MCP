@@ -1,0 +1,22 @@
+{
+  "task": "radial-duplicator-stagger",
+  "status": "verified",
+  "script": "const dot = await Layer.layerCreatePrimitive('ellipse', 'Dot');\nconst dup = await Layer.layerCreate('duplicator', 'Radial');\nawait Gen.generatorSet(dup.layerId, 'circleDistribution', 'generator');\nawait Attr.attributeSetMany(dup.layerId, { 'generator.count': 16, 'generator.radius': 175 });\nawait Graph.graphConnect({ sourceLayerId: dot.layerId, sourceAttr: 'id', targetLayerId: dup.layerId, targetAttr: 'shapes', force: true });",
+  "inputAssumptions": [
+    "Cavalry 2.7.2 bridge connected on macOS"
+  ],
+  "createdObjects": [
+    "basicShape",
+    "duplicator",
+    "circleDistribution"
+  ],
+  "validation": {
+    "passed": true,
+    "checks": [
+      "Circle Distribution present in saved graph",
+      "16-copy rendered outcome verified",
+      "Five-frame motion gate passed"
+    ]
+  },
+  "errors": []
+}

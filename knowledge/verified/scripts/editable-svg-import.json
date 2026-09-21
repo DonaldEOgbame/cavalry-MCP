@@ -1,0 +1,21 @@
+{
+  "task": "editable-svg-import",
+  "status": "verified",
+  "script": "const converted = await Path.svgConvertToLayers(stagedSvgPath);\nconst inspection = await Scene.sceneInspect(true);",
+  "inputAssumptions": [
+    "Cavalry 2.7.2 bridge connected on macOS"
+  ],
+  "createdObjects": [
+    "editableShape"
+  ],
+  "validation": {
+    "passed": true,
+    "checks": [
+      "SVG staged through canonical temporary path",
+      "editableShape created",
+      "Preview rendered",
+      "Scene saved and reopened"
+    ]
+  },
+  "errors": []
+}

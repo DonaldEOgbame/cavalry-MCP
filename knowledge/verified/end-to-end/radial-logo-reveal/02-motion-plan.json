@@ -89,7 +89,7 @@
             "fallback": "cavalry_raw_script"
           }
         },
-        "score": 0.5406781022257383,
+        "score": 0.5406665130476561,
         "relevance": 0.3413608505927754,
         "authority": 0.75,
         "versionCompatibility": "same",
@@ -179,7 +179,7 @@
             "fallback": "cavalry_raw_script"
           }
         },
-        "score": 0.5333853944515807,
+        "score": 0.5333738052734985,
         "relevance": 0.32677543431817924,
         "authority": 0.75,
         "versionCompatibility": "same",
@@ -262,7 +262,7 @@
             "fallback": "cavalry_raw_script"
           }
         },
-        "score": 0.5233437105018064,
+        "score": 0.5233321213237242,
         "relevance": 0.3066920591933642,
         "authority": 0.75,
         "versionCompatibility": "same",
@@ -359,7 +359,7 @@
             "fallback": "cavalry_raw_script"
           }
         },
-        "score": 0.5141687449472541,
+        "score": 0.5141571557691719,
         "relevance": 0.28834213568877487,
         "authority": 0.75,
         "versionCompatibility": "same",
@@ -446,7 +446,7 @@
             "fallback": "cavalry_raw_script"
           }
         },
-        "score": 0.5051701252152744,
+        "score": 0.5051585360371922,
         "relevance": 0.270344881339732,
         "authority": 0.75,
         "versionCompatibility": "same",
@@ -528,7 +528,7 @@
             "fallback": "cavalry_raw_script"
           }
         },
-        "score": 0.5030959555348088,
+        "score": 0.5030843663567266,
         "relevance": 0.2661965412677405,
         "authority": 0.75,
         "versionCompatibility": "same",
@@ -598,7 +598,7 @@
           "createdAt": "2026-09-20T06:55:55.969Z",
           "updatedAt": "2026-09-20T06:55:55.969Z"
         },
-        "score": 0.560203751955636,
+        "score": 0.5601921627760318,
         "relevance": 0.3044127016504908,
         "authority": 0.94,
         "versionCompatibility": "same",
@@ -689,7 +689,7 @@
           "createdAt": "2026-09-20T06:55:55.895Z",
           "updatedAt": "2026-09-20T06:55:55.895Z"
         },
-        "score": 0.5494606361871189,
+        "score": 0.5494490470075146,
         "relevance": 0.28292647013222877,
         "authority": 0.94,
         "versionCompatibility": "same",
@@ -754,7 +754,7 @@
           "createdAt": "2026-09-20T06:55:55.967Z",
           "updatedAt": "2026-09-20T06:55:55.967Z"
         },
-        "score": 0.5407498153174042,
+        "score": 0.5407382261364047,
         "relevance": 0.26550482837605643,
         "authority": 0.94,
         "versionCompatibility": "same",
@@ -808,7 +808,7 @@
           "createdAt": "2026-09-20T06:55:55.969Z",
           "updatedAt": "2026-09-20T06:55:55.969Z"
         },
-        "score": 0.536872145794008,
+        "score": 0.5368605566136426,
         "relevance": 0.25774948932824937,
         "authority": 0.94,
         "versionCompatibility": "same",
@@ -880,7 +880,7 @@
           "createdAt": "2026-09-20T06:55:55.967Z",
           "updatedAt": "2026-09-20T06:55:55.967Z"
         },
-        "score": 0.530992244144385,
+        "score": 0.5309806549636391,
         "relevance": 0.24598968602976434,
         "authority": 0.94,
         "versionCompatibility": "same",
@@ -949,7 +949,7 @@
           "createdAt": "2026-09-20T06:55:55.969Z",
           "updatedAt": "2026-09-20T06:55:55.969Z"
         },
-        "score": 0.5296676943234367,
+        "score": 0.5296561051421835,
         "relevance": 0.24334058638761424,
         "authority": 0.94,
         "versionCompatibility": "same",

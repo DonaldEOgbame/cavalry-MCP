@@ -13,6 +13,33 @@ The server also includes a Cavalry-specific Knowledge Engine for provenance-awar
 
 ---
 
+## Tested Compatibility
+
+Measured on **Cavalry 2.7.2 for macOS** on 21 September 2026:
+
+| Validation boundary | Result |
+|---|---:|
+| Registered MCP tools | 340 |
+| Concrete node types | 436 |
+| Node attributes | 3,168 |
+| Installed render generators | 14 |
+| Build/edit/save/reopen/render soak | 100/100 cycles passed |
+| Verified real scenes | 26 |
+| Verified Knowledge Engine records | 1,641 |
+| Unclassified callable or node-schema routes (`UNKNOWN`) | 0 |
+
+Known limitations include Camera Guides, Editable Path morph/keyframe routes,
+shared-process timeline playback, HEVC/ProRes audio export, and several
+specialized asset fixtures. Windows installation is available, but the current
+certification evidence is macOS-only.
+
+See **[SUPPORTED.md](SUPPORTED.md)** for the exact scope and limitations, and
+the [release validation report](docs/release-validation-2026-09-21.md) for the
+underlying live-test evidence. This project reports measured coverage, not a
+claim of universal or maximum practical parity.
+
+---
+
 ## Architecture
 
 ```text
@@ -195,6 +222,8 @@ npm run test:integration
 
 ## Documentation
 
+* [Supported Compatibility and Known Limitations](SUPPORTED.md)
+* [Release Validation Report](docs/release-validation-2026-09-21.md)
 * [Architecture Specification](docs/architecture.md)
 * [Cavalry Scripting API Notes & Introspection Reference](docs/cavalry-api-notes.md)
 * [Security & Sandboxing Guide](docs/security.md)

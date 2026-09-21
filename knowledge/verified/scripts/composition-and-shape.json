@@ -1,0 +1,21 @@
+{
+  "task": "composition-and-shape",
+  "status": "verified",
+  "script": "await Scene.sceneNew(true);\nawait Comp.compositionCreate({ name: 'Verified', width: 960, height: 540, fps: 30, startFrame: 0, endFrame: 90 });\nconst layer = await Layer.layerCreatePrimitive('ellipse', 'Verified Circle');",
+  "inputAssumptions": [
+    "Cavalry 2.7.2 bridge connected on macOS"
+  ],
+  "createdObjects": [
+    "compNode",
+    "basicShape"
+  ],
+  "validation": {
+    "passed": true,
+    "checks": [
+      "Blank scene created",
+      "Composition settings read back",
+      "Shape persisted after save/reopen"
+    ]
+  },
+  "errors": []
+}

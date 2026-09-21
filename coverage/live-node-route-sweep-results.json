@@ -1,0 +1,663 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-20T14:10:06.829Z",
+  "targets": 87,
+  "summary": {
+    "NEEDS_HOST_ROUTE": 44,
+    "PASS_DIRECT_CREATE": 43
+  },
+  "results": [
+    {
+      "nodeType": "hiddenFolder",
+      "superType": "element",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 3
+    },
+    {
+      "nodeType": "compNode",
+      "superType": "drawable",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 21
+    },
+    {
+      "nodeType": "animationCurveBase",
+      "superType": null,
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 15
+    },
+    {
+      "nodeType": "animationCurve",
+      "superType": "animationCurveBase",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 15
+    },
+    {
+      "nodeType": "animationPath",
+      "superType": "animationCurveBase",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 14
+    },
+    {
+      "nodeType": "colorSwatch",
+      "superType": null,
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 8
+    },
+    {
+      "nodeType": "paletteContainer",
+      "superType": null,
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 7
+    },
+    {
+      "nodeType": "palette",
+      "superType": null,
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 13
+    },
+    {
+      "nodeType": "audioTrack",
+      "superType": "atomic",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 7
+    },
+    {
+      "nodeType": "asset",
+      "superType": "element",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 6
+    },
+    {
+      "nodeType": "renderQueue",
+      "superType": null,
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 15
+    },
+    {
+      "nodeType": "renderQueueItem",
+      "superType": "element",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 7
+    },
+    {
+      "nodeType": "keyframeLayerFolder",
+      "superType": "hiddenFolder",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 6
+    },
+    {
+      "nodeType": "keyframeLayer",
+      "superType": "element",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 15
+    },
+    {
+      "nodeType": "dynamicIndexManager",
+      "superType": "element",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 14
+    },
+    {
+      "nodeType": "oscillatorLegacy",
+      "superType": "behaviour",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 12
+    },
+    {
+      "nodeType": "textArray",
+      "superType": "indexableArray",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 15
+    },
+    {
+      "nodeType": "collisionModifier",
+      "superType": "particleModifier",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 11
+    },
+    {
+      "nodeType": "squetch",
+      "superType": "behaviour",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 4
+    },
+    {
+      "nodeType": "areaRangeBase",
+      "superType": "remapper",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "areaRangeBase#1",
+      "observedType": "areaRangeBase",
+      "durationMs": 32
+    },
+    {
+      "nodeType": "triangulate",
+      "superType": "behaviourBase",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 11
+    },
+    {
+      "nodeType": "blendSubMeshPositionsLegacy",
+      "superType": "behaviourBase",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 11
+    },
+    {
+      "nodeType": "applyTextFill",
+      "superType": "textMaterialBehaviour",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 15
+    },
+    {
+      "nodeType": "textHash",
+      "superType": "textEngine",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "textHash#1",
+      "observedType": "textHash",
+      "durationMs": 42
+    },
+    {
+      "nodeType": "textDate",
+      "superType": "textEngine",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "textDate#1",
+      "observedType": "textDate",
+      "durationMs": 30
+    },
+    {
+      "nodeType": "textBlockUnicode",
+      "superType": "textEngine",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "textBlockUnicode#1",
+      "observedType": "textBlockUnicode",
+      "durationMs": 32
+    },
+    {
+      "nodeType": "textFormatted",
+      "superType": "textEngine",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "textFormatted#1",
+      "observedType": "textFormatted",
+      "durationMs": 34
+    },
+    {
+      "nodeType": "textHex",
+      "superType": "textEngine",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "textHex#1",
+      "observedType": "textHex",
+      "durationMs": 31
+    },
+    {
+      "nodeType": "textValue",
+      "superType": "textEngine",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "textValue#1",
+      "observedType": "textValue",
+      "durationMs": 26
+    },
+    {
+      "nodeType": "textNumber",
+      "superType": "textEngine",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "textNumber#1",
+      "observedType": "textNumber",
+      "durationMs": 29
+    },
+    {
+      "nodeType": "formattedDateAndTime",
+      "superType": "textEngine",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "formattedDateAndTime#1",
+      "observedType": "formattedDateAndTime",
+      "durationMs": 42
+    },
+    {
+      "nodeType": "simpleLine",
+      "superType": "lineGenerator",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "simpleLine#1",
+      "observedType": "simpleLine",
+      "durationMs": 36
+    },
+    {
+      "nodeType": "spiralLine",
+      "superType": "lineGenerator",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "spiralLine#1",
+      "observedType": "spiralLine",
+      "durationMs": 25
+    },
+    {
+      "nodeType": "bezierLine",
+      "superType": "lineGenerator",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "bezierLine#1",
+      "observedType": "bezierLine",
+      "durationMs": 36
+    },
+    {
+      "nodeType": "transformDistribution",
+      "superType": "connectDistribution",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "transformDistribution#1",
+      "observedType": "transformDistribution",
+      "durationMs": 28
+    },
+    {
+      "nodeType": "intersectionDistribution",
+      "superType": "connectDistribution",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "intersectionDistribution#1",
+      "observedType": "intersectionDistribution",
+      "durationMs": 30
+    },
+    {
+      "nodeType": "basicArrowHead",
+      "superType": "arrowHead",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "basicArrowHead#1",
+      "observedType": "basicArrowHead",
+      "durationMs": 32
+    },
+    {
+      "nodeType": "chevronHead",
+      "superType": "arrowHead",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "chevronHead#1",
+      "observedType": "chevronHead",
+      "durationMs": 36
+    },
+    {
+      "nodeType": "barbedHead",
+      "superType": "arrowHead",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "barbedHead#1",
+      "observedType": "barbedHead",
+      "durationMs": 30
+    },
+    {
+      "nodeType": "circleHead",
+      "superType": "arrowHead",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "circleHead#1",
+      "observedType": "circleHead",
+      "durationMs": 33
+    },
+    {
+      "nodeType": "boxHead",
+      "superType": "arrowHead",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "boxHead#1",
+      "observedType": "boxHead",
+      "durationMs": 27
+    },
+    {
+      "nodeType": "textTimecode",
+      "superType": "textEngine",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "textTimecode#1",
+      "observedType": "textTimecode",
+      "durationMs": 37
+    },
+    {
+      "nodeType": "numberRangeBase",
+      "superType": "remapper",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "numberRangeBase#1",
+      "observedType": "numberRangeBase",
+      "durationMs": 25
+    },
+    {
+      "nodeType": "numberRangeToColorBase",
+      "superType": "remapper",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "numberRangeToColorBase#1",
+      "observedType": "numberRangeToColorBase",
+      "durationMs": 30
+    },
+    {
+      "nodeType": "meshBehaviour",
+      "superType": "behaviourBase",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 8
+    },
+    {
+      "nodeType": "shuffleString",
+      "superType": "stringOperator",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "shuffleString#1",
+      "observedType": "shuffleString",
+      "durationMs": 36
+    },
+    {
+      "nodeType": "resizeString",
+      "superType": "stringOperator",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "resizeString#1",
+      "observedType": "resizeString",
+      "durationMs": 27
+    },
+    {
+      "nodeType": "replaceString",
+      "superType": "stringOperator",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "replaceString#1",
+      "observedType": "replaceString",
+      "durationMs": 32
+    },
+    {
+      "nodeType": "changeStringCase",
+      "superType": "stringOperator",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "changeStringCase#1",
+      "observedType": "changeStringCase",
+      "durationMs": 37
+    },
+    {
+      "nodeType": "concatenateStringArray",
+      "superType": "stringOperator",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "concatenateStringArray#1",
+      "observedType": "concatenateStringArray",
+      "durationMs": 38
+    },
+    {
+      "nodeType": "subString",
+      "superType": "stringOperator",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "subString#1",
+      "observedType": "subString",
+      "durationMs": 24
+    },
+    {
+      "nodeType": "regexString",
+      "superType": "stringOperator",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "regexString#1",
+      "observedType": "regexString",
+      "durationMs": 29
+    },
+    {
+      "nodeType": "unicodeManipulator",
+      "superType": "stringOperator",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "unicodeManipulator#1",
+      "observedType": "unicodeManipulator",
+      "durationMs": 26
+    },
+    {
+      "nodeType": "transitionString",
+      "superType": "stringOperator",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "transitionString#1",
+      "observedType": "transitionString",
+      "durationMs": 38
+    },
+    {
+      "nodeType": "arrayManipulator",
+      "superType": "atomic",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 6
+    },
+    {
+      "nodeType": "resizeArray",
+      "superType": "arrayOperator",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "resizeArray#1",
+      "observedType": "resizeArray",
+      "durationMs": 29
+    },
+    {
+      "nodeType": "sortArray",
+      "superType": "arrayOperator",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "sortArray#1",
+      "observedType": "sortArray",
+      "durationMs": 24
+    },
+    {
+      "nodeType": "shuffleArray",
+      "superType": "arrayOperator",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "shuffleArray#1",
+      "observedType": "shuffleArray",
+      "durationMs": 38
+    },
+    {
+      "nodeType": "manipulateArray",
+      "superType": "arrayOperator",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "manipulateArray#1",
+      "observedType": "manipulateArray",
+      "durationMs": 26
+    },
+    {
+      "nodeType": "envilopeDistort",
+      "superType": "behaviourBase",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 13
+    },
+    {
+      "nodeType": "pointConstraint",
+      "superType": "constraintOperator",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "pointConstraint#1",
+      "observedType": "pointConstraint",
+      "durationMs": 21
+    },
+    {
+      "nodeType": "edgeConstraint",
+      "superType": "constraintOperator",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "edgeConstraint#1",
+      "observedType": "edgeConstraint",
+      "durationMs": 36
+    },
+    {
+      "nodeType": "editablePathArray",
+      "superType": "indexableArray",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 14
+    },
+    {
+      "nodeType": "gradientBuilder",
+      "superType": "atomic",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 15
+    },
+    {
+      "nodeType": "simpleMeshSolver",
+      "superType": "behaviourBase",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 10
+    },
+    {
+      "nodeType": "gradientStopArray",
+      "superType": "indexableArray",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 5
+    },
+    {
+      "nodeType": "growthSolver",
+      "superType": "atomic",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 13
+    },
+    {
+      "nodeType": "horizontalLayout",
+      "superType": "layoutItem",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "horizontalLayout#1",
+      "observedType": "horizontalLayout",
+      "durationMs": 29
+    },
+    {
+      "nodeType": "verticalLayout",
+      "superType": "layoutItem",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "verticalLayout#1",
+      "observedType": "verticalLayout",
+      "durationMs": 28
+    },
+    {
+      "nodeType": "gridLayout",
+      "superType": "layoutItem",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "gridLayout#1",
+      "observedType": "gridLayout",
+      "durationMs": 31
+    },
+    {
+      "nodeType": "lineRectPatternGenerator",
+      "superType": "rectPatternItem",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "lineRectPatternGenerator#1",
+      "observedType": "lineRectPatternGenerator",
+      "durationMs": 32
+    },
+    {
+      "nodeType": "ringRectPatternGenerator",
+      "superType": "rectPatternItem",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "ringRectPatternGenerator#1",
+      "observedType": "ringRectPatternGenerator",
+      "durationMs": 33
+    },
+    {
+      "nodeType": "toonOutlines",
+      "superType": "behaviourBase",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 5
+    },
+    {
+      "nodeType": "forgeBodyAuxiliary",
+      "superType": "atomic",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 11
+    },
+    {
+      "nodeType": "displacementUtility",
+      "superType": "drawable",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 12
+    },
+    {
+      "nodeType": "normalizePathUtility",
+      "superType": "behaviourBase",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 15
+    },
+    {
+      "nodeType": "removeContoursUtility",
+      "superType": "behaviourBase",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 11
+    },
+    {
+      "nodeType": "timeMarkerFolder",
+      "superType": "hiddenFolder",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 5
+    },
+    {
+      "nodeType": "timeMarker",
+      "superType": null,
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 12
+    },
+    {
+      "nodeType": "keyframe",
+      "superType": "molecule",
+      "status": "PASS_DIRECT_CREATE",
+      "layerId": "keyframe#1",
+      "observedType": "keyframe",
+      "durationMs": 30
+    },
+    {
+      "nodeType": "visibilityCurve",
+      "superType": "animationCurveBase",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 6
+    },
+    {
+      "nodeType": "bone",
+      "superType": "drawable",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 13
+    },
+    {
+      "nodeType": "inverseKinematicsControl",
+      "superType": "null",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 6
+    },
+    {
+      "nodeType": "skeleton",
+      "superType": "drawable",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 7
+    },
+    {
+      "nodeType": "skinning",
+      "superType": "behaviourBase",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 7
+    },
+    {
+      "nodeType": "pointDisplace",
+      "superType": "behaviour",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 15
+    },
+    {
+      "nodeType": "pathSplit",
+      "superType": "behaviour",
+      "status": "NEEDS_HOST_ROUTE",
+      "error": "Cannot read properties of null (reading 'uuid')",
+      "durationMs": 14
+    }
+  ]
+}

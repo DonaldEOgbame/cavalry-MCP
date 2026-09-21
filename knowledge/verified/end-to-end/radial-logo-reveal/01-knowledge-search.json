@@ -10,15 +10,14 @@
         "projectId": "cavalry-2.7.2-golden-corpus",
         "title": "Create a polished radial logo reveal with 16 repeating elements and a staggered clockwise entrance.",
         "section": "approved visual outcome",
-        "content": "Create a polished radial logo reveal with 16 repeating elements and a staggered clockwise entrance.\nRecipe: radial-duplication-wave\nInitial preview showed crowding between the core mark and title.\nMoved and reduced the core mark, then separated title and subtitle before final render.\nCore mark crowded the title in the initial preview.: Move mark upward, reduce its settled size, and lower the text lockup.",
+        "content": "Create a polished radial logo reveal with 16 repeating elements and a staggered clockwise entrance.\nRecipe: radial-duplication-wave\nInitial preview showed the rightmost radial element colliding with the wordmark.\nShifted the radial system left, moved the wordmark right, and reduced the core mark before final render.\nRadial element collided with the title in the initial preview.: Create a left-mark/right-wordmark lockup with clear horizontal separation.",
         "cavalryVersion": "2.7.2",
         "entities": [
           "Create",
           "Recipe",
           "Initial",
-          "Moved",
-          "Core",
-          "Move"
+          "Shifted",
+          "Radial"
         ],
         "operations": [],
         "tags": [
@@ -40,11 +39,11 @@
         "provenance": {
           "sourceType": "visual_outcome",
           "source": "visual-outcome:09a3c6821311",
-          "contentHash": "17a73506ad7bf399f6387080431690946a822f12088fa2f429f2b627e3d44825",
-          "retrievedAt": "2026-09-20T12:36:44.544Z"
+          "contentHash": "f140b172c0a52e0eb33646e9619ec3f99a94dd678ae20b1adaed003d617cc81a",
+          "retrievedAt": "2026-09-20T12:37:28.092Z"
         },
         "createdAt": "2026-09-20T12:36:44.544Z",
-        "updatedAt": "2026-09-20T12:36:44.544Z",
+        "updatedAt": "2026-09-20T12:37:28.092Z",
         "visualOutcome": {
           "intent": "Create a polished radial logo reveal with 16 repeating elements and a staggered clockwise entrance.",
           "recipeUsed": "radial-duplication-wave",
@@ -62,20 +61,20 @@
             "fps": 30
           },
           "notes": [
-            "Initial preview showed crowding between the core mark and title.",
-            "Moved and reduced the core mark, then separated title and subtitle before final render."
+            "Initial preview showed the rightmost radial element colliding with the wordmark.",
+            "Shifted the radial system left, moved the wordmark right, and reduced the core mark before final render."
           ],
           "qaPassed": true,
           "issues": [
             {
-              "issue": "Core mark crowded the title in the initial preview.",
-              "fix": "Move mark upward, reduce its settled size, and lower the text lockup."
+              "issue": "Radial element collided with the title in the initial preview.",
+              "fix": "Create a left-mark/right-wordmark lockup with clear horizontal separation."
             }
           ]
         }
       },
-      "score": 0.789155134429355,
-      "relevance": 0.850310279232632,
+      "score": 0.803311213011194,
+      "relevance": 0.8786456037052901,
       "authority": 0.72,
       "versionCompatibility": "same",
       "confidence": {
@@ -141,7 +140,7 @@
         "createdAt": "2026-09-20T06:55:55.969Z",
         "updatedAt": "2026-09-20T06:55:55.969Z"
       },
-      "score": 0.5602037519589339,
+      "score": 0.56019216278453,
       "relevance": 0.3044127016504908,
       "authority": 0.94,
       "versionCompatibility": "same",
@@ -232,7 +231,7 @@
         "createdAt": "2026-09-20T06:55:55.895Z",
         "updatedAt": "2026-09-20T06:55:55.895Z"
       },
-      "score": 0.54946063619029,
+      "score": 0.5494490470160129,
       "relevance": 0.28292647013222877,
       "authority": 0.94,
       "versionCompatibility": "same",
@@ -297,7 +296,7 @@
         "createdAt": "2026-09-20T06:55:55.967Z",
         "updatedAt": "2026-09-20T06:55:55.967Z"
       },
-      "score": 0.540749815320702,
+      "score": 0.5407382261435076,
       "relevance": 0.26550482837605643,
       "authority": 0.94,
       "versionCompatibility": "same",
@@ -377,7 +376,7 @@
           "fallback": "cavalry_raw_script"
         }
       },
-      "score": 0.5406781022278946,
+      "score": 0.5406665130536176,
       "relevance": 0.3413608505927754,
       "authority": 0.75,
       "versionCompatibility": "same",
@@ -431,7 +430,7 @@
         "createdAt": "2026-09-20T06:55:55.969Z",
         "updatedAt": "2026-09-20T06:55:55.969Z"
       },
-      "score": 0.5368721457973058,
+      "score": 0.5368605566216336,
       "relevance": 0.25774948932824937,
       "authority": 0.94,
       "versionCompatibility": "same",
@@ -521,7 +520,7 @@
           "fallback": "cavalry_raw_script"
         }
       },
-      "score": 0.533385394453737,
+      "score": 0.53337380527946,
       "relevance": 0.32677543431817924,
       "authority": 0.75,
       "versionCompatibility": "same",
@@ -593,7 +592,7 @@
         "createdAt": "2026-09-20T06:55:55.967Z",
         "updatedAt": "2026-09-20T06:55:55.967Z"
       },
-      "score": 0.5309922441476828,
+      "score": 0.5309806549712495,
       "relevance": 0.24598968602976434,
       "authority": 0.94,
       "versionCompatibility": "same",

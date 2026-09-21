@@ -1,0 +1,29 @@
+{
+  "generatedAt": "2026-09-20T14:14:22.755Z",
+  "results": [
+    {
+      "name": "radial-wave",
+      "componentPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/components/radial-wave.cvc",
+      "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/components/radial-wave.png",
+      "validationScene": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/components/radial-wave-validation.cv",
+      "importedLayerCount": 3,
+      "status": "VERIFIED"
+    },
+    {
+      "name": "progress-indicator",
+      "componentPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/components/progress-indicator.cvc",
+      "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/components/progress-indicator.png",
+      "validationScene": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/components/progress-indicator-validation.cv",
+      "importedLayerCount": 2,
+      "status": "VERIFIED"
+    },
+    {
+      "name": "geometric-logo-assembly",
+      "componentPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/components/geometric-logo-assembly.cvc",
+      "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/components/geometric-logo-assembly.png",
+      "validationScene": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/components/geometric-logo-assembly-validation.cv",
+      "importedLayerCount": 3,
+      "status": "VERIFIED"
+    }
+  ]
+}

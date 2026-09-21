@@ -1,0 +1,22 @@
+{
+  "generatedAt": "2026-09-20T14:11:38.489Z",
+  "types": [
+    "animationCurve",
+    "asset",
+    "basicShape",
+    "colorMaterial",
+    "compNode",
+    "ellipseShape",
+    "hiddenFolder",
+    "keyframe",
+    "motionBlurFilter",
+    "polygonShape",
+    "renderMP4",
+    "renderQueueItem",
+    "sound",
+    "strokeMaterial",
+    "timeMarker",
+    "timeMarkerFolder",
+    "visibilityCurve"
+  ]
+}

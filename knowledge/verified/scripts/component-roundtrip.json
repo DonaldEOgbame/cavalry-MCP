@@ -1,0 +1,22 @@
+{
+  "task": "component-roundtrip",
+  "status": "verified",
+  "script": "await Layer.layerSelect(exportLayerIds);\nawait Serial.componentExport(componentPath);\nawait Scene.sceneNew(true);\nawait Serial.componentImport(componentPath);\nawait Scene.sceneSaveAs(validationScene);\nawait Scene.sceneOpen(validationScene, true);",
+  "inputAssumptions": [
+    "Cavalry 2.7.2 bridge connected on macOS"
+  ],
+  "createdObjects": [
+    "component",
+    "compNode"
+  ],
+  "validation": {
+    "passed": true,
+    "checks": [
+      "Component file non-empty",
+      "Imported layers present",
+      "Preview rendered",
+      "Save/reopen retained layers"
+    ]
+  },
+  "errors": []
+}

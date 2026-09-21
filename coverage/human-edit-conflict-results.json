@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-20T14:29:26.000Z",
+  "cavalryVersion": "2.7.2",
+  "action": "Created an Ellipse through Cavalry's native Create > Primitives > Ellipse menu after recording the MCP revision.",
+  "revisionBeforeHumanEdit": 101029,
+  "revisionAfterHumanEdit": 101348,
+  "nativeEventsObserved": [
+    "layer.added",
+    "attribute.connected",
+    "attribute.disconnected",
+    "attribute.changed"
+  ],
+  "staleRequest": {
+    "operation": "app_state",
+    "expectedRevision": 101029,
+    "actualErrorCode": "EDIT_CONFLICT",
+    "message": "Cavalry scene changed since the operation was planned (expected revision 101029, current revision 101348)."
+  },
+  "passed": true
+}

@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-20T14:30:52.000Z",
+  "cavalryVersion": "2.7.2",
+  "before": {
+    "pid": 96955,
+    "online": true
+  },
+  "disconnected": {
+    "online": false,
+    "transportErrorObserved": true
+  },
+  "reconnected": {
+    "pid": 97920,
+    "online": true,
+    "bridgeInstanceId": "bridge_1789914643811_pw0phbe5wto",
+    "sceneNewSucceeded": true,
+    "platform": "macOS",
+    "restrictedLicence": false
+  },
+  "passed": true,
+  "note": "Cavalry requires the CavalryBridge script to be relaunched from Scripts after a full host-process restart; reconnect then succeeds with a new bridge instance ID."
+}

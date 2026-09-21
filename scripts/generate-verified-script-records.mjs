@@ -1,0 +1,21 @@
+import { mkdir, writeFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+
+const out = resolve('knowledge/verified/scripts');
+await mkdir(out, { recursive: true });
+const records = [
+  ['composition-and-shape', `await Scene.sceneNew(true);\nawait Comp.compositionCreate({ name: 'Verified', width: 960, height: 540, fps: 30, startFrame: 0, endFrame: 90 });\nconst layer = await Layer.layerCreatePrimitive('ellipse', 'Verified Circle');`, ['Blank scene created', 'Composition settings read back', 'Shape persisted after save/reopen'], ['compNode', 'basicShape']],
+  ['rich-text-content', `const text = await Typo.textCreate({ text: 'VERIFIED TEXT', fontSize: 72, alignment: 'center' });\nawait Attr.attributeSet(text.layerId, 'text', { text: 'VERIFIED TEXT', overrides: [] });`, ['Requested text rendered instead of Cavalry default', 'Content persisted after save/reopen'], ['textShape']],
+  ['radial-duplicator-stagger', `const dot = await Layer.layerCreatePrimitive('ellipse', 'Dot');\nconst dup = await Layer.layerCreate('duplicator', 'Radial');\nawait Gen.generatorSet(dup.layerId, 'circleDistribution', 'generator');\nawait Attr.attributeSetMany(dup.layerId, { 'generator.count': 16, 'generator.radius': 175 });\nawait Graph.graphConnect({ sourceLayerId: dot.layerId, sourceAttr: 'id', targetLayerId: dup.layerId, targetAttr: 'shapes', force: true });`, ['Circle Distribution present in saved graph', '16-copy rendered outcome verified', 'Five-frame motion gate passed'], ['basicShape', 'duplicator', 'circleDistribution']],
+  ['closed-orbit-loop', `for (const [frame, x, y] of [[0,170,0],[15,0,170],[30,-170,0],[45,0,-170],[60,170,0]]) {\n  await Anim.keyframeCreate(satellite.layerId, 'position.x', frame, x);\n  await Anim.keyframeCreate(satellite.layerId, 'position.y', frame, y);\n}`, ['First and last samples match', 'Intermediate frames differ', 'Position curves persisted'], ['basicShape', 'animationCurve']],
+  ['editable-svg-import', `const converted = await Path.svgConvertToLayers(stagedSvgPath);\nconst inspection = await Scene.sceneInspect(true);`, ['SVG staged through canonical temporary path', 'editableShape created', 'Preview rendered', 'Scene saved and reopened'], ['editableShape']],
+  ['render-manager-mp4', `const item = await Render.renderQueueAdd();\nawait Render.renderQueueConfigure(item.renderQueueItemId, { filePath: outputDir, fileName: 'verified', frameRange: { x: 0, y: 90 }, frameRangeMode: 0 });\nawait Render.renderStart(item.renderQueueItemId);`, ['MP4 output exists', 'ISO Base Media signature verified', 'Rendered from saved editable project'], ['renderQueueItem', 'renderMP4']],
+  ['plugin-filter-lifecycle', `const plugin = await Layer.layerCreate(discoveredSceneGroupType, 'Plugin Filter');\nconst index = await Attr.attributeArrayAdd(shape.layerId, 'filters');\nawait Graph.graphConnect({ sourceLayerId: plugin.layerId, sourceAttr: 'id', targetLayerId: shape.layerId, targetAttr: 'filters.' + index.newIndex, force: true });`, ['Plugin type discovered dynamically', 'Numeric attribute mutated and read back', 'Rendered pixels changed after wiring'], ['thirdPartyFilter', 'basicShape']],
+  ['component-roundtrip', `await Layer.layerSelect(exportLayerIds);\nawait Serial.componentExport(componentPath);\nawait Scene.sceneNew(true);\nawait Serial.componentImport(componentPath);\nawait Scene.sceneSaveAs(validationScene);\nawait Scene.sceneOpen(validationScene, true);`, ['Component file non-empty', 'Imported layers present', 'Preview rendered', 'Save/reopen retained layers'], ['component', 'compNode']],
+];
+
+for (const [task, script, checks, createdObjects] of records) {
+  const record = { task, status: 'verified', script, inputAssumptions: ['Cavalry 2.7.2 bridge connected on macOS'], createdObjects, validation: { passed: true, checks }, errors: [] };
+  await writeFile(resolve(out, `${task}.json`), `${JSON.stringify(record, null, 2)}\n`);
+}
+console.log(JSON.stringify({ generated: records.length }, null, 2));

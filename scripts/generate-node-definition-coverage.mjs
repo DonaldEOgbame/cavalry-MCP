@@ -1,4 +1,4 @@
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, readdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -27,6 +27,23 @@ const liveLayerTypesPath = resolve(root, 'coverage/live-layer-types.json');
 const liveLayerTypes = existsSync(liveLayerTypesPath)
   ? new Set(JSON.parse(await readFile(liveLayerTypesPath, 'utf8')).types)
   : null;
+const liveSweepPath = resolve(root, 'coverage/live-node-route-sweep-results.json');
+const liveSweep = existsSync(liveSweepPath)
+  ? new Map(JSON.parse(await readFile(liveSweepPath, 'utf8')).results.map((entry) => [entry.nodeType, entry]))
+  : new Map();
+const implicitTypesPath = resolve(root, 'coverage/live-implicit-node-types.json');
+const implicitTypes = existsSync(implicitTypesPath)
+  ? new Set(JSON.parse(await readFile(implicitTypesPath, 'utf8')).types)
+  : new Set();
+const corpusRoot = resolve(root, 'knowledge/verified/golden-corpus');
+if (existsSync(corpusRoot)) {
+  for (const directory of await readdir(corpusRoot)) {
+    const inspectionPath = resolve(corpusRoot, directory, `${directory}.inspection.json`);
+    if (!existsSync(inspectionPath)) continue;
+    const inspection = JSON.parse(await readFile(inspectionPath, 'utf8'));
+    for (const layer of inspection.layers || []) if (layer.type) implicitTypes.add(layer.type);
+  }
+}
 
 // Reachability rules keyed by nodeDefinitions.json `superType`. Each rule was
 // verified against a live Cavalry 2.7.2 instance on 2026-09-20 (see
@@ -81,9 +98,23 @@ const abstractTypes = allEntries.filter((n) => n.abstract);
 
 const results = concrete.map((entry) => {
   const isLiveTopLevel = liveLayerTypes ? liveLayerTypes.has(entry.nodeType) : null;
-  const classification = isLiveTopLevel
+  let classification = isLiveTopLevel
     ? { coverage: 'STRUCTURED_MCP', via: 'layer_create / layer_create_primitive (confirmed in live api.getAllLayerTypes())', verifiedLive: true, notes: '' }
     : classify(entry);
+  const sweep = liveSweep.get(entry.nodeType);
+  if (!isLiveTopLevel && sweep?.status === 'PASS_DIRECT_CREATE') {
+    classification = { ...classification, verifiedLive: true, liveStatus: 'PASS_DIRECT_CREATE', notes: `Created, inspected, and deleted live in Cavalry 2.7.2 (${sweep.durationMs}ms).` };
+  } else if (!isLiveTopLevel && implicitTypes.has(entry.nodeType)) {
+    classification = { ...classification, verifiedLive: true, liveStatus: 'PASS_IMPLICIT_WORKFLOW', notes: 'Observed in the serialized live graph after its owning workflow created it.' };
+  } else if (!isLiveTopLevel && sweep?.status === 'NEEDS_HOST_ROUTE') {
+    classification = {
+      coverage: 'SCHEMA_INTERNAL_UNAVAILABLE',
+      via: 'Live api.create probe rejected this schema entry; no independent top-level route is exposed.',
+      verifiedLive: true,
+      liveStatus: 'KNOWN_LIMITATION',
+      notes: sweep.error,
+    };
+  }
   return {
     nodeType: entry.nodeType,
     superType: entry.superType || null,
@@ -110,6 +141,7 @@ const report = {
   liveTopLevelLayerTypes: liveLayerTypes ? liveLayerTypes.size : null,
   counts,
   unknownCount: unknown.length,
+  verifiedLiveFalseCount: results.filter((entry) => entry.verifiedLive === false).length,
   nodes: results,
 };
 

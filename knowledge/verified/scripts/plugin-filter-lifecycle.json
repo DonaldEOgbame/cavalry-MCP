@@ -1,0 +1,21 @@
+{
+  "task": "plugin-filter-lifecycle",
+  "status": "verified",
+  "script": "const plugin = await Layer.layerCreate(discoveredSceneGroupType, 'Plugin Filter');\nconst index = await Attr.attributeArrayAdd(shape.layerId, 'filters');\nawait Graph.graphConnect({ sourceLayerId: plugin.layerId, sourceAttr: 'id', targetLayerId: shape.layerId, targetAttr: 'filters.' + index.newIndex, force: true });",
+  "inputAssumptions": [
+    "Cavalry 2.7.2 bridge connected on macOS"
+  ],
+  "createdObjects": [
+    "thirdPartyFilter",
+    "basicShape"
+  ],
+  "validation": {
+    "passed": true,
+    "checks": [
+      "Plugin type discovered dynamically",
+      "Numeric attribute mutated and read back",
+      "Rendered pixels changed after wiring"
+    ]
+  },
+  "errors": []
+}

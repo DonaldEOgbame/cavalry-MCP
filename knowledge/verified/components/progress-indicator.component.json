@@ -1,0 +1,30 @@
+{
+  "name": "progress-indicator",
+  "path": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/components/progress-indicator.cvc",
+  "description": "Editable progress bar and label lockup with a verified normalized scale animation.",
+  "requiredInputs": [
+    "progress value",
+    "label text"
+  ],
+  "exposedAttributes": [
+    "scale.x",
+    "text",
+    "material.materialColor"
+  ],
+  "aspectRatios": [
+    "16:9"
+  ],
+  "expectedDurationFrames": 90,
+  "editableProperties": [
+    "scale.x",
+    "text",
+    "material.materialColor"
+  ],
+  "visualStyle": [
+    "data motion",
+    "clean UI"
+  ],
+  "limitations": [
+    "Validated against Cavalry 2.7.2 on macOS."
+  ]
+}
