@@ -817,7 +817,7 @@ Provides the path to the preferences directory.
 ### api.getPresetsPath
 
 Runtime identifier: api.getPresetsPath.
-Kind: function. Coverage: RAW_SCRIPT. Availability: Script UI global api.
+Kind: function. Coverage: STRUCTURED. Availability: Script UI global api.
 Provides the path to the presets directory.
 
 ### api.getProfileName
@@ -1267,7 +1267,7 @@ Sets the parent of a layer to the specified layer.
 ### api.play
 
 Runtime identifier: api.play.
-Kind: function. Coverage: STRUCTURED. Availability: Script UI global api.
+Kind: function. Coverage: RAW_SCRIPT. Availability: Script UI global api.
 Starts playback.
 
 ### api.preCompose
@@ -1423,7 +1423,7 @@ Resets the transform properties of a specified layer to their default values.
 ### api.resyncPathKeyframes
 
 Runtime identifier: api.resyncPathKeyframes.
-Kind: function. Coverage: STRUCTURED. Availability: Script UI global api.
+Kind: function. Coverage: RAW_SCRIPT. Availability: Script UI global api.
 Resynchronise path keyframe data, run this if you use api.set() on a path keyframe.
 
 ### api.runDetachedProcess

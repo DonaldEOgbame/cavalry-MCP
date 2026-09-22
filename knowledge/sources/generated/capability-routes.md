@@ -62,8 +62,8 @@ MCP tools: path_add_contour, path_remove_contour, path_add_point, path_remove_po
 
 Capability identifier: EditableShape.PathAnimation.
 Coverage: STRUCTURED.
-MCP tools: path_keyframe_create, path_keyframe_set, path_keyframe_resync, path_morph.
-
+MCP tools: path_morph_safe, path_animation_safe, path_keyframe_create, path_keyframe_set, path_keyframe_resync, path_morph.
+Native path keyframe/resync routes fail fast as KNOWN_HOST_LIMITATION on 2.7.2; verified safe helpers build persistent frame-sampled Editable Shape sequences with topology validation.
 
 ## Selection.Layers
 
@@ -125,8 +125,8 @@ Cavalry 2.7.2 documents has3dTransforms() but no public enable/disable operation
 
 Capability identifier: Camera.PlanarCamera.
 Coverage: STRUCTURED.
-MCP tools: camera_create, camera_list, camera_inspect, camera_set_type.
-
+MCP tools: camera_create, camera_list, camera_inspect, camera_look_at, camera_cut, camera_transition, camera_sequence_create, camera_set_type.
+Direct cameraType mutation fails fast on 2.7.2; normal Planar Camera attributes and semantic cut/transition helpers are the verified route.
 
 ## Camera.ActiveCamera
 
@@ -138,9 +138,9 @@ MCP tools: camera_get_active, camera_has_active.
 ## Camera.Guides
 
 Capability identifier: Camera.Guides.
-Coverage: STRUCTURED.
-MCP tools: camera_create_guide, camera_sequence_guides.
-
+Coverage: UNSUPPORTED.
+MCP tools: camera_create_guide, camera_sequence_guides, camera_add_guide, camera_remove_guide, camera_sequence_create.
+Native Camera Guide operations are host-unstable and now fail fast. camera_sequence_create is the verified semantic replacement, but it does not claim native Guide parity.
 
 ## RulerGuides
 
@@ -215,9 +215,9 @@ MCP tools: preferences_get, preferences_set.
 ## Preferences.EnumerateKnown
 
 Capability identifier: Preferences.EnumerateKnown.
-Coverage: UNSUPPORTED.
-MCP tools: none.
-Cavalry exposes keyed get/set but not enumeration of Preferences.json keys.
+Coverage: UI_ACCESSIBILITY.
+MCP tools: preferences_list.
+The optional macOS driver enumerates the active Cavalry profile; keyed reads/writes remain structured API operations.
 
 ## Viewport.Capture
 
@@ -236,9 +236,9 @@ MCP tools: viewport_active_tool, tool_get_active.
 ## Viewport.SetTool
 
 Capability identifier: Viewport.SetTool.
-Coverage: UNSUPPORTED.
-MCP tools: none.
-No documented setActiveTool API and no UI driver is shipped yet.
+Coverage: UI_ACCESSIBILITY.
+MCP tools: tool_set_active.
+Verified against the deterministic Tool menu with tool_get_active readback.
 
 ## Viewport.QAProfiles
 
@@ -328,8 +328,8 @@ MCP tools: render_script_get, render_script_set_setup, render_script_set_pre, re
 
 Capability identifier: Render.FormatsAndCodecs.
 Coverage: GENERIC_ATTRIBUTE.
-MCP tools: render_item_set_format, render_item_set_audio.
-Installed render generators and codec attributes are discovered and set generically.
+MCP tools: render_item_set_format, render_item_set_audio, render_mux_audio.
+Installed generators are discovered generically. render_mux_audio supplies and ffprobe-verifies audio for HEVC/ProRes video when Cavalry 2.7.2 exposes no codec audio attributes.
 
 ## Layer.SuperTypes
 
@@ -370,22 +370,22 @@ MCP tools: clipboard_get_text, clipboard_set_text.
 
 Capability identifier: NativeDialogs.
 Coverage: UNSUPPORTED.
-MCP tools: none.
-Blocking native dialogs are deliberately not exposed for unattended automation.
+MCP tools: dialog_open_file, dialog_save_file, dialog_choose_folder.
+Accessibility path submission was not deterministic under Cavalry's file filters. The tools return PLATFORM_LIMITATION and direct callers to verified scene_open, scene_save_as, and project_set routes.
 
 ## UI.CommandSearch
 
 Capability identifier: UI.CommandSearch.
-Coverage: UNSUPPORTED.
-MCP tools: none.
-No accessibility driver is currently implemented; do not claim UI fallback coverage.
+Coverage: UI_ACCESSIBILITY.
+MCP tools: command_search, command_execute.
+Verified against live Cavalry menu command enumeration and exact command execution.
 
 ## UI.Shortcuts
 
 Capability identifier: UI.Shortcuts.
-Coverage: UNSUPPORTED.
-MCP tools: none.
-No accessibility driver is currently implemented; do not claim UI fallback coverage.
+Coverage: UI_ACCESSIBILITY.
+MCP tools: shortcut_discover, shortcut_execute.
+Verified against live menu shortcuts and explicit key dispatch; user overrides are read from the active profile.
 
 ## UI.VisionFallback
 
@@ -398,22 +398,22 @@ No verified vision interaction driver is currently implemented.
 
 Capability identifier: Presets.
 Coverage: UNSUPPORTED.
-MCP tools: none.
-Preset application is not exposed in the documented API and no UI driver is shipped.
+MCP tools: preset_list, preset_apply, preset_save, preset_delete, preset_rename, preset_set_default, preset_clear_default.
+The live presets path is discoverable and concrete preset menu commands can be executed, but the clean profile has no preset fixture and Cavalry exposes no stable generic mutation contract.
 
 ## Tags
 
 Capability identifier: Tags.
 Coverage: UNSUPPORTED.
-MCP tools: none.
-Experimental Tag controls have no documented structured API and no UI driver is shipped.
+MCP tools: tag_list, tag_create, tag_delete, tag_assign, tag_unassign, tag_select, tag_filter_scene, tag_filter_viewport, tag_clear_filter.
+Tag controls remain PLATFORM_LIMITATION: Cavalry 2.7.2 exposes neither scripting methods nor stable Accessibility identifiers for generic tag mutation.
 
 ## WorkspacesAndWindows
 
 Capability identifier: WorkspacesAndWindows.
-Coverage: UNSUPPORTED.
-MCP tools: none.
-Editor-only operations require a future accessibility driver.
+Coverage: UI_ACCESSIBILITY.
+MCP tools: workspace_list, workspace_switch, workspace_save, workspace_reset, window_open, window_close, viewport_add, focus_mode.
+Workspace enumeration, window commands, and Focus Mode pass live. Persistent layout mutations remain explicitly interactive and were not run unattended.
 
 ## ThirdParty.SceneNodes
 

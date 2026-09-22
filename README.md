@@ -15,26 +15,29 @@ The server also includes a Cavalry-specific Knowledge Engine for provenance-awar
 
 ## Tested Compatibility
 
-Measured on **Cavalry 2.7.2 for macOS** on 21 September 2026:
+Measured on **Cavalry 2.7.2 for macOS** on 22 September 2026:
 
 | Validation boundary | Result |
 |---|---:|
-| Registered MCP tools | 340 |
+| Registered MCP tools | 385 |
 | Concrete node types | 436 |
 | Node attributes | 3,168 |
 | Installed render generators | 14 |
-| Build/edit/save/reopen/render soak | 100/100 cycles passed |
-| Verified real scenes | 26 |
-| Verified Knowledge Engine records | 1,641 |
+| Build/edit/save/reopen/render soak | 500/500 cycles passed |
+| Verified real scenes | 75 |
+| Verified Knowledge Engine records | 1,700 of 1,701 |
 | Unclassified callable or node-schema routes (`UNKNOWN`) | 0 |
 
-Known limitations include Camera Guides, Editable Path morph/keyframe routes,
-shared-process timeline playback, HEVC/ProRes audio export, and several
-specialized asset fixtures. Windows installation is available, but the current
-certification evidence is macOS-only.
+Native Camera Guides, native Editable Path morph/keyframe routes, shared-process
+timeline playback, and native HEVC/ProRes audio export remain Cavalry 2.7.2
+limitations. Verified safe alternatives now cover camera sequencing, sampled
+path animation, rendered timeline previews, and FFmpeg audio muxing. Generic
+tags, presets, native file dialogs, and third-party custom UI remain platform
+limitations. Windows installation is available, but the current certification
+evidence is macOS-only.
 
 See **[SUPPORTED.md](SUPPORTED.md)** for the exact scope and limitations, and
-the [release validation report](docs/release-validation-2026-09-21.md) for the
+the [release validation report](docs/release-validation-2026-09-22.md) for the
 underlying live-test evidence. This project reports measured coverage, not a
 claim of universal or maximum practical parity.
 
@@ -61,10 +64,11 @@ Live Cavalry Scene Graph
 
 * **Introspection-Driven**: Dynamically queries `api.getAllLayerTypes()` and `api.getAttributeDefinition()`. Any layer or plugin installed in Cavalry is automatically creatable and editable without changing MCP code.
 * **Exact Bézier Curve Control**: Full control over keyframe tangents, handle coordinates, angle/weight locking, and speed/influence velocities.
-* **Three-Level Control Model**:
+* **Layered Control Model**:
   * **Level 1**: Validated, structured MCP tools (default).
   * **Level 2**: `cavalry_raw_script` escape hatch (guarded by `CAVALRY_ALLOW_RAW_SCRIPT=true`).
-  * **Level 3**: Extensibility hooks for future OS-level UI automation.
+  * **Level 3**: Optional Command Search, shortcut, and macOS Accessibility driver for editor-only controls (`CAVALRY_UI_DRIVER=true`).
+  * **Recovery**: Risk-classified host supervision with checkpoint, timeout, bridge-health verification, optional Cavalry restart, and checkpoint restoration (`CAVALRY_WATCHDOG_AUTO_RESTART=true`).
 * **Stable UUID Layer Identities**: Dual-indexing (`uuid` ↔ `layerId`) prevents broken references when layers are reordered or scenes are reloaded.
 * **Single Round-Trip Batch Execution**: Fail-fast batch engine with `$symbol` reference resolution across dependent operations.
 * **Native Event Stream**: Cavalry application callbacks feed subscribed scene, layer, attribute, asset, selection, tool, licence, and preference events into a bounded queue. Polling those events invalidates MCP caches immediately.
@@ -179,6 +183,8 @@ Configuration can be set via environment variables or a `.env` file in the proje
 | `CAVALRY_BRIDGE_TIMEOUT_MS` | `15000` | Bridge request timeout (ms). |
 | `CAVALRY_SECURITY_TIER` | `SAFE` | `SAFE`, `EXTENDED`, `RAW`, or `SYSTEM_EXEC`. |
 | `CAVALRY_ALLOW_RAW_SCRIPT` | `false` | Enables `cavalry_raw_script` tool when `true`. |
+| `CAVALRY_UI_DRIVER` | `false` | Enables optional Command Search, shortcut, and macOS Accessibility tools. |
+| `CAVALRY_WATCHDOG_AUTO_RESTART` | `false` | Allows supervised host recovery to restart Cavalry and relaunch the bridge on macOS. |
 | `CAVALRY_ALLOWED_ROOTS` | `""` | Comma-separated list of approved filesystem paths. |
 | `CAVALRY_PREVIEW_DIR` | `os.tmpdir()/cavalry-previews` | Output directory for rendered frames and contact sheets. |
 | `CAVALRY_LOG_LEVEL` | `info` | `debug`, `info`, `warn`, or `error`. |

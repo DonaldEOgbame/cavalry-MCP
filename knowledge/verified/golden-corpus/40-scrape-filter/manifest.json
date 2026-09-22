@@ -1,0 +1,21 @@
+{
+  "slug": "40-scrape-filter",
+  "description": "scrape Filter filter study with visible animated geometry and a structurally verified native graph.",
+  "verified": true,
+  "scenePath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/40-scrape-filter/40-scrape-filter.cv",
+  "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/40-scrape-filter/40-scrape-filter.png",
+  "inspectionPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/40-scrape-filter/40-scrape-filter.inspection.json",
+  "nodeCount": 24,
+  "connectionCount": 19,
+  "animatedAttributes": [
+    "position.x",
+    "on"
+  ],
+  "ingestion": {
+    "added": 1,
+    "updated": 0,
+    "unchanged": 0,
+    "deleted": 0,
+    "failed": []
+  }
+}

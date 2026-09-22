@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-21T14:04:41.008Z",
+  "generatedAt": "2026-09-21T20:05:23.695Z",
   "source": "/Applications/Cavalry.app/Contents/assets/Definitions/nodeDefinitions.json",
   "method": "Cross-references every concrete node type in nodeDefinitions.json against the live api.getAllLayerTypes() result and a manually verified per-superType reachability map. See docs/coverage.md for the live verification transcript.",
   "totalNodeTypeEntries": 483,
@@ -429,7 +429,8 @@
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a shape's \"fill\"/\"stroke\"/\"material\" slot",
       "verifiedLive": true,
-      "notes": ""
+      "notes": "Observed in the serialized live graph after its owning workflow created it.",
+      "liveStatus": "PASS_IMPLICIT_WORKFLOW"
     },
     {
       "nodeType": "flowFieldNoise",
@@ -439,7 +440,8 @@
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a shape's \"fill\"/\"stroke\"/\"material\" slot",
       "verifiedLive": true,
-      "notes": ""
+      "notes": "Observed in the serialized live graph after its owning workflow created it.",
+      "liveStatus": "PASS_IMPLICIT_WORKFLOW"
     },
     {
       "nodeType": "cubicNoise",
@@ -1526,7 +1528,8 @@
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a shape's \"fill\"/\"stroke\"/\"material\" slot",
       "verifiedLive": true,
-      "notes": ""
+      "notes": "Observed in the serialized live graph after its owning workflow created it.",
+      "liveStatus": "PASS_IMPLICIT_WORKFLOW"
     },
     {
       "nodeType": "radialGradientShader",
@@ -1906,7 +1909,8 @@
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
       "verifiedLive": true,
-      "notes": ""
+      "notes": "Observed in the serialized live graph after its owning workflow created it.",
+      "liveStatus": "PASS_IMPLICIT_WORKFLOW"
     },
     {
       "nodeType": "gridDistribution",
@@ -2327,7 +2331,8 @@
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
       "verifiedLive": true,
-      "notes": ""
+      "notes": "Observed in the serialized live graph after its owning workflow created it.",
+      "liveStatus": "PASS_IMPLICIT_WORKFLOW"
     },
     {
       "nodeType": "customDistribution",
@@ -2367,7 +2372,8 @@
       "coverage": "GENERIC_MCP",
       "via": "generator_set on a Duplicator/Stroke Duplicator \"generator\" slot",
       "verifiedLive": true,
-      "notes": ""
+      "notes": "Observed in the serialized live graph after its owning workflow created it.",
+      "liveStatus": "PASS_IMPLICIT_WORKFLOW"
     },
     {
       "nodeType": "rectangleShape",

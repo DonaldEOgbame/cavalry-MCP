@@ -73,7 +73,7 @@
           ]
         }
       },
-      "score": 0.803311213011194,
+      "score": 0.8033037710035836,
       "relevance": 0.8786456037052901,
       "authority": 0.72,
       "versionCompatibility": "same",
@@ -83,7 +83,7 @@
           "visual outcome source",
           "verified evidence",
           "runtime version compatible",
-          "9 matching records"
+          "13 matching records"
         ]
       },
       "warnings": []
@@ -140,7 +140,7 @@
         "createdAt": "2026-09-20T06:55:55.969Z",
         "updatedAt": "2026-09-20T06:55:55.969Z"
       },
-      "score": 0.56019216278453,
+      "score": 0.5601847207766659,
       "relevance": 0.3044127016504908,
       "authority": 0.94,
       "versionCompatibility": "same",
@@ -150,7 +150,7 @@
           "official docs source",
           "verified evidence",
           "runtime version compatible",
-          "9 matching records"
+          "13 matching records"
         ]
       },
       "warnings": []
@@ -231,7 +231,7 @@
         "createdAt": "2026-09-20T06:55:55.895Z",
         "updatedAt": "2026-09-20T06:55:55.895Z"
       },
-      "score": 0.5494490470160129,
+      "score": 0.5494416050081489,
       "relevance": 0.28292647013222877,
       "authority": 0.94,
       "versionCompatibility": "same",
@@ -241,7 +241,7 @@
           "official docs source",
           "verified evidence",
           "runtime version compatible",
-          "9 matching records"
+          "13 matching records"
         ]
       },
       "warnings": []
@@ -296,7 +296,7 @@
         "createdAt": "2026-09-20T06:55:55.967Z",
         "updatedAt": "2026-09-20T06:55:55.967Z"
       },
-      "score": 0.5407382261435076,
+      "score": 0.5407307841352631,
       "relevance": 0.26550482837605643,
       "authority": 0.94,
       "versionCompatibility": "same",
@@ -306,7 +306,7 @@
           "official docs source",
           "verified evidence",
           "runtime version compatible",
-          "9 matching records"
+          "13 matching records"
         ]
       },
       "warnings": []
@@ -376,7 +376,7 @@
           "fallback": "cavalry_raw_script"
         }
       },
-      "score": 0.5406665130536176,
+      "score": 0.5406590710457535,
       "relevance": 0.3413608505927754,
       "authority": 0.75,
       "versionCompatibility": "same",
@@ -386,7 +386,7 @@
           "motion recipe source",
           "verified evidence",
           "runtime version compatible",
-          "9 matching records"
+          "13 matching records"
         ]
       },
       "warnings": []
@@ -430,7 +430,7 @@
         "createdAt": "2026-09-20T06:55:55.969Z",
         "updatedAt": "2026-09-20T06:55:55.969Z"
       },
-      "score": 0.5368605566216336,
+      "score": 0.536853114612628,
       "relevance": 0.25774948932824937,
       "authority": 0.94,
       "versionCompatibility": "same",
@@ -440,7 +440,7 @@
           "official docs source",
           "verified evidence",
           "runtime version compatible",
-          "9 matching records"
+          "13 matching records"
         ]
       },
       "warnings": []
@@ -520,7 +520,7 @@
           "fallback": "cavalry_raw_script"
         }
       },
-      "score": 0.53337380527946,
+      "score": 0.5333663632715959,
       "relevance": 0.32677543431817924,
       "authority": 0.75,
       "versionCompatibility": "same",
@@ -530,7 +530,7 @@
           "motion recipe source",
           "verified evidence",
           "runtime version compatible",
-          "9 matching records"
+          "13 matching records"
         ]
       },
       "warnings": []
@@ -592,7 +592,7 @@
         "createdAt": "2026-09-20T06:55:55.967Z",
         "updatedAt": "2026-09-20T06:55:55.967Z"
       },
-      "score": 0.5309806549712495,
+      "score": 0.5309732129624976,
       "relevance": 0.24598968602976434,
       "authority": 0.94,
       "versionCompatibility": "same",
@@ -602,7 +602,7 @@
           "official docs source",
           "verified evidence",
           "runtime version compatible",
-          "9 matching records"
+          "13 matching records"
         ]
       },
       "warnings": []

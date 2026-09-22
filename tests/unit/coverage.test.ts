@@ -53,8 +53,10 @@ describe('parity coverage records', () => {
       return;
     }
     const data = JSON.parse(await readFile(path, 'utf8'));
+    const inventory = JSON.parse(await readFile(resolve('coverage/mcp-tool-inventory.json'), 'utf8'));
     assert.equal(data.counts.unknown, 0);
-    assert.equal(data.counts.mcpTools, 340);
+    assert.equal(data.counts.mcpTools, inventory.count);
+    assert.equal(inventory.tools.length, inventory.count);
     assert.equal(data.counts.capabilityGroups, 62);
     assert.equal(data.counts.concreteNodeTypes, 436);
     assert.equal(data.counts.nodeAttributes, 3168);

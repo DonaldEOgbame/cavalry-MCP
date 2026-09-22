@@ -24,6 +24,7 @@ import { executeBatch, getCapabilities } from '../../src/cavalry/capabilities.js
 import { CavalryError } from '../../src/mcp/errors.js';
 import { permissions } from '../../src/mcp/permissions.js';
 import { executeRawScript } from '../../src/cavalry/raw-script.js';
+import { recoverCavalryBridge } from '../../src/bridge/watchdog.js';
 
 describe('Cavalry Acceptance Tests Suite', () => {
   let isCavalryOnline = false;
@@ -51,11 +52,21 @@ describe('Cavalry Acceptance Tests Suite', () => {
     });
   }
 
+  async function freshSceneWithRecovery(): Promise<void> {
+    try {
+      await Scene.sceneNew(true);
+    } catch (error) {
+      const code = (error as CavalryError).code;
+      if (!['BRIDGE_OFFLINE', 'BRIDGE_TIMEOUT'].includes(code) || !await recoverCavalryBridge()) throw error;
+      await Scene.sceneNew(true);
+    }
+  }
+
   // --------------------------------------------------------------------------
   // TEST 1 — COMPOSITION
   // --------------------------------------------------------------------------
   runLiveTest('TEST 1 — COMPOSITION: Create 1920x1080 30fps 0-149 and verify', async () => {
-    await Scene.sceneNew(true);
+    await freshSceneWithRecovery();
     const comp = await Comp.compositionCreate({
       name: 'AcceptanceComp',
       width: 1920,
@@ -387,6 +398,7 @@ describe('Cavalry Acceptance Tests Suite', () => {
   // plugin/extension names out of its curated subset (see cavalry/bridge.js
   // cavalry_capabilities), so discovery must go through layer_types instead.
   runLiveTest('TEST 21 — THIRD-PARTY LAYER: Discover, instantiate, mutate, and render a plugin filter', async (t: any) => {
+    await freshSceneWithRecovery();
     const { layerTypes } = await Layer.layerTypes(true);
     const pluginType = layerTypes.find((entry) => entry.type.startsWith('sceneGroup::'));
     if (!pluginType) {
@@ -394,7 +406,6 @@ describe('Cavalry Acceptance Tests Suite', () => {
       return;
     }
 
-    await Scene.sceneNew(true);
     await Comp.compositionCreate({ name: 'ThirdPartyPluginTest', width: 320, height: 180, fps: 30, startFrame: 0, endFrame: 1 });
 
     // A star shape sized smaller than the frame (never full-bleed) so its
@@ -455,7 +466,7 @@ describe('Cavalry Acceptance Tests Suite', () => {
   // --------------------------------------------------------------------------
   runLiveTest('TEST 22 — END-TO-END MOTION GRAPHIC: Complete autonomous motion design workflow', async () => {
     // 1. New Composition
-    await Scene.sceneNew(true);
+    await freshSceneWithRecovery();
     await Comp.compositionCreate({
       name: 'MotionGraphicFinal',
       width: 1920,

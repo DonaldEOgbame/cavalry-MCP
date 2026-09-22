@@ -8,17 +8,17 @@
     "Attribute Editor": { "coverage": "Structured MCP", "notes": "Discovery, values, limits, expressions, and selection are covered." },
     "Dependency Graph": { "coverage": "Structured MCP", "notes": "Connections and generic node inspection are covered." },
     "Assets": { "coverage": "Structured MCP", "notes": "Files, groups, sequences, cloud sheets, smart folders, ICC data, and async callbacks are covered." },
-    "Control Centre": { "coverage": "Not Automatable", "notes": "Add/remove are structured; listing/description have no public API." },
+    "Control Centre": { "coverage": "Partially Automatable", "notes": "Add/remove are structured; listing/description still have no stable public or Accessibility enumeration route." },
     "Render Manager": { "coverage": "Raw Script", "notes": "Queue basics are structured; format-specific attributes vary by installed definitions." },
     "Animation Utilities": { "coverage": "Structured MCP" },
-    "Tags": { "coverage": "Not Automatable", "notes": "No documented structured API and no accessibility fallback yet." },
-    "Presets": { "coverage": "Not Automatable", "notes": "No documented structured API and no accessibility fallback yet." },
-    "Workspaces": { "coverage": "Not Automatable", "notes": "No accessibility fallback yet." },
-    "Shortcuts": { "coverage": "Not Automatable", "notes": "No accessibility fallback yet." },
-    "Preferences": { "coverage": "Structured MCP", "notes": "Explicit keyed read/write only." },
+    "Tags": { "coverage": "Not Automatable", "notes": "No documented API or stable Accessibility identifiers; tools report PLATFORM_LIMITATION." },
+    "Presets": { "coverage": "Partially Automatable", "notes": "Preset path/list and concrete menu commands are available; generic save/delete/rename/default operations remain unavailable." },
+    "Workspaces": { "coverage": "Accessibility UI", "notes": "Enumeration and switching are available; persistent save/reset operations are explicitly interactive." },
+    "Shortcuts": { "coverage": "Accessibility UI", "notes": "Discovery and explicit execution pass live through the optional macOS UI driver." },
+    "Preferences": { "coverage": "Structured MCP", "notes": "Explicit keyed read/write plus profile-key enumeration." },
     "Tool Settings": { "coverage": "Raw Script", "notes": "Scene-backed settings use attributes; editor-only settings remain unavailable." },
-    "Camera": { "coverage": "Structured MCP", "notes": "Planar cameras and Camera Guides are covered; 2.5D activation is not exposed." },
+    "Camera": { "coverage": "Structured MCP", "notes": "Planar cameras and safe cut/transition/sequence helpers are verified; native Camera Guides and 2.5D activation remain unavailable." },
     "JavaScript": { "coverage": "Raw Script", "notes": "Explicit opt-in only." },
-    "Third-party plugins": { "coverage": "Raw Script", "notes": "Scene-node attributes are generic; custom plugin UI remains unavailable." }
+    "Third-party plugins": { "coverage": "Raw Script", "notes": "Scene-node attributes are generic; custom plugin UI is inspected only where stable Accessibility controls are exposed." }
   }
 }

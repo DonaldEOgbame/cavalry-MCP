@@ -1,0 +1,21 @@
+{
+  "slug": "35-inner-shadow-filter",
+  "description": "inner Shadow Filter filter study with visible animated geometry and a structurally verified native graph.",
+  "verified": true,
+  "scenePath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/35-inner-shadow-filter/35-inner-shadow-filter.cv",
+  "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/35-inner-shadow-filter/35-inner-shadow-filter.png",
+  "inspectionPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/35-inner-shadow-filter/35-inner-shadow-filter.inspection.json",
+  "nodeCount": 24,
+  "connectionCount": 19,
+  "animatedAttributes": [
+    "position.x",
+    "on"
+  ],
+  "ingestion": {
+    "added": 1,
+    "updated": 0,
+    "unchanged": 0,
+    "deleted": 0,
+    "failed": []
+  }
+}

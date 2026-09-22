@@ -1,0 +1,21 @@
+{
+  "slug": "36-mirror-filter",
+  "description": "mirror Filter filter study with visible animated geometry and a structurally verified native graph.",
+  "verified": true,
+  "scenePath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/36-mirror-filter/36-mirror-filter.cv",
+  "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/36-mirror-filter/36-mirror-filter.png",
+  "inspectionPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/36-mirror-filter/36-mirror-filter.inspection.json",
+  "nodeCount": 24,
+  "connectionCount": 20,
+  "animatedAttributes": [
+    "position.x",
+    "on"
+  ],
+  "ingestion": {
+    "added": 1,
+    "updated": 0,
+    "unchanged": 0,
+    "deleted": 0,
+    "failed": []
+  }
+}

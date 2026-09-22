@@ -1056,10 +1056,7 @@
       return { frame: params.frame };
     },
 
-    timeline_play: function (params) {
-      api.play();
-      return { playing: true };
-    },
+    timeline_play: function () { throw new Error("HOST_UNSTABLE: Native timeline playback can block the Cavalry 2.7.2 bridge. Use timeline_preview_playback or preview_video."); },
 
     timeline_stop: function (params) {
       api.stop();
@@ -1619,9 +1616,9 @@
       return { layerId: id, worldSpace: params.worldSpace === true, path: api.getEditablePath(id, params.worldSpace === true) };
     },
     path_keyframe_get: function (params) { const id = resolveLayerId(params.layerId); const previousFrame = api.getFrame(); api.setFrame(params.frame); api.processEvents(); const value = api.get(id, params.attrPath); api.setFrame(previousFrame); api.processEvents(); return { layerId: id, attrPath: params.attrPath, frame: params.frame, value: value }; },
-    path_keyframe_set: function (params) { const id = resolveLayerId(params.layerId); const values = {}; values[params.attrPath] = params.pathObject; api.keyframe(id, params.frame, values); api.resyncPathKeyframes(id, params.attrPath); api.processEvents(); return handlers.path_keyframe_get({ layerId: id, attrPath: params.attrPath, frame: params.frame }); },
-    path_keyframe_resync: function (params) { const id = resolveLayerId(params.layerId); api.resyncPathKeyframes(id, params.attrPath); api.processEvents(); return { layerId: id, attrPath: params.attrPath, resynced: true }; },
-    path_morph: function (params) { const id = resolveLayerId(params.layerId); const a = {}; const b = {}; a[params.attrPath] = params.fromPath; b[params.attrPath] = params.toPath; api.keyframe(id, params.startFrame, a); api.keyframe(id, params.endFrame, b); api.resyncPathKeyframes(id, params.attrPath); api.processEvents(); return { layerId: id, attrPath: params.attrPath, startFrame: params.startFrame, endFrame: params.endFrame, resynced: true }; },
+    path_keyframe_set: function () { throw new Error("HOST_UNSTABLE: Native Editable Path keyframes/resync can terminate Cavalry 2.7.2. Use path_animation_safe."); },
+    path_keyframe_resync: function () { throw new Error("HOST_UNSTABLE: Native Editable Path resync can terminate Cavalry 2.7.2. Use path_animation_safe."); },
+    path_morph: function () { throw new Error("HOST_UNSTABLE: Native Editable Path morphing can terminate Cavalry 2.7.2. Use path_morph_safe."); },
 
     attribute_get_selection: function () { return { attributes: api.getSelectedAttributes() || [] }; },
     attribute_select: function (params) { api.selectAttribute(params.attributePaths || [], params.add === true); return { attributes: api.getSelectedAttributes() || [] }; },
@@ -1640,11 +1637,11 @@
     camera_get_active: function () { const id = api.getActiveCamera(); return { hasActive: api.hasActiveCamera(), camera: id ? getLayerIdentity(id) : null }; },
     camera_has_active: function () { return { hasActive: api.hasActiveCamera() }; },
     camera_inspect: function (params) { const id = resolveLayerId(params.layerId); return { identity: getLayerIdentity(id), cameraType: api.get(id, "cameraType"), position: api.get(id, "position"), rotation: api.get(id, "rotation"), lookAt: api.get(id, "lookAt"), zoom: api.get(id, "zoom"), guides: api.get(id, "inputGuides") }; },
-    camera_set_type: function (params) { const id = resolveLayerId(params.layerId); api.set(id, { cameraType: params.cameraType }); api.processEvents(); return { layerId: id, cameraType: api.get(id, "cameraType") }; },
-    camera_create_guide: function (params) { const id = api.create("cameraGuide"); if (params.name) api.rename(id, params.name); api.processEvents(); return getLayerIdentity(id); },
-    camera_set_guides: function (params) { const id = resolveLayerId(params.layerId); const guides = (params.guideIds || []).map(resolveLayerId); api.set(id, { inputGuides: guides }); api.processEvents(); return { layerId: id, guideIds: api.get(id, "inputGuides") || [] }; },
-    camera_add_guide: function (params) { const id = resolveLayerId(params.layerId); const guideId = resolveLayerId(params.guideId); const guides = api.get(id, "inputGuides") || []; if (guides.indexOf(guideId) === -1) guides.push(guideId); api.set(id, { inputGuides: guides }); api.processEvents(); return { layerId: id, guideIds: api.get(id, "inputGuides") || [] }; },
-    camera_remove_guide: function (params) { const id = resolveLayerId(params.layerId); const guideId = resolveLayerId(params.guideId); const guides = (api.get(id, "inputGuides") || []).filter(function (item) { return item !== guideId; }); api.set(id, { inputGuides: guides }); api.processEvents(); return { layerId: id, guideIds: api.get(id, "inputGuides") || [] }; },
+    camera_set_type: function () { throw new Error("HOST_UNSTABLE: Direct cameraType mutation can terminate Cavalry 2.7.2. Use camera_look_at, camera_cut, camera_transition, or camera_sequence_create."); },
+    camera_create_guide: function () { throw new Error("HOST_UNSTABLE: Camera Guide creation can terminate Cavalry 2.7.2. Use camera_sequence_create."); },
+    camera_set_guides: function () { throw new Error("HOST_UNSTABLE: Camera Guide sequencing is disabled on Cavalry 2.7.2. Use camera_sequence_create."); },
+    camera_add_guide: function () { throw new Error("HOST_UNSTABLE: Camera Guides are disabled on Cavalry 2.7.2. Use camera_cut or camera_sequence_create."); },
+    camera_remove_guide: function () { throw new Error("HOST_UNSTABLE: Camera Guides are disabled on Cavalry 2.7.2. Use camera_cut or camera_sequence_create."); },
     camera_look_at: function (params) { const id = resolveLayerId(params.layerId); api.set(id, { lookAt: params.position, cameraType: 1 }); api.processEvents(); return { layerId: id, lookAt: api.get(id, "lookAt") }; },
     camera_layer_2_5d: function () { throw new Error("Cavalry 2.7.2 exposes has3dTransforms(), but no supported scripting API for enabling or disabling a layer's 2.5D transform state"); },
 
@@ -1685,6 +1682,7 @@
 
     viewport_capture: function (params) { api.saveViewportContentsAsImage(params.filePath); return { filePath: params.filePath }; },
     viewport_active_tool: function () { return { activeTool: api.getActiveTool() }; },
+    preset_path: function () { return { path: api.getPresetsPath() }; },
 
     project_get: function () { return { projectPath: api.getProjectPath(), assetPath: api.getAssetPath(), renderPath: api.getRenderPath(), scenesPath: api.getScenesPath(), palettesPath: api.getPalettesPath(), scenePath: api.getSceneFilePath() }; },
     project_set: function (params) { api.setProject(params.path); api.processEvents(); return handlers.project_get(); },

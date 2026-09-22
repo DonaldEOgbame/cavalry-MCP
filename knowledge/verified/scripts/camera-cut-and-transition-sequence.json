@@ -1,0 +1,21 @@
+{
+  "task": "camera-cut-and-transition-sequence",
+  "status": "verified",
+  "script": "await Safe.cameraSequenceCreate({ shots: [{ cameraId: cameraA, frame: 0 }, { cameraId: cameraB, frame: 45, transitionFrames: 12 }] });",
+  "inputAssumptions": [
+    "Cavalry 2.7.2 bridge connected on macOS"
+  ],
+  "createdObjects": [
+    "planarCamera",
+    "animationCurve"
+  ],
+  "validation": {
+    "passed": true,
+    "checks": [
+      "Camera nodes created with final types",
+      "Cut and transition keyframes persisted",
+      "Preview rendered without Camera Guide APIs"
+    ]
+  },
+  "errors": []
+}

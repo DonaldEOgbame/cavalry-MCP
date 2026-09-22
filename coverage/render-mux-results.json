@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-21T20:07:19.218Z",
+  "cavalryVersion": "2.7.2",
+  "method": "Cavalry video-only render plus FFmpeg audio mux; ffprobe must find both video and audio streams.",
+  "counts": {
+    "PASS": 2
+  },
+  "results": [
+    {
+      "label": "HEVC",
+      "source": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/render-format-sweep-output/sweep-renderHVEC-1790021198424.mp4",
+      "status": "PASS",
+      "outputPath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/render-mux-output/hevc-with-audio.mp4",
+      "verified": true,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "hevc",
+            "codec_type": "video"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "0.533333",
+          "size": "18022"
+        }
+      }
+    },
+    {
+      "label": "ProRes",
+      "source": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/render-format-sweep-output/sweep-renderProRes-1790021200039.mov",
+      "status": "PASS",
+      "outputPath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/render-mux-output/prores-with-audio.mov",
+      "verified": true,
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "index": 0,
+            "codec_name": "prores",
+            "codec_type": "video"
+          },
+          {
+            "index": 1,
+            "codec_name": "aac",
+            "codec_type": "audio"
+          }
+        ],
+        "format": {
+          "duration": "0.533333",
+          "size": "194833"
+        }
+      }
+    }
+  ]
+}

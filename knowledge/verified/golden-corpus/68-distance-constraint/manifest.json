@@ -1,0 +1,21 @@
+{
+  "slug": "68-distance-constraint",
+  "description": "distance Constraint constraint study with visible animated geometry and a structurally verified native graph.",
+  "verified": true,
+  "scenePath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/68-distance-constraint/68-distance-constraint.cv",
+  "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/68-distance-constraint/68-distance-constraint.png",
+  "inspectionPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/68-distance-constraint/68-distance-constraint.inspection.json",
+  "nodeCount": 24,
+  "connectionCount": 18,
+  "animatedAttributes": [
+    "position.x",
+    "on"
+  ],
+  "ingestion": {
+    "added": 1,
+    "updated": 0,
+    "unchanged": 0,
+    "deleted": 0,
+    "failed": []
+  }
+}

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-21T14:04:37.468Z",
+  "generatedAt": "2026-09-22T06:27:16.864Z",
   "cavalryVersion": "2.7.2",
   "sources": {
     "metadataFiles": [
@@ -14,7 +14,7 @@
     "mcpServer": "/Users/macbook/Documents/GitHub/calvary-MCP/src/mcp/server.ts"
   },
   "counts": {
-    "mcpTools": 340,
+    "mcpTools": 385,
     "callableApiMethodsUniqueByName": 358,
     "callableApiMethodsQualified": 359,
     "apiProperties": 9,
@@ -28,8 +28,8 @@
     "unknown": 0
   },
   "apiBreakdown": {
-    "STRUCTURED": 183,
-    "RAW_SCRIPT": 130,
+    "STRUCTURED": 182,
+    "RAW_SCRIPT": 131,
     "CONTEXT_ONLY": 27,
     "SCRIPT_UI_BRIDGE": 4,
     "SCRIPT_UI": 31
@@ -72,9 +72,10 @@
     }
   },
   "capabilityBreakdown": {
-    "STRUCTURED": 43,
+    "STRUCTURED": 42,
     "GENERIC_ATTRIBUTE": 5,
-    "UNSUPPORTED": 13,
+    "UNSUPPORTED": 9,
+    "UI_ACCESSIBILITY": 5,
     "RAW_SCRIPT": 1
   },
   "infrastructure": [
@@ -215,13 +216,15 @@
       "name": "EditableShape.PathAnimation",
       "coverage": "STRUCTURED",
       "tools": [
+        "path_morph_safe",
+        "path_animation_safe",
         "path_keyframe_create",
         "path_keyframe_set",
         "path_keyframe_resync",
         "path_morph"
       ],
       "missingTools": [],
-      "notes": ""
+      "notes": "Native path keyframe/resync routes fail fast as KNOWN_HOST_LIMITATION on 2.7.2; verified safe helpers build persistent frame-sampled Editable Shape sequences with topology validation."
     },
     {
       "name": "Selection.Layers",
@@ -307,10 +310,14 @@
         "camera_create",
         "camera_list",
         "camera_inspect",
+        "camera_look_at",
+        "camera_cut",
+        "camera_transition",
+        "camera_sequence_create",
         "camera_set_type"
       ],
       "missingTools": [],
-      "notes": ""
+      "notes": "Direct cameraType mutation fails fast on 2.7.2; normal Planar Camera attributes and semantic cut/transition helpers are the verified route."
     },
     {
       "name": "Camera.ActiveCamera",
@@ -324,13 +331,16 @@
     },
     {
       "name": "Camera.Guides",
-      "coverage": "STRUCTURED",
+      "coverage": "UNSUPPORTED",
       "tools": [
         "camera_create_guide",
-        "camera_sequence_guides"
+        "camera_sequence_guides",
+        "camera_add_guide",
+        "camera_remove_guide",
+        "camera_sequence_create"
       ],
       "missingTools": [],
-      "notes": ""
+      "notes": "Native Camera Guide operations are host-unstable and now fail fast. camera_sequence_create is the verified semantic replacement, but it does not claim native Guide parity."
     },
     {
       "name": "RulerGuides",
@@ -434,10 +444,12 @@
     },
     {
       "name": "Preferences.EnumerateKnown",
-      "coverage": "UNSUPPORTED",
-      "tools": [],
+      "coverage": "UI_ACCESSIBILITY",
+      "tools": [
+        "preferences_list"
+      ],
       "missingTools": [],
-      "notes": "Cavalry exposes keyed get/set but not enumeration of Preferences.json keys."
+      "notes": "The optional macOS driver enumerates the active Cavalry profile; keyed reads/writes remain structured API operations."
     },
     {
       "name": "Viewport.Capture",
@@ -460,10 +472,12 @@
     },
     {
       "name": "Viewport.SetTool",
-      "coverage": "UNSUPPORTED",
-      "tools": [],
+      "coverage": "UI_ACCESSIBILITY",
+      "tools": [
+        "tool_set_active"
+      ],
       "missingTools": [],
-      "notes": "No documented setActiveTool API and no UI driver is shipped yet."
+      "notes": "Verified against the deterministic Tool menu with tool_get_active readback."
     },
     {
       "name": "Viewport.QAProfiles",
@@ -593,10 +607,11 @@
       "coverage": "GENERIC_ATTRIBUTE",
       "tools": [
         "render_item_set_format",
-        "render_item_set_audio"
+        "render_item_set_audio",
+        "render_mux_audio"
       ],
       "missingTools": [],
-      "notes": "Installed render generators and codec attributes are discovered and set generically."
+      "notes": "Installed generators are discovered generically. render_mux_audio supplies and ffprobe-verifies audio for HEVC/ProRes video when Cavalry 2.7.2 exposes no codec audio attributes."
     },
     {
       "name": "Layer.SuperTypes",
@@ -656,23 +671,33 @@
     {
       "name": "NativeDialogs",
       "coverage": "UNSUPPORTED",
-      "tools": [],
+      "tools": [
+        "dialog_open_file",
+        "dialog_save_file",
+        "dialog_choose_folder"
+      ],
       "missingTools": [],
-      "notes": "Blocking native dialogs are deliberately not exposed for unattended automation."
+      "notes": "Accessibility path submission was not deterministic under Cavalry's file filters. The tools return PLATFORM_LIMITATION and direct callers to verified scene_open, scene_save_as, and project_set routes."
     },
     {
       "name": "UI.CommandSearch",
-      "coverage": "UNSUPPORTED",
-      "tools": [],
+      "coverage": "UI_ACCESSIBILITY",
+      "tools": [
+        "command_search",
+        "command_execute"
+      ],
       "missingTools": [],
-      "notes": "No accessibility driver is currently implemented; do not claim UI fallback coverage."
+      "notes": "Verified against live Cavalry menu command enumeration and exact command execution."
     },
     {
       "name": "UI.Shortcuts",
-      "coverage": "UNSUPPORTED",
-      "tools": [],
+      "coverage": "UI_ACCESSIBILITY",
+      "tools": [
+        "shortcut_discover",
+        "shortcut_execute"
+      ],
       "missingTools": [],
-      "notes": "No accessibility driver is currently implemented; do not claim UI fallback coverage."
+      "notes": "Verified against live menu shortcuts and explicit key dispatch; user overrides are read from the active profile."
     },
     {
       "name": "UI.VisionFallback",
@@ -684,23 +709,50 @@
     {
       "name": "Presets",
       "coverage": "UNSUPPORTED",
-      "tools": [],
+      "tools": [
+        "preset_list",
+        "preset_apply",
+        "preset_save",
+        "preset_delete",
+        "preset_rename",
+        "preset_set_default",
+        "preset_clear_default"
+      ],
       "missingTools": [],
-      "notes": "Preset application is not exposed in the documented API and no UI driver is shipped."
+      "notes": "The live presets path is discoverable and concrete preset menu commands can be executed, but the clean profile has no preset fixture and Cavalry exposes no stable generic mutation contract."
     },
     {
       "name": "Tags",
       "coverage": "UNSUPPORTED",
-      "tools": [],
+      "tools": [
+        "tag_list",
+        "tag_create",
+        "tag_delete",
+        "tag_assign",
+        "tag_unassign",
+        "tag_select",
+        "tag_filter_scene",
+        "tag_filter_viewport",
+        "tag_clear_filter"
+      ],
       "missingTools": [],
-      "notes": "Experimental Tag controls have no documented structured API and no UI driver is shipped."
+      "notes": "Tag controls remain PLATFORM_LIMITATION: Cavalry 2.7.2 exposes neither scripting methods nor stable Accessibility identifiers for generic tag mutation."
     },
     {
       "name": "WorkspacesAndWindows",
-      "coverage": "UNSUPPORTED",
-      "tools": [],
+      "coverage": "UI_ACCESSIBILITY",
+      "tools": [
+        "workspace_list",
+        "workspace_switch",
+        "workspace_save",
+        "workspace_reset",
+        "window_open",
+        "window_close",
+        "viewport_add",
+        "focus_mode"
+      ],
       "missingTools": [],
-      "notes": "Editor-only operations require a future accessibility driver."
+      "notes": "Workspace enumeration, window commands, and Focus Mode pass live. Persistent layout mutations remain explicitly interactive and were not run unattended."
     },
     {
       "name": "ThirdParty.SceneNodes",
@@ -756,8 +808,8 @@
       "notes": "Files, groups, sequences, cloud sheets, smart folders, ICC data, and async callbacks are covered."
     },
     "Control Centre": {
-      "coverage": "Not Automatable",
-      "notes": "Add/remove are structured; listing/description have no public API."
+      "coverage": "Partially Automatable",
+      "notes": "Add/remove are structured; listing/description still have no stable public or Accessibility enumeration route."
     },
     "Render Manager": {
       "coverage": "Raw Script",
@@ -768,23 +820,23 @@
     },
     "Tags": {
       "coverage": "Not Automatable",
-      "notes": "No documented structured API and no accessibility fallback yet."
+      "notes": "No documented API or stable Accessibility identifiers; tools report PLATFORM_LIMITATION."
     },
     "Presets": {
-      "coverage": "Not Automatable",
-      "notes": "No documented structured API and no accessibility fallback yet."
+      "coverage": "Partially Automatable",
+      "notes": "Preset path/list and concrete menu commands are available; generic save/delete/rename/default operations remain unavailable."
     },
     "Workspaces": {
-      "coverage": "Not Automatable",
-      "notes": "No accessibility fallback yet."
+      "coverage": "Accessibility UI",
+      "notes": "Enumeration and switching are available; persistent save/reset operations are explicitly interactive."
     },
     "Shortcuts": {
-      "coverage": "Not Automatable",
-      "notes": "No accessibility fallback yet."
+      "coverage": "Accessibility UI",
+      "notes": "Discovery and explicit execution pass live through the optional macOS UI driver."
     },
     "Preferences": {
       "coverage": "Structured MCP",
-      "notes": "Explicit keyed read/write only."
+      "notes": "Explicit keyed read/write plus profile-key enumeration."
     },
     "Tool Settings": {
       "coverage": "Raw Script",
@@ -792,7 +844,7 @@
     },
     "Camera": {
       "coverage": "Structured MCP",
-      "notes": "Planar cameras and Camera Guides are covered; 2.5D activation is not exposed."
+      "notes": "Planar cameras and safe cut/transition/sequence helpers are verified; native Camera Guides and 2.5D activation remain unavailable."
     },
     "JavaScript": {
       "coverage": "Raw Script",
@@ -800,7 +852,7 @@
     },
     "Third-party plugins": {
       "coverage": "Raw Script",
-      "notes": "Scene-node attributes are generic; custom plugin UI remains unavailable."
+      "notes": "Scene-node attributes are generic; custom plugin UI is inspected only where stable Accessibility controls are exposed."
     }
   },
   "apiSurface": [
@@ -2262,8 +2314,8 @@
       "namespace": "@JS_GUI_API",
       "kind": "function",
       "callable": true,
-      "coverage": "RAW_SCRIPT",
-      "usedByBridge": false,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
       "availability": "Script UI global api",
       "description": "Provides the path to the presets directory."
     },
@@ -3087,8 +3139,8 @@
       "namespace": "@JS_GUI_API",
       "kind": "function",
       "callable": true,
-      "coverage": "STRUCTURED",
-      "usedByBridge": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
       "availability": "Script UI global api",
       "description": "Starts playback."
     },
@@ -3373,8 +3425,8 @@
       "namespace": "@JS_GUI_API",
       "kind": "function",
       "callable": true,
-      "coverage": "STRUCTURED",
-      "usedByBridge": true,
+      "coverage": "RAW_SCRIPT",
+      "usedByBridge": false,
       "availability": "Script UI global api",
       "description": "Resynchronise path keyframe data, run this if you use api.set() on a path keyframe."
     },

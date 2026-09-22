@@ -178,6 +178,69 @@ const scenes: GoldenScene[] = [
   },
 ];
 
+// Focused structural/visual studies extend the corpus across systems that were
+// under-represented by the narrative recipes above. Every study still goes
+// through the same live .cv save, graph extraction, preview render, structural
+// assertions, and verified ingestion path as the hand-authored scenes.
+const systemStudies: Array<{ type: string; family: 'filter' | 'shader' | 'field' | 'constraint' | 'distribution' }> = [
+  ...[
+    'backgroundBlurFilter', 'chromaticAberrationFilter', 'distortionFilter', 'ditheringFilter',
+    'dropShadowFilter', 'gammaCorrectionFilter', 'glowFilter', 'gradientMapFilter',
+    'halftoneFilter', 'hsvAdjustmentFilter', 'innerShadowFilter', 'mirrorFilter',
+    'pixelateFilter', 'posterizeFilter', 'rgbSplitFilter', 'scrapeFilter',
+    'sharpenFilter', 'thresholdFilter', 'triToneFilter', 'vignetteFilter',
+  ].map((type) => ({ type, family: 'filter' as const })),
+  ...[
+    'blendShader', 'checkerboardShader', 'colorShader', 'gradientShader',
+    'multiPointGradientShader', 'noiseShader', 'shapeToShader', 'skslShader', 'voronoiShader',
+  ].map((type) => ({ type, family: 'shader' as const })),
+  ...[
+    'attractorField', 'buoyancyField', 'directionField', 'dragField', 'pathField',
+    'vortexField', 'flowFieldModifier', 'forceModifier', 'goalModifier', 'turbulenceModifier',
+  ].map((type) => ({ type, family: 'field' as const })),
+  ...[
+    'boundingBoxConstraint', 'bridgeConstraint', 'compConstraint', 'componentConstraint',
+    'distanceConstraint', 'pinConstraint', 'transformConstraint',
+  ].map((type) => ({ type, family: 'constraint' as const })),
+  ...['randomDistribution', 'linearDistribution', 'fibonacciDistribution']
+    .map((type) => ({ type, family: 'distribution' as const })),
+];
+
+for (const [index, study] of systemStudies.entries()) {
+  const number = String(index + 25).padStart(2, '0');
+  const readable = study.type.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/::/g, ' ');
+  scenes.push({
+    slug: `${number}-${study.type.replace(/::/g, '-').replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()}`,
+    description: `${readable} ${study.family} study with visible animated geometry and a structurally verified native graph.`,
+    expected: { nodeTypes: ['basicShape', 'textShape', study.type], animatedAttributes: ['position.x'], minConnections: study.family === 'filter' || study.family === 'shader' || study.family === 'distribution' ? 2 : 1 },
+    build: async () => {
+      await base(`${readable} Study`, 60);
+      const focal = await shape(index % 2 ? 'star' : 'ellipse', `${readable} Subject`);
+      await Attr.attributeSet(focal.layerId, 'scale', { x: 0.7, y: 0.7 });
+      await Anim.keyframeCreate(focal.layerId, 'position.x', 0, -120);
+      await Anim.keyframeCreate(focal.layerId, 'position.x', 60, 120);
+      const title = await Typo.textCreate({ text: readable.toUpperCase(), fontSize: 42, alignment: 'center', name: `${readable} Label` });
+      await Attr.attributeSet(title.layerId, 'position', { x: 0, y: 190 });
+
+      if (study.family === 'filter') {
+        const node = await Layer.layerCreate(study.type, readable);
+        await connect(node.layerId, focal.layerId, 'filters');
+      } else if (study.family === 'shader') {
+        const shader = await Layer.layerCreate(study.type, readable);
+        const material = await Layer.layerCreate('colorMaterial', `${readable} Material`);
+        await connect(shader.layerId, material.layerId, 'colorShaders');
+        await connect(material.layerId, focal.layerId, 'material');
+      } else if (study.family === 'distribution') {
+        const duplicator = await Layer.layerCreate('duplicator', `${readable} Duplicator`);
+        await Gen.generatorSet(duplicator.layerId, study.type, 'generator');
+        await connect(focal.layerId, duplicator.layerId, 'shapes');
+      } else {
+        await Layer.layerCreate(study.type, readable);
+      }
+    },
+  });
+}
+
 function valueOf(attribute: any): unknown {
   if (!attribute || typeof attribute !== 'object') return attribute;
   if ('value' in attribute) return attribute.value;

@@ -31,6 +31,10 @@ import * as Events from '../cavalry/events.js';
 import * as Parity from '../cavalry/parity.js';
 import { cavalryParityAudit } from '../cavalry/coverage.js';
 import { knowledgeEngine } from '../knowledge/engine.js';
+import { executeSupervised, operationRisk } from '../bridge/watchdog.js';
+import * as Safe from '../cavalry/safe-operations.js';
+import { renderMuxAudio } from '../cavalry/render-mux.js';
+import * as UI from '../ui/driver.js';
 
 export function createMcpServer(): McpServer {
   const server = new McpServer({
@@ -111,6 +115,9 @@ export function createMcpServer(): McpServer {
   server.tool('cavalry_raw_script', 'Escape hatch to execute arbitrary JavaScript in Cavalry (disabled by default; requires CAVALRY_ALLOW_RAW_SCRIPT=true)', Schemas.SystemSchemas.rawScript.shape, handleTool('cavalry_raw_script', async (args) => {
     return executeRawScript(args.code);
   }));
+
+  server.tool('operation_risk_classify', 'Classify a bridge operation as SAFE, CAUTION, or HOST_UNSTABLE before execution', Schemas.SystemSchemas.safeHostOperation.pick({ operation: true }).shape, handleTool('operation_risk_classify', async (args) => ({ operation: args.operation, risk: operationRisk(args.operation) })));
+  server.tool('safe_host_operation', 'Checkpoint and supervise a bridge operation, block known host-unstable routes by default, and return structured recovery state', Schemas.SystemSchemas.safeHostOperation.shape, handleTool('safe_host_operation', async (args) => executeSupervised(args.operation, args.params, args)));
 
   // ============================================================================
   // CAVALRY KNOWLEDGE ENGINE
@@ -272,7 +279,6 @@ export function createMcpServer(): McpServer {
   parityTool('render_dynamic_range', 'Enable Dynamic Rendering and set its index range', P.dynamicRange);
   parityTool('render_dynamic_offset', 'Set the Dynamic Rendering index offset', P.dynamicOffset);
   parityTool('render_dynamic_preview', 'Report the missing native Dynamic preview API and direct callers to preview_frame', P.renderItem);
-  parityTool('render_background_start', 'Start background rendering for a Render Queue Item', P.renderItem);
   parityTool('render_item_create', 'Create a first-class Render Queue Item for a composition', Schemas.RenderQueueSchemas.add, 'render_queue_add');
   parityTool('render_item_inspect', 'Inspect every exposed Render Queue Item attribute and value', P.renderItem);
   parityTool('render_item_attributes', 'List Render Queue Item attributes', P.renderItem);
@@ -299,8 +305,6 @@ export function createMcpServer(): McpServer {
   parityTool('render_metadata_add', 'Add or append a Render Manager metadata entry', P.renderMetadataEntry);
   parityTool('render_metadata_remove', 'Remove Render Manager metadata entries by name', P.renderMetadataEntry);
   parityTool('render_metadata_format', 'Set metadata format: 0 JSON, 1 Simple Traits, 2 NFT Traits', P.renderMetadataFormat, 'render_item_set', (args) => ({ itemId: args.itemId, settings: { metaDataFormat: args.format } }));
-  parityTool('render_is_active', 'Report the unavailable active-render status API explicitly', {}, 'render_status_unavailable');
-  parityTool('render_wait', 'Report the unavailable render-wait status API explicitly', P.renderItem, 'render_status_unavailable');
   parityTool('layer_get_supertypes', 'Read Cavalry layer supertypes', P.layer);
   parityTool('shape_has_fill', 'Check explicit shape fill state', P.layer);
   parityTool('shape_enable_fill', 'Enable shape fill', P.layer, 'shape_set_fill', (args) => ({ ...args, enabled: true }));
@@ -315,6 +319,47 @@ export function createMcpServer(): McpServer {
   parityTool('component_export_selected', 'Export selected connected layers as a Component', P.exportSelected);
   parityTool('clipboard_get_text', 'Read Cavalry clipboard text', {});
   parityTool('clipboard_set_text', 'Write Cavalry clipboard text', P.clipboard);
+
+  // Stable semantic alternatives for native routes that can terminate or wedge
+  // Cavalry 2.7.2.
+  server.tool('path_morph_safe', 'Build an Editable Path morph as verified frame-sampled layers without native path keyframes', Schemas.SafeOperationSchemas.pathMorph.shape, handleTool('path_morph_safe', async (args) => Safe.pathMorphSafe(args.layerId, args.startFrame, args.endFrame, args.fromPath, args.toPath, args.sampleEvery)));
+  server.tool('path_animation_safe', 'Build multi-keyframe Editable Path animation as a persistent sampled-layer sequence', Schemas.SafeOperationSchemas.pathAnimation.shape, handleTool('path_animation_safe', async (args) => Safe.pathAnimationSafe(args.layerId, args.keyframes, args.sampleEvery, args.namePrefix)));
+  server.tool('camera_cut', 'Create a deterministic camera cut using hold keyframes on a normal Planar Camera', Schemas.SafeOperationSchemas.cameraCut.shape, handleTool('camera_cut', async (args) => Safe.cameraCut(args.layerId, args.shot)));
+  server.tool('camera_transition', 'Create a camera move using ordinary Planar Camera transform keyframes and easing', Schemas.SafeOperationSchemas.cameraTransition.shape, handleTool('camera_transition', async (args) => Safe.cameraTransition(args.layerId, args.from, args.to, args.easing)));
+  server.tool('camera_sequence_create', 'Create an ordered camera sequence without native Camera Guides', Schemas.SafeOperationSchemas.cameraSequence.shape, handleTool('camera_sequence_create', async (args) => Safe.cameraSequenceCreate(args.layerId, args.shots)));
+  server.tool('timeline_preview_playback', 'Render an agent-safe low-resolution preview video instead of blocking the bridge with native playback', Schemas.PreviewSchemas.video.shape, handleTool('timeline_preview_playback', async (args) => Video.previewVideo(args.startFrame, args.endFrame, args.fps, args.scalePercentage, args.outputPath)));
+  server.tool('render_mux_audio', 'Mux a Cavalry-rendered video with separately rendered audio and verify both streams with ffprobe', Schemas.SafeOperationSchemas.renderMuxAudio.shape, handleTool('render_mux_audio', async (args) => renderMuxAudio(args.videoPath, args.audioPath, args.outputPath)));
+
+  // Optional macOS Accessibility driver. It is opt-in because these operations
+  // focus windows, invoke menu commands, or interact with native dialogs.
+  server.tool('ui_driver_status', 'Inspect optional Cavalry UI Driver availability and Accessibility permission', {}, handleTool('ui_driver_status', async () => UI.uiDriverStatus()));
+  server.tool('command_search', 'Search real Cavalry menu commands without invoking them', Schemas.UiSchemas.commandSearch.shape, handleTool('command_search', async (args) => UI.commandSearch(args.query)));
+  server.tool('command_execute', 'Interactively execute an exact Cavalry menu command', Schemas.UiSchemas.commandExecute.shape, handleTool('command_execute', async (args) => UI.commandExecute(args.command, args.menu)));
+  server.tool('shortcut_discover', 'Discover visible Cavalry menu shortcuts and user overrides', Schemas.UiSchemas.shortcutDiscover.shape, handleTool('shortcut_discover', async (args) => UI.shortcutDiscover(args.query)));
+  server.tool('shortcut_execute', 'Interactively send an explicit shortcut to the Cavalry Project window', Schemas.UiSchemas.shortcutExecute.shape, handleTool('shortcut_execute', async (args) => UI.shortcutExecute(args.key, args.modifiers)));
+  server.tool('preferences_list', 'Enumerate preference keys from the active Cavalry profile without guessing key names', {}, handleTool('preferences_list', async () => UI.preferencesList()));
+  server.tool('tool_set_active', 'Set a major Cavalry editor tool through the deterministic Tool menu', Schemas.UiSchemas.tool.shape, handleTool('tool_set_active', async (args) => UI.toolSetActive(args.tool)));
+  server.tool('workspace_list', 'List Cavalry workspaces exposed by the Window menu', {}, handleTool('workspace_list', async () => UI.workspaceList()));
+  server.tool('workspace_switch', 'Switch to a named Cavalry workspace through the Window menu', Schemas.UiSchemas.named.shape, handleTool('workspace_switch', async (args) => UI.workspaceSwitch(args.name)));
+  server.tool('workspace_save', 'Save and verify a named Cavalry workspace as an explicitly interactive operation', Schemas.UiSchemas.workspaceSave.shape, handleTool('workspace_save', async (args) => UI.workspaceSave(args.name)));
+  server.tool('workspace_reset', 'Reset the active Cavalry workspace through the Window menu', {}, handleTool('workspace_reset', async () => UI.workspaceReset()));
+  server.tool('window_open', 'Open a named Cavalry editor window through the Window menu', Schemas.UiSchemas.named.shape, handleTool('window_open', async (args) => UI.windowOpen(args.name)));
+  server.tool('window_close', 'Interactively close an exact Cavalry window title', Schemas.UiSchemas.window.shape, handleTool('window_close', async (args) => UI.windowClose(args.title)));
+  server.tool('viewport_add', 'Add a Viewport through Cavalry Window commands', {}, handleTool('viewport_add', async () => UI.viewportAdd()));
+  server.tool('focus_mode', 'Toggle Cavalry Focus Mode through the Window menu', {}, handleTool('focus_mode', async () => UI.focusMode()));
+  server.tool('dialog_open_file', 'Report the native-dialog boundary and direct callers to verified scene_open', Schemas.UiSchemas.dialogPath.shape, handleTool('dialog_open_file', async () => UI.unsupportedUiCapability('native Open dialog automation', 'Use scene_open, which is deterministic and persistence-tested.')));
+  server.tool('dialog_save_file', 'Report the native-dialog boundary and direct callers to verified scene_save_as', Schemas.UiSchemas.dialogPath.shape, handleTool('dialog_save_file', async () => UI.unsupportedUiCapability('native Save dialog automation', 'Use scene_save_as, which is deterministic and persistence-tested.')));
+  server.tool('dialog_choose_folder', 'Report the native-dialog boundary and direct callers to verified project/file-path tools', Schemas.UiSchemas.dialogPath.shape, handleTool('dialog_choose_folder', async () => UI.unsupportedUiCapability('native folder chooser automation', 'Use project_set or an explicit absolute path.')));
+
+  server.tool('preset_list', 'List the Cavalry preset library when the installed profile exposes it', {}, handleTool('preset_list', async () => UI.presetList()));
+  server.tool('preset_apply', 'Apply a named preset through a discoverable Cavalry command when available', Schemas.UiSchemas.presetApply.shape, handleTool('preset_apply', async (args) => args.menu ? UI.commandExecute(args.name, args.menu) : UI.unsupportedUiCapability('generic preset application', 'Use command_search to locate a concrete preset command, then command_execute.')));
+  for (const name of ['preset_save', 'preset_delete', 'preset_rename', 'preset_set_default', 'preset_clear_default'] as const) {
+    server.tool(name, `${name} is classified explicitly when Cavalry exposes no stable generic preset mutation route`, Schemas.UiSchemas.presetFile.shape, handleTool(name, async () => UI.unsupportedUiCapability(name, 'Use the Upload Preset Manager interactively through window_open when applicable.')));
+  }
+  for (const name of ['tag_list', 'tag_create', 'tag_delete', 'tag_assign', 'tag_unassign', 'tag_select', 'tag_filter_scene', 'tag_filter_viewport', 'tag_clear_filter'] as const) {
+    server.tool(name, `${name} reports the Cavalry 2.7.2 tag-control boundary without fabricating state`, Schemas.UiSchemas.tag.partial().shape, handleTool(name, async () => UI.unsupportedUiCapability(name, 'Tag display preferences remain available through preferences_get/preferences_set.')));
+  }
+  server.tool('third_party_ui_inspect', 'Report the generic Accessibility boundary for third-party custom plugin UI', Schemas.UiSchemas.window.shape, handleTool('third_party_ui_inspect', async (args) => UI.unsupportedUiCapability(`third-party controls in ${args.title}`, 'Use window_open plus command_search; plugin node attributes remain generically introspected.')));
 
   // ============================================================================
   // SCENE TOOLS
@@ -522,6 +567,10 @@ export function createMcpServer(): McpServer {
   server.tool('render_start', 'Start rendering a specific Render Manager item', Schemas.RenderQueueSchemas.start.shape, handleTool('render_start', async (args) => Render.renderStart(args.itemId)));
   server.tool('render_start_all', 'Start rendering all items in the Render Manager queue', {}, handleTool('render_start_all', async () => Render.renderStartAll()));
   server.tool('render_cancel', 'Cancel the current render in progress', {}, handleTool('render_cancel', async () => Render.renderCancel()));
+  server.tool('render_background_start', 'Start a background render and record the last state Cavalry exposes without fabricating progress', Schemas.RenderQueueSchemas.start.shape, handleTool('render_background_start', async (args) => Render.renderBackgroundStart(args.itemId)));
+  server.tool('render_status', 'Return known MCP render state; progress is null when Cavalry exposes no reliable percentage', Schemas.RenderQueueSchemas.status.shape, handleTool('render_status', async (args) => Render.renderStatus(args.itemId)));
+  server.tool('render_is_active', 'Return true, false, or null when active-render state cannot be known reliably', Schemas.RenderQueueSchemas.status.shape, handleTool('render_is_active', async (args) => Render.renderIsActive(args.itemId)));
+  server.tool('render_wait', 'Return completion for tracked foreground renders or an explicit unknown state for unsupervisable background renders', Schemas.RenderQueueSchemas.start.shape, handleTool('render_wait', async (args) => Render.renderWait(args.itemId)));
 
   // ============================================================================
   // DESIGN & LAYOUT HELPERS

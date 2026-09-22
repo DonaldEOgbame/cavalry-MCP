@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-22T06:17:49.692Z",
+  "cavalryVersion": "2.7.2",
+  "status": "PASS",
+  "processRestarted": true,
+  "bridgeHealthy": true,
+  "checkpointRestored": true,
+  "sceneReadableAfterRestore": true,
+  "durationMs": 9295
+}

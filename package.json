@@ -20,8 +20,14 @@
     "coverage:live-layer-types": "tsx scripts/probe-live-layer-types.ts",
     "coverage:node-definitions": "node scripts/generate-node-definition-coverage.mjs",
     "coverage:live-node-routes": "tsx scripts/live-node-route-sweep.ts",
-    "coverage:soak": "tsx scripts/live-soak.ts",
+    "coverage:specialized-fixtures": "tsx scripts/live-specialized-fixtures.ts",
+    "coverage:safe-fallbacks": "tsx scripts/live-safe-fallbacks.ts",
+    "coverage:watchdog-recovery": "CAVALRY_WATCHDOG_AUTO_RESTART=true tsx scripts/live-watchdog-recovery.ts",
+    "coverage:ui-driver": "tsx scripts/live-ui-driver-sweep.ts",
+    "coverage:soak": "tsx scripts/live-soak.ts && node scripts/analyze-soak.mjs",
+    "coverage:soak:analyze": "node scripts/analyze-soak.mjs",
     "coverage:render-sweep": "tsx scripts/live-render-format-sweep.ts && node scripts/regenerate-render-formats.mjs",
+    "coverage:render-mux": "tsx scripts/verify-render-mux-formats.ts",
     "knowledge:bootstrap": "tsx src/knowledge/cli.ts bootstrap",
     "knowledge:generate-sources": "node scripts/generate-knowledge-sources.mjs",
     "knowledge:generate-verified-scripts": "node scripts/generate-verified-script-records.mjs",
@@ -38,7 +44,8 @@
     "knowledge:verify": "tsx src/knowledge/cli.ts verify",
     "knowledge:validate-components": "tsx scripts/live-component-library.ts",
     "coverage:compatibility": "tsx scripts/live-compatibility-sweep.ts",
-    "coverage:live-tool-sweep": "tsx scripts/live-mcp-tool-sweep.ts"
+    "coverage:live-tool-sweep": "tsx scripts/live-mcp-tool-sweep.ts",
+    "coverage:final-ledger": "node scripts/generate-final-tool-ledger.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",

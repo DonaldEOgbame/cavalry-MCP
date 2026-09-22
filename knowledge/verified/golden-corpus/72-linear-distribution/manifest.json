@@ -1,0 +1,21 @@
+{
+  "slug": "72-linear-distribution",
+  "description": "linear Distribution distribution study with visible animated geometry and a structurally verified native graph.",
+  "verified": true,
+  "scenePath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/72-linear-distribution/72-linear-distribution.cv",
+  "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/72-linear-distribution/72-linear-distribution.png",
+  "inspectionPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/72-linear-distribution/72-linear-distribution.inspection.json",
+  "nodeCount": 33,
+  "connectionCount": 25,
+  "animatedAttributes": [
+    "position.x",
+    "on"
+  ],
+  "ingestion": {
+    "added": 1,
+    "updated": 0,
+    "unchanged": 0,
+    "deleted": 0,
+    "failed": []
+  }
+}

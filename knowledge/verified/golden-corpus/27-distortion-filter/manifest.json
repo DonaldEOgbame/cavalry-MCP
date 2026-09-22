@@ -1,0 +1,21 @@
+{
+  "slug": "27-distortion-filter",
+  "description": "distortion Filter filter study with visible animated geometry and a structurally verified native graph.",
+  "verified": true,
+  "scenePath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/27-distortion-filter/27-distortion-filter.cv",
+  "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/27-distortion-filter/27-distortion-filter.png",
+  "inspectionPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/27-distortion-filter/27-distortion-filter.inspection.json",
+  "nodeCount": 26,
+  "connectionCount": 23,
+  "animatedAttributes": [
+    "position.x",
+    "on"
+  ],
+  "ingestion": {
+    "added": 1,
+    "updated": 0,
+    "unchanged": 0,
+    "deleted": 0,
+    "failed": []
+  }
+}

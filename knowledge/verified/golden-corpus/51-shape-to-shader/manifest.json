@@ -1,0 +1,21 @@
+{
+  "slug": "51-shape-to-shader",
+  "description": "shape To Shader shader study with visible animated geometry and a structurally verified native graph.",
+  "verified": true,
+  "scenePath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/51-shape-to-shader/51-shape-to-shader.cv",
+  "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/51-shape-to-shader/51-shape-to-shader.png",
+  "inspectionPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/51-shape-to-shader/51-shape-to-shader.inspection.json",
+  "nodeCount": 25,
+  "connectionCount": 19,
+  "animatedAttributes": [
+    "position.x",
+    "on"
+  ],
+  "ingestion": {
+    "added": 1,
+    "updated": 0,
+    "unchanged": 0,
+    "deleted": 0,
+    "failed": []
+  }
+}

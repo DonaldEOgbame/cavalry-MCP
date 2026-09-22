@@ -1,0 +1,21 @@
+{
+  "slug": "44-vignette-filter",
+  "description": "vignette Filter filter study with visible animated geometry and a structurally verified native graph.",
+  "verified": true,
+  "scenePath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/44-vignette-filter/44-vignette-filter.cv",
+  "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/44-vignette-filter/44-vignette-filter.png",
+  "inspectionPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/golden-corpus/44-vignette-filter/44-vignette-filter.inspection.json",
+  "nodeCount": 24,
+  "connectionCount": 20,
+  "animatedAttributes": [
+    "position.x",
+    "on"
+  ],
+  "ingestion": {
+    "added": 1,
+    "updated": 0,
+    "unchanged": 0,
+    "deleted": 0,
+    "failed": []
+  }
+}

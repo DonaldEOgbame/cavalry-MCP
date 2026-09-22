@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "supportedCavalryVersion": "2.7.2",
   "definitionValidation": "PASS against installed nodeDefinitions.json",
-  "liveRenderValidation": "LIVE: 12/14 formats fully verified (rendered + ffprobe/format-specific validation passed), 2 classified as known Cavalry 2.7.2 platform limitations, 0 failed. Generated 2026-09-20T13:56:31.917Z by scripts/live-render-format-sweep.ts. See docs/coverage.md for the HEVC/ProRes audio-export limitation writeup.",
+  "liveRenderValidation": "LIVE: 12/14 formats fully verified (rendered + ffprobe/format-specific validation passed), 2 classified as known Cavalry 2.7.2 platform limitations, 0 failed. Generated 2026-09-21T20:06:41.530Z by scripts/live-render-format-sweep.ts. See docs/coverage.md for the HEVC/ProRes audio-export limitation writeup.",
   "formats": {
     "APNG": {
       "nodeType": "renderAPNG",
@@ -11,7 +11,7 @@
       "liveStatus": "PASS",
       "liveEvidence": {
         "sizeBytes": 3556,
-        "durationMs": 1388,
+        "durationMs": 1433,
         "container": "apng",
         "videoCodec": "apng",
         "width": 320,
@@ -25,7 +25,7 @@
       "liveStatus": "PASS",
       "liveEvidence": {
         "sizeBytes": 8961,
-        "durationMs": 1375,
+        "durationMs": 1379,
         "container": "aac",
         "audioCodec": "aac"
       }
@@ -37,7 +37,7 @@
       "liveStatus": "PASS",
       "liveEvidence": {
         "sizeBytes": 13245,
-        "durationMs": 1374,
+        "durationMs": 1396,
         "container": "gif",
         "videoCodec": "gif",
         "width": 320,
@@ -65,7 +65,7 @@
       "liveStatus": "PASS",
       "liveEvidence": {
         "sizeBytes": 1431,
-        "durationMs": 1413,
+        "durationMs": 1448,
         "container": "lottie-json",
         "width": 320,
         "height": 180
@@ -78,7 +78,7 @@
       "liveStatus": "PASS",
       "liveEvidence": {
         "sizeBytes": 15175,
-        "durationMs": 1428,
+        "durationMs": 1703,
         "container": "mov,mp4,m4a,3gp,3g2,mj2",
         "videoCodec": "h264",
         "audioCodec": "aac",
@@ -93,7 +93,7 @@
       "liveStatus": "PASS",
       "liveEvidence": {
         "sizeBytes": 231043,
-        "durationMs": 1390,
+        "durationMs": 1436,
         "container": "png_pipe",
         "videoCodec": "png",
         "width": 320,
@@ -107,7 +107,7 @@
       "liveStatus": "PASS",
       "liveEvidence": {
         "sizeBytes": 149070,
-        "durationMs": 1416,
+        "durationMs": 1499,
         "container": "mov,mp4,m4a,3gp,3g2,mj2",
         "videoCodec": "prores",
         "audioCodec": "aac",
@@ -122,7 +122,7 @@
       "liveStatus": "PASS",
       "liveEvidence": {
         "sizeBytes": 523,
-        "durationMs": 1342,
+        "durationMs": 1376,
         "container": "svg-xml"
       }
     },
@@ -133,7 +133,7 @@
       "liveStatus": "PASS",
       "liveEvidence": {
         "sizeBytes": 18181,
-        "durationMs": 1419,
+        "durationMs": 1426,
         "container": "png_pipe",
         "videoCodec": "png",
         "width": 1293,
@@ -147,7 +147,7 @@
       "liveStatus": "PASS",
       "liveEvidence": {
         "sizeBytes": 3004,
-        "durationMs": 1427,
+        "durationMs": 1444,
         "container": "webp_pipe",
         "videoCodec": "webp",
         "width": 320,
@@ -161,7 +161,7 @@
       "liveStatus": "PASS",
       "liveEvidence": {
         "sizeBytes": 10382,
-        "durationMs": 1473,
+        "durationMs": 1504,
         "container": "matroska,webm",
         "videoCodec": "vp9",
         "audioCodec": "vorbis",
@@ -177,7 +177,7 @@
       "liveStatus": "KNOWN_LIMITATION",
       "liveEvidence": {
         "sizeBytes": 4553,
-        "durationMs": 1431,
+        "durationMs": 1473,
         "container": "mov,mp4,m4a,3gp,3g2,mj2",
         "videoCodec": "hevc",
         "width": 320,
@@ -192,7 +192,7 @@
       "liveStatus": "KNOWN_LIMITATION",
       "liveEvidence": {
         "sizeBytes": 181285,
-        "durationMs": 1394,
+        "durationMs": 1395,
         "container": "mov,mp4,m4a,3gp,3g2,mj2",
         "videoCodec": "prores",
         "width": 320,
@@ -216,5 +216,5 @@
       "coverage": "Generic attribute control"
     }
   },
-  "liveSweepGeneratedAt": "2026-09-20T13:56:31.917Z"
+  "liveSweepGeneratedAt": "2026-09-21T20:06:41.530Z"
 }

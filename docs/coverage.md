@@ -8,7 +8,7 @@ noted as such.
 
 The consolidated release evidence, live-tool accounting, Knowledge Engine
 counts, soak metrics, compatibility results, and remaining limitations are in
-[`release-validation-2026-09-21.md`](release-validation-2026-09-21.md). The
+[`release-validation-2026-09-22.md`](release-validation-2026-09-22.md). The
 tool-count and helper decision is recorded separately in
 [`tool-ergonomics-audit.md`](tool-ergonomics-audit.md).
 
@@ -141,8 +141,8 @@ confirmed reachable. This is flagged as `WORKFLOW_LIMITATION`, not
 | `coverage/live-layer-types.json` | Raw `api.getAllLayerTypes(true)` snapshot | New this pass — regenerate whenever Cavalry version changes |
 | `coverage/cavalry-node-definition-coverage.json` | Full node/attribute schema reconciliation | New this pass |
 | `coverage/cavalry-surface-audit.json` | All API/runtime/UI/callback/project/editor/render surfaces | 62 groups, `UNKNOWN: 0` |
-| `coverage/live-mcp-tool-sweep-results.json` | Registered-handler live ledger | 340/340 accounted; 289 PASS; no unclassified failure |
-| `coverage/live-soak-results.json` | 100 save/reopen/render cycles | 100/100 PASS |
+| `coverage/final-tool-ledger.json` | Consolidated registered-handler ledger | 385/385 accounted; 320 PASS; 38 known host limitations; 27 platform limitations |
+| `coverage/live-soak-results.json` | 500 save/reopen/render cycles | 500/500 PASS; no linear RSS growth detected |
 | `coverage/live-compatibility-results.json` | Fonts, Unicode/RTL, large scene/assets/timeline, ICC, paths | PASS |
 
 ## Third-party plugin validation (resolved)

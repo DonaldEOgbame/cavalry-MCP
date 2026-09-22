@@ -1,0 +1,1342 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-21T19:45:52.668Z",
+  "counts": {
+    "PASS": 27,
+    "KNOWN_HOST_LIMITATION": 3
+  },
+  "artifacts": {
+    "scenePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/safe-fallbacks/safe-fallbacks.cv",
+    "previewPath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/safe-fallbacks/timeline-preview.mp4",
+    "muxPath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/safe-fallbacks/verified-mux.mp4"
+  },
+  "results": [
+    {
+      "tool": "scene_new",
+      "status": "PASS",
+      "durationMs": 229,
+      "args": {
+        "force": true
+      },
+      "payload": {
+        "ok": true,
+        "operation": "scene_new",
+        "result": {
+          "success": true
+        },
+        "durationMs": 228
+      }
+    },
+    {
+      "tool": "composition_create",
+      "status": "PASS",
+      "durationMs": 37,
+      "args": {
+        "name": "Safe Fallback Validation",
+        "width": 320,
+        "height": 180,
+        "fps": 30,
+        "startFrame": 0,
+        "endFrame": 12,
+        "makeActive": true
+      },
+      "payload": {
+        "ok": true,
+        "operation": "composition_create",
+        "result": {
+          "compId": "compNode#2",
+          "name": "Safe Fallback Validation",
+          "uuid": "4683c1b6-5f7c-4514-bcd7-437602429041"
+        },
+        "durationMs": 37
+      }
+    },
+    {
+      "tool": "path_create",
+      "status": "PASS",
+      "durationMs": 136,
+      "args": {
+        "primitiveType": "rectangle",
+        "name": "Safe Morph Source"
+      },
+      "payload": {
+        "ok": true,
+        "operation": "path_create",
+        "result": {
+          "layerId": "editableShape#1",
+          "uuid": "930f35f5-db9f-4ba3-9a6f-247e792e2f87",
+          "name": "Safe Morph Source [Editable]",
+          "type": "editableShape"
+        },
+        "durationMs": 136
+      }
+    },
+    {
+      "tool": "path_inspect",
+      "status": "PASS",
+      "durationMs": 77,
+      "args": {
+        "layerId": "editableShape#1",
+        "worldSpace": false
+      },
+      "payload": {
+        "ok": true,
+        "operation": "path_inspect",
+        "result": {
+          "layerId": "editableShape#1",
+          "worldSpace": false,
+          "path": [
+            {
+              "isClosed": true,
+              "points": [
+                {
+                  "angleLocked": true,
+                  "hasInHandle": false,
+                  "hasOutHandle": false,
+                  "position": {
+                    "x": -100,
+                    "y": -100
+                  },
+                  "selected": false,
+                  "weightLocked": true
+                },
+                {
+                  "angleLocked": true,
+                  "hasInHandle": false,
+                  "hasOutHandle": false,
+                  "position": {
+                    "x": 100,
+                    "y": -100
+                  },
+                  "selected": false,
+                  "weightLocked": true
+                },
+                {
+                  "angleLocked": true,
+                  "hasInHandle": false,
+                  "hasOutHandle": false,
+                  "position": {
+                    "x": 100,
+                    "y": 100
+                  },
+                  "selected": false,
+                  "weightLocked": true
+                },
+                {
+                  "angleLocked": true,
+                  "hasInHandle": false,
+                  "hasOutHandle": false,
+                  "position": {
+                    "x": -100,
+                    "y": 100
+                  },
+                  "selected": false,
+                  "weightLocked": true
+                }
+              ]
+            }
+          ]
+        },
+        "durationMs": 77
+      }
+    },
+    {
+      "tool": "path_morph_safe",
+      "status": "PASS",
+      "durationMs": 534,
+      "args": {
+        "layerId": "editableShape#1",
+        "startFrame": 0,
+        "endFrame": 6,
+        "fromPath": [
+          {
+            "isClosed": true,
+            "points": [
+              {
+                "angleLocked": true,
+                "hasInHandle": false,
+                "hasOutHandle": false,
+                "position": {
+                  "x": -100,
+                  "y": -100
+                },
+                "selected": false,
+                "weightLocked": true
+              },
+              {
+                "angleLocked": true,
+                "hasInHandle": false,
+                "hasOutHandle": false,
+                "position": {
+                  "x": 100,
+                  "y": -100
+                },
+                "selected": false,
+                "weightLocked": true
+              },
+              {
+                "angleLocked": true,
+                "hasInHandle": false,
+                "hasOutHandle": false,
+                "position": {
+                  "x": 100,
+                  "y": 100
+                },
+                "selected": false,
+                "weightLocked": true
+              },
+              {
+                "angleLocked": true,
+                "hasInHandle": false,
+                "hasOutHandle": false,
+                "position": {
+                  "x": -100,
+                  "y": 100
+                },
+                "selected": false,
+                "weightLocked": true
+              }
+            ]
+          }
+        ],
+        "toPath": [
+          {
+            "isClosed": true,
+            "points": [
+              {
+                "angleLocked": true,
+                "hasInHandle": false,
+                "hasOutHandle": false,
+                "position": {
+                  "x": -60,
+                  "y": -125
+                },
+                "selected": false,
+                "weightLocked": true
+              },
+              {
+                "angleLocked": true,
+                "hasInHandle": false,
+                "hasOutHandle": false,
+                "position": {
+                  "x": 60,
+                  "y": -125
+                },
+                "selected": false,
+                "weightLocked": true
+              },
+              {
+                "angleLocked": true,
+                "hasInHandle": false,
+                "hasOutHandle": false,
+                "position": {
+                  "x": 60,
+                  "y": 125
+                },
+                "selected": false,
+                "weightLocked": true
+              },
+              {
+                "angleLocked": true,
+                "hasInHandle": false,
+                "hasOutHandle": false,
+                "position": {
+                  "x": -60,
+                  "y": 125
+                },
+                "selected": false,
+                "weightLocked": true
+              }
+            ]
+          }
+        ],
+        "sampleEvery": 2
+      },
+      "payload": {
+        "ok": true,
+        "operation": "path_morph_safe",
+        "result": {
+          "mode": "sampled-layer-sequence",
+          "sourceLayerId": "editableShape#1",
+          "sourceHidden": true,
+          "sampleEvery": 2,
+          "frameCount": 4,
+          "layers": [
+            {
+              "frame": 0,
+              "layerId": "editableShape#2",
+              "uuid": "930f35f5-db9f-4ba3-9a6f-247e792e2f87"
+            },
+            {
+              "frame": 2,
+              "layerId": "editableShape#3",
+              "uuid": "930f35f5-db9f-4ba3-9a6f-247e792e2f87"
+            },
+            {
+              "frame": 4,
+              "layerId": "editableShape#4",
+              "uuid": "930f35f5-db9f-4ba3-9a6f-247e792e2f87"
+            },
+            {
+              "frame": 6,
+              "layerId": "editableShape#5",
+              "uuid": "930f35f5-db9f-4ba3-9a6f-247e792e2f87"
+            }
+          ],
+          "nativePathKeyframesUsed": false,
+          "checkpointId": "chk_1790019949532"
+        },
+        "durationMs": 533
+      }
+    },
+    {
+      "tool": "path_get_editable",
+      "status": "PASS",
+      "durationMs": 18,
+      "args": {
+        "layerId": "editableShape#3",
+        "worldSpace": false
+      },
+      "payload": {
+        "ok": true,
+        "operation": "path_get_editable",
+        "result": {
+          "layerId": "editableShape#3",
+          "worldSpace": false,
+          "path": [
+            {
+              "isClosed": true,
+              "points": [
+                {
+                  "angleLocked": true,
+                  "hasInHandle": false,
+                  "hasOutHandle": false,
+                  "position": {
+                    "x": -86.66666666666667,
+                    "y": -108.33333333333333
+                  },
+                  "selected": false,
+                  "weightLocked": true
+                },
+                {
+                  "angleLocked": true,
+                  "hasInHandle": false,
+                  "hasOutHandle": false,
+                  "position": {
+                    "x": 86.66666666666667,
+                    "y": -108.33333333333333
+                  },
+                  "selected": false,
+                  "weightLocked": true
+                },
+                {
+                  "angleLocked": true,
+                  "hasInHandle": false,
+                  "hasOutHandle": false,
+                  "position": {
+                    "x": 86.66666666666667,
+                    "y": 108.33333333333333
+                  },
+                  "selected": false,
+                  "weightLocked": true
+                },
+                {
+                  "angleLocked": true,
+                  "hasInHandle": false,
+                  "hasOutHandle": false,
+                  "position": {
+                    "x": -86.66666666666667,
+                    "y": 108.33333333333333
+                  },
+                  "selected": false,
+                  "weightLocked": true
+                }
+              ]
+            }
+          ]
+        },
+        "durationMs": 18
+      }
+    },
+    {
+      "tool": "path_animation_safe",
+      "status": "PASS",
+      "durationMs": 362,
+      "args": {
+        "layerId": "editableShape#1",
+        "keyframes": [
+          {
+            "frame": 7,
+            "pathObject": [
+              {
+                "isClosed": true,
+                "points": [
+                  {
+                    "angleLocked": true,
+                    "hasInHandle": false,
+                    "hasOutHandle": false,
+                    "position": {
+                      "x": -100,
+                      "y": -100
+                    },
+                    "selected": false,
+                    "weightLocked": true
+                  },
+                  {
+                    "angleLocked": true,
+                    "hasInHandle": false,
+                    "hasOutHandle": false,
+                    "position": {
+                      "x": 100,
+                      "y": -100
+                    },
+                    "selected": false,
+                    "weightLocked": true
+                  },
+                  {
+                    "angleLocked": true,
+                    "hasInHandle": false,
+                    "hasOutHandle": false,
+                    "position": {
+                      "x": 100,
+                      "y": 100
+                    },
+                    "selected": false,
+                    "weightLocked": true
+                  },
+                  {
+                    "angleLocked": true,
+                    "hasInHandle": false,
+                    "hasOutHandle": false,
+                    "position": {
+                      "x": -100,
+                      "y": 100
+                    },
+                    "selected": false,
+                    "weightLocked": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "frame": 9,
+            "pathObject": [
+              {
+                "isClosed": true,
+                "points": [
+                  {
+                    "angleLocked": true,
+                    "hasInHandle": false,
+                    "hasOutHandle": false,
+                    "position": {
+                      "x": -60,
+                      "y": -125
+                    },
+                    "selected": false,
+                    "weightLocked": true
+                  },
+                  {
+                    "angleLocked": true,
+                    "hasInHandle": false,
+                    "hasOutHandle": false,
+                    "position": {
+                      "x": 60,
+                      "y": -125
+                    },
+                    "selected": false,
+                    "weightLocked": true
+                  },
+                  {
+                    "angleLocked": true,
+                    "hasInHandle": false,
+                    "hasOutHandle": false,
+                    "position": {
+                      "x": 60,
+                      "y": 125
+                    },
+                    "selected": false,
+                    "weightLocked": true
+                  },
+                  {
+                    "angleLocked": true,
+                    "hasInHandle": false,
+                    "hasOutHandle": false,
+                    "position": {
+                      "x": -60,
+                      "y": 125
+                    },
+                    "selected": false,
+                    "weightLocked": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "sampleEvery": 2,
+        "namePrefix": "Safe Animation"
+      },
+      "payload": {
+        "ok": true,
+        "operation": "path_animation_safe",
+        "result": {
+          "mode": "sampled-layer-sequence",
+          "sourceLayerId": "editableShape#1",
+          "sourceHidden": true,
+          "sampleEvery": 2,
+          "frameCount": 2,
+          "layers": [
+            {
+              "frame": 7,
+              "layerId": "editableShape#6",
+              "uuid": "930f35f5-db9f-4ba3-9a6f-247e792e2f87"
+            },
+            {
+              "frame": 9,
+              "layerId": "editableShape#7",
+              "uuid": "930f35f5-db9f-4ba3-9a6f-247e792e2f87"
+            }
+          ],
+          "nativePathKeyframesUsed": false,
+          "checkpointId": "chk_1790019950092"
+        },
+        "durationMs": 362
+      }
+    },
+    {
+      "tool": "camera_create",
+      "status": "PASS",
+      "durationMs": 56,
+      "args": {
+        "name": "Safe Sequence Camera"
+      },
+      "payload": {
+        "ok": true,
+        "operation": "camera_create",
+        "result": {
+          "layerId": "planarCamera#1",
+          "uuid": "e66717a6-8c37-4ca2-8b2f-7ee8a052b911",
+          "name": "Safe Sequence Camera",
+          "type": "planarCamera"
+        },
+        "durationMs": 56
+      }
+    },
+    {
+      "tool": "camera_sequence_create",
+      "status": "PASS",
+      "durationMs": 131,
+      "args": {
+        "layerId": "planarCamera#1",
+        "shots": [
+          {
+            "frame": 0,
+            "zoom": 1
+          },
+          {
+            "frame": 6,
+            "zoom": 1.5
+          },
+          {
+            "frame": 12,
+            "zoom": 0.8
+          }
+        ]
+      },
+      "payload": {
+        "ok": true,
+        "operation": "camera_sequence_create",
+        "result": {
+          "layerId": "planarCamera#1",
+          "mode": "single-camera-hold-keyframes",
+          "shots": [
+            {
+              "layerId": "planarCamera#1",
+              "frame": 0,
+              "keyed": [
+                "zoom"
+              ],
+              "interpolation": "hold"
+            },
+            {
+              "layerId": "planarCamera#1",
+              "frame": 6,
+              "keyed": [
+                "zoom"
+              ],
+              "interpolation": "hold"
+            },
+            {
+              "layerId": "planarCamera#1",
+              "frame": 12,
+              "keyed": [
+                "zoom"
+              ],
+              "interpolation": "hold"
+            }
+          ]
+        },
+        "durationMs": 131
+      }
+    },
+    {
+      "tool": "camera_cut",
+      "status": "PASS",
+      "durationMs": 21,
+      "args": {
+        "layerId": "planarCamera#1",
+        "shot": {
+          "frame": 2,
+          "zoom": 1.1
+        }
+      },
+      "payload": {
+        "ok": true,
+        "operation": "camera_cut",
+        "result": {
+          "layerId": "planarCamera#1",
+          "frame": 2,
+          "keyed": [
+            "zoom"
+          ],
+          "interpolation": "hold"
+        },
+        "durationMs": 21
+      }
+    },
+    {
+      "tool": "camera_transition",
+      "status": "PASS",
+      "durationMs": 40,
+      "args": {
+        "layerId": "planarCamera#1",
+        "from": {
+          "frame": 3,
+          "zoom": 1.1
+        },
+        "to": {
+          "frame": 5,
+          "zoom": 1.4
+        },
+        "easing": "SlowOut"
+      },
+      "payload": {
+        "ok": true,
+        "operation": "camera_transition",
+        "result": {
+          "layerId": "planarCamera#1",
+          "startFrame": 3,
+          "endFrame": 5,
+          "keyed": [
+            "zoom"
+          ],
+          "easing": "SlowOut"
+        },
+        "durationMs": 40
+      }
+    },
+    {
+      "tool": "keyframe_list",
+      "status": "PASS",
+      "durationMs": 79,
+      "args": {
+        "layerId": "planarCamera#1",
+        "attrPath": "zoom"
+      },
+      "payload": {
+        "ok": true,
+        "operation": "keyframe_list",
+        "result": {
+          "layerId": "planarCamera#1",
+          "attrPath": "zoom",
+          "keyframes": [
+            0,
+            2,
+            3,
+            5,
+            6,
+            12
+          ]
+        },
+        "durationMs": 79
+      }
+    },
+    {
+      "tool": "operation_risk_classify",
+      "status": "PASS",
+      "durationMs": 0,
+      "args": {
+        "operation": "timeline_play"
+      },
+      "payload": {
+        "ok": true,
+        "operation": "operation_risk_classify",
+        "result": {
+          "operation": "timeline_play",
+          "risk": "HOST_UNSTABLE"
+        },
+        "durationMs": 0
+      }
+    },
+    {
+      "tool": "safe_host_operation",
+      "status": "PASS",
+      "durationMs": 0,
+      "args": {
+        "operation": "timeline_play",
+        "params": {}
+      },
+      "payload": {
+        "ok": true,
+        "operation": "safe_host_operation",
+        "result": {
+          "executed": false,
+          "operation": "timeline_play",
+          "risk": "HOST_UNSTABLE",
+          "status": "KNOWN_HOST_LIMITATION",
+          "safeAlternatives": [
+            "timeline_preview_playback",
+            "preview_video",
+            "preview_frames"
+          ],
+          "message": "Native invocation is blocked because it can terminate or wedge Cavalry 2.7.2."
+        },
+        "durationMs": 0
+      }
+    },
+    {
+      "tool": "path_morph",
+      "status": "KNOWN_HOST_LIMITATION",
+      "durationMs": 23,
+      "args": {
+        "layerId": "editableShape#1",
+        "attrPath": "path",
+        "startFrame": 0,
+        "endFrame": 6,
+        "fromPath": [
+          {
+            "isClosed": true,
+            "points": [
+              {
+                "angleLocked": true,
+                "hasInHandle": false,
+                "hasOutHandle": false,
+                "position": {
+                  "x": -100,
+                  "y": -100
+                },
+                "selected": false,
+                "weightLocked": true
+              },
+              {
+                "angleLocked": true,
+                "hasInHandle": false,
+                "hasOutHandle": false,
+                "position": {
+                  "x": 100,
+                  "y": -100
+                },
+                "selected": false,
+                "weightLocked": true
+              },
+              {
+                "angleLocked": true,
+                "hasInHandle": false,
+                "hasOutHandle": false,
+                "position": {
+                  "x": 100,
+                  "y": 100
+                },
+                "selected": false,
+                "weightLocked": true
+              },
+              {
+                "angleLocked": true,
+                "hasInHandle": false,
+                "hasOutHandle": false,
+                "position": {
+                  "x": -100,
+                  "y": 100
+                },
+                "selected": false,
+                "weightLocked": true
+              }
+            ]
+          }
+        ],
+        "toPath": [
+          {
+            "isClosed": true,
+            "points": [
+              {
+                "angleLocked": true,
+                "hasInHandle": false,
+                "hasOutHandle": false,
+                "position": {
+                  "x": -60,
+                  "y": -125
+                },
+                "selected": false,
+                "weightLocked": true
+              },
+              {
+                "angleLocked": true,
+                "hasInHandle": false,
+                "hasOutHandle": false,
+                "position": {
+                  "x": 60,
+                  "y": -125
+                },
+                "selected": false,
+                "weightLocked": true
+              },
+              {
+                "angleLocked": true,
+                "hasInHandle": false,
+                "hasOutHandle": false,
+                "position": {
+                  "x": 60,
+                  "y": 125
+                },
+                "selected": false,
+                "weightLocked": true
+              },
+              {
+                "angleLocked": true,
+                "hasInHandle": false,
+                "hasOutHandle": false,
+                "position": {
+                  "x": -60,
+                  "y": 125
+                },
+                "selected": false,
+                "weightLocked": true
+              }
+            ]
+          }
+        ]
+      },
+      "payload": {
+        "ok": false,
+        "operation": "path_morph",
+        "error": {
+          "code": "CAVALRY_ERROR",
+          "message": "HOST_UNSTABLE: Native Editable Path morphing can terminate Cavalry 2.7.2. Use path_morph_safe.",
+          "operation": "path_morph"
+        },
+        "durationMs": 23
+      }
+    },
+    {
+      "tool": "camera_create_guide",
+      "status": "KNOWN_HOST_LIMITATION",
+      "durationMs": 7,
+      "args": {
+        "name": "Must Not Be Created"
+      },
+      "payload": {
+        "ok": false,
+        "operation": "camera_create_guide",
+        "error": {
+          "code": "CAVALRY_ERROR",
+          "message": "HOST_UNSTABLE: Camera Guide creation can terminate Cavalry 2.7.2. Use camera_sequence_create.",
+          "operation": "camera_create_guide"
+        },
+        "durationMs": 7
+      }
+    },
+    {
+      "tool": "timeline_play",
+      "status": "KNOWN_HOST_LIMITATION",
+      "durationMs": 93,
+      "args": {},
+      "payload": {
+        "ok": false,
+        "operation": "timeline_play",
+        "error": {
+          "code": "CAVALRY_ERROR",
+          "message": "HOST_UNSTABLE: Native timeline playback can block the Cavalry 2.7.2 bridge. Use timeline_preview_playback or preview_video.",
+          "operation": "timeline_play"
+        },
+        "durationMs": 92
+      }
+    },
+    {
+      "tool": "cavalry_health",
+      "status": "PASS",
+      "durationMs": 22,
+      "args": {},
+      "payload": {
+        "ok": true,
+        "operation": "cavalry_health",
+        "result": {
+          "online": true,
+          "latencyMs": 20,
+          "bridgeHost": "127.0.0.1",
+          "bridgePort": 8080,
+          "cavalryVersion": "2.7.2",
+          "activeComp": "compNode#2",
+          "timestamp": "2026-09-21T19:45:50.891Z",
+          "details": {
+            "online": true,
+            "bridgeVersion": "1.0.0",
+            "bridgeInstanceId": "bridge_1790019284563_49izw21auki",
+            "cavalryVersion": "2.7.2",
+            "activeComp": "compNode#2",
+            "activeScenePath": "",
+            "unsavedChanges": true
+          }
+        },
+        "durationMs": 21
+      }
+    },
+    {
+      "tool": "scene_save_as",
+      "status": "PASS",
+      "durationMs": 48,
+      "args": {
+        "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/safe-fallbacks/safe-fallbacks.cv"
+      },
+      "payload": {
+        "ok": true,
+        "operation": "scene_save_as",
+        "result": {
+          "saved": true,
+          "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/safe-fallbacks/safe-fallbacks.cv"
+        },
+        "durationMs": 48
+      }
+    },
+    {
+      "tool": "scene_open",
+      "status": "PASS",
+      "durationMs": 143,
+      "args": {
+        "path": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/safe-fallbacks/safe-fallbacks.cv",
+        "force": true
+      },
+      "payload": {
+        "ok": true,
+        "operation": "scene_open",
+        "result": {
+          "path": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/safe-fallbacks/safe-fallbacks.cv",
+          "activeComp": "compNode#2"
+        },
+        "durationMs": 143
+      }
+    },
+    {
+      "tool": "layer_find",
+      "status": "PASS",
+      "durationMs": 23,
+      "args": {
+        "pattern": "Safe Morph"
+      },
+      "payload": {
+        "ok": true,
+        "operation": "layer_find",
+        "result": {
+          "count": 5,
+          "layers": [
+            {
+              "layerId": "editableShape#5",
+              "uuid": "930f35f5-db9f-4ba3-9a6f-247e792e2f87",
+              "name": "Safe Morph 0006",
+              "type": "editableShape"
+            },
+            {
+              "layerId": "editableShape#2",
+              "uuid": "930f35f5-db9f-4ba3-9a6f-247e792e2f87",
+              "name": "Safe Morph 0000",
+              "type": "editableShape"
+            },
+            {
+              "layerId": "editableShape#3",
+              "uuid": "930f35f5-db9f-4ba3-9a6f-247e792e2f87",
+              "name": "Safe Morph 0002",
+              "type": "editableShape"
+            },
+            {
+              "layerId": "editableShape#1",
+              "uuid": "930f35f5-db9f-4ba3-9a6f-247e792e2f87",
+              "name": "Safe Morph Source [Editable]",
+              "type": "editableShape"
+            },
+            {
+              "layerId": "editableShape#4",
+              "uuid": "930f35f5-db9f-4ba3-9a6f-247e792e2f87",
+              "name": "Safe Morph 0004",
+              "type": "editableShape"
+            }
+          ]
+        },
+        "durationMs": 23
+      }
+    },
+    {
+      "tool": "timeline_preview_playback",
+      "status": "PASS",
+      "durationMs": 994,
+      "args": {
+        "startFrame": 0,
+        "endFrame": 2,
+        "fps": 30,
+        "scalePercentage": 25,
+        "outputPath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/safe-fallbacks/timeline-preview.mp4"
+      },
+      "payload": {
+        "ok": true,
+        "operation": "timeline_preview_playback",
+        "result": {
+          "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/safe-fallbacks/timeline-preview.mp4",
+          "frameCount": 3,
+          "startFrame": 0,
+          "endFrame": 2,
+          "fps": 30,
+          "format": "mp4"
+        },
+        "durationMs": 994
+      }
+    },
+    {
+      "tool": "render_mux_audio",
+      "status": "PASS",
+      "durationMs": 311,
+      "args": {
+        "videoPath": "/Users/macbook/Documents/GitHub/calvary-MCP/knowledge/verified/end-to-end/radial-logo-reveal/final-render/radial-logo-reveal-final.mp4",
+        "audioPath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/fixtures/test-tone-440hz-1s.wav",
+        "outputPath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/safe-fallbacks/verified-mux.mp4"
+      },
+      "payload": {
+        "ok": true,
+        "operation": "render_mux_audio",
+        "result": {
+          "outputPath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/safe-fallbacks/verified-mux.mp4",
+          "verified": true,
+          "probe": {
+            "programs": [],
+            "stream_groups": [],
+            "streams": [
+              {
+                "index": 0,
+                "codec_name": "h264",
+                "codec_type": "video"
+              },
+              {
+                "index": 1,
+                "codec_name": "aac",
+                "codec_type": "audio"
+              }
+            ],
+            "format": {
+              "duration": "1.000000",
+              "size": "49618"
+            }
+          }
+        },
+        "durationMs": 309
+      }
+    },
+    {
+      "tool": "render_queue_add",
+      "status": "PASS",
+      "durationMs": 16,
+      "args": {},
+      "payload": {
+        "ok": true,
+        "operation": "render_queue_add",
+        "result": {
+          "renderQueueItemId": "renderQueueItem#1",
+          "compId": "compNode#2"
+        },
+        "durationMs": 16
+      }
+    },
+    {
+      "tool": "render_item_set_output",
+      "status": "PASS",
+      "durationMs": 135,
+      "args": {
+        "itemId": "renderQueueItem#1",
+        "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/safe-fallbacks",
+        "fileName": "supervised-frame",
+        "formatType": "renderPNG"
+      },
+      "payload": {
+        "ok": true,
+        "operation": "render_item_set_output",
+        "result": {
+          "identity": {
+            "layerId": "renderQueueItem#1",
+            "uuid": "f8598adc-0fcf-4123-9b9a-c9d275b1e1c6",
+            "name": "Safe Fallback Validation Render Item",
+            "type": "renderQueueItem"
+          },
+          "attributes": [
+            "canvaUpload",
+            "targets",
+            "niceName",
+            "dynamicIndex",
+            "dynamicRender",
+            "ensureUniqueNames",
+            "generator",
+            "fileName",
+            "metaDataFormat",
+            "frameRange",
+            "frameRangeMode",
+            "id",
+            "dynamicIndexOffset",
+            "metadata",
+            "generator.bitDepth",
+            "generator.compression",
+            "generator.pngFilter",
+            "padding",
+            "filePath",
+            "postRenderExpression",
+            "preRenderExpression",
+            "backend",
+            "renderQuality",
+            "dynamicRenderRange",
+            "resolutionScale",
+            "respectViewportFiltering",
+            "renderSetupExpression",
+            "upload",
+            "uploadPreset",
+            "usePlaybackStep",
+            "retimeHelp",
+            "enableMetadata"
+          ],
+          "values": {
+            "canvaUpload": false,
+            "targets": null,
+            "niceName": "Safe Fallback Validation Render Item",
+            "dynamicIndex": 0,
+            "dynamicRender": false,
+            "ensureUniqueNames": true,
+            "generator": null,
+            "fileName": "supervised-frame",
+            "metaDataFormat": 0,
+            "frameRange": {
+              "x": 0,
+              "y": 250
+            },
+            "frameRangeMode": 1,
+            "id": null,
+            "dynamicIndexOffset": 0,
+            "metadata": null,
+            "generator.bitDepth": 0,
+            "generator.compression": 0,
+            "generator.pngFilter": 1,
+            "padding": 5,
+            "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/safe-fallbacks",
+            "postRenderExpression": "",
+            "preRenderExpression": "",
+            "backend": 1,
+            "renderQuality": 0,
+            "dynamicRenderRange": {
+              "x": 0,
+              "y": 0
+            },
+            "resolutionScale": 100,
+            "respectViewportFiltering": false,
+            "renderSetupExpression": "",
+            "upload": false,
+            "uploadPreset": "",
+            "usePlaybackStep": true,
+            "retimeHelp": true,
+            "enableMetadata": false
+          }
+        },
+        "durationMs": 135
+      }
+    },
+    {
+      "tool": "render_item_set_range",
+      "status": "PASS",
+      "durationMs": 32,
+      "args": {
+        "itemId": "renderQueueItem#1",
+        "startFrame": 0,
+        "endFrame": 0
+      },
+      "payload": {
+        "ok": true,
+        "operation": "render_item_set_range",
+        "result": {
+          "identity": {
+            "layerId": "renderQueueItem#1",
+            "uuid": "f8598adc-0fcf-4123-9b9a-c9d275b1e1c6",
+            "name": "Safe Fallback Validation Render Item",
+            "type": "renderQueueItem"
+          },
+          "attributes": [
+            "canvaUpload",
+            "targets",
+            "niceName",
+            "dynamicIndex",
+            "dynamicRender",
+            "ensureUniqueNames",
+            "generator",
+            "fileName",
+            "metaDataFormat",
+            "frameRange",
+            "frameRangeMode",
+            "id",
+            "dynamicIndexOffset",
+            "metadata",
+            "generator.bitDepth",
+            "generator.compression",
+            "generator.pngFilter",
+            "padding",
+            "filePath",
+            "postRenderExpression",
+            "preRenderExpression",
+            "backend",
+            "renderQuality",
+            "dynamicRenderRange",
+            "resolutionScale",
+            "respectViewportFiltering",
+            "renderSetupExpression",
+            "upload",
+            "uploadPreset",
+            "usePlaybackStep",
+            "retimeHelp",
+            "enableMetadata"
+          ],
+          "values": {
+            "canvaUpload": false,
+            "targets": null,
+            "niceName": "Safe Fallback Validation Render Item",
+            "dynamicIndex": 0,
+            "dynamicRender": false,
+            "ensureUniqueNames": true,
+            "generator": null,
+            "fileName": "supervised-frame",
+            "metaDataFormat": 0,
+            "frameRange": {
+              "x": 0,
+              "y": 0
+            },
+            "frameRangeMode": 2,
+            "id": null,
+            "dynamicIndexOffset": 0,
+            "metadata": null,
+            "generator.bitDepth": 0,
+            "generator.compression": 0,
+            "generator.pngFilter": 1,
+            "padding": 5,
+            "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/safe-fallbacks",
+            "postRenderExpression": "",
+            "preRenderExpression": "",
+            "backend": 1,
+            "renderQuality": 0,
+            "dynamicRenderRange": {
+              "x": 0,
+              "y": 0
+            },
+            "resolutionScale": 100,
+            "respectViewportFiltering": false,
+            "renderSetupExpression": "",
+            "upload": false,
+            "uploadPreset": "",
+            "usePlaybackStep": true,
+            "retimeHelp": true,
+            "enableMetadata": false
+          }
+        },
+        "durationMs": 32
+      }
+    },
+    {
+      "tool": "render_start",
+      "status": "PASS",
+      "durationMs": 73,
+      "args": {
+        "itemId": "renderQueueItem#1"
+      },
+      "payload": {
+        "ok": true,
+        "operation": "render_start",
+        "result": {
+          "itemId": "renderQueueItem#1",
+          "status": "started",
+          "supervision": {
+            "itemId": "renderQueueItem#1",
+            "state": "COMPLETED",
+            "startedAt": "2026-09-21T19:45:52.595Z",
+            "updatedAt": "2026-09-21T19:45:52.667Z",
+            "progress": null,
+            "reliable": true
+          }
+        },
+        "durationMs": 73
+      }
+    },
+    {
+      "tool": "render_status",
+      "status": "PASS",
+      "durationMs": 0,
+      "args": {
+        "itemId": "renderQueueItem#1"
+      },
+      "payload": {
+        "ok": true,
+        "operation": "render_status",
+        "result": {
+          "itemId": "renderQueueItem#1",
+          "state": "COMPLETED",
+          "startedAt": "2026-09-21T19:45:52.595Z",
+          "updatedAt": "2026-09-21T19:45:52.667Z",
+          "progress": null,
+          "reliable": true
+        },
+        "durationMs": 0
+      }
+    },
+    {
+      "tool": "render_is_active",
+      "status": "PASS",
+      "durationMs": 1,
+      "args": {
+        "itemId": "renderQueueItem#1"
+      },
+      "payload": {
+        "ok": true,
+        "operation": "render_is_active",
+        "result": {
+          "itemId": "renderQueueItem#1",
+          "active": false,
+          "state": "COMPLETED",
+          "reliable": true,
+          "progress": null
+        },
+        "durationMs": 1
+      }
+    },
+    {
+      "tool": "render_wait",
+      "status": "PASS",
+      "durationMs": 0,
+      "args": {
+        "itemId": "renderQueueItem#1"
+      },
+      "payload": {
+        "ok": true,
+        "operation": "render_wait",
+        "result": {
+          "completed": true,
+          "status": {
+            "itemId": "renderQueueItem#1",
+            "state": "COMPLETED",
+            "startedAt": "2026-09-21T19:45:52.595Z",
+            "updatedAt": "2026-09-21T19:45:52.667Z",
+            "progress": null,
+            "reliable": true
+          }
+        },
+        "durationMs": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "task": "render-audio-mux",
+  "status": "verified",
+  "script": "await RenderMux.renderMuxAudio({ videoPath, audioPath, outputPath });",
+  "inputAssumptions": [
+    "Cavalry 2.7.2 bridge connected on macOS"
+  ],
+  "createdObjects": [
+    "renderMP4",
+    "audioShape"
+  ],
+  "validation": {
+    "passed": true,
+    "checks": [
+      "FFmpeg mux completed",
+      "ffprobe found a video stream",
+      "ffprobe found an audio stream"
+    ]
+  },
+  "errors": []
+}

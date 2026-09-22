@@ -1,0 +1,22 @@
+{
+  "task": "safe-editable-path-animation",
+  "status": "verified",
+  "script": "const result = await Safe.pathAnimationSafe({ layerId, keyframes, samples: 12 });\nawait Scene.sceneSaveAs(outputPath);\nawait Scene.sceneOpen(outputPath, true);",
+  "inputAssumptions": [
+    "Cavalry 2.7.2 bridge connected on macOS"
+  ],
+  "createdObjects": [
+    "editableShape",
+    "animationCurve"
+  ],
+  "validation": {
+    "passed": true,
+    "checks": [
+      "Path topology validated before mutation",
+      "Sampled layers persisted",
+      "Preview motion rendered",
+      "Scene reopened with animation intact"
+    ]
+  },
+  "errors": []
+}

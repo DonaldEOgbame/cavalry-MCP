@@ -62,6 +62,7 @@ export async function previewVideo(
         '-f', 'concat',
         '-safe', '0',
         '-i', concatListPath,
+        '-vf', 'pad=ceil(iw/2)*2:ceil(ih/2)*2',
         '-c:v', 'libx264',
         '-pix_fmt', 'yuv420p',
         '-crf', '28', // fast, low quality preview

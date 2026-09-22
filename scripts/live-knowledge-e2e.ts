@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, stat, writeFile } from 'node:fs/promises';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 import { resolve } from 'node:path';
 import * as Scene from '../src/cavalry/scene.js';
 import * as Comp from '../src/cavalry/compositions.js';
@@ -18,6 +20,7 @@ import { knowledgeEngine } from '../src/knowledge/engine.js';
 const ROOT = resolve('knowledge/verified/end-to-end/radial-logo-reveal');
 const PROJECT_ID = 'cavalry-2.7.2-golden-corpus';
 const GOAL = 'Create a polished radial logo reveal with 16 repeating elements and a staggered clockwise entrance.';
+const execFileAsync = promisify(execFile);
 
 async function connect(sourceLayerId: string, targetLayerId: string, targetAttr: string, sourceAttr = 'id') {
   return Graph.graphConnect({ sourceLayerId, sourceAttr, targetLayerId, targetAttr, force: true });
@@ -110,10 +113,43 @@ async function correct() {
   return result;
 }
 
+async function render() {
+  const finalScene = resolve(ROOT, 'radial-logo-reveal-final.cv');
+  const outputDir = resolve(ROOT, 'final-render');
+  await mkdir(outputDir, { recursive: true });
+  await Scene.sceneOpen(finalScene, true);
+  const comp = await Comp.compositionGetActive() as any;
+  const item = (await bridgeClient.send<any>('render_queue_add', { compId: comp.compId ?? comp.layerId })).result!;
+  const fileName = `radial-logo-reveal-final-${Date.now()}`;
+  await bridgeClient.send('render_item_set_output', { itemId: item.renderQueueItemId, filePath: outputDir, fileName, formatType: 'renderMP4' });
+  await bridgeClient.send('render_item_set', { itemId: item.renderQueueItemId, settings: { frameRangeMode: 2, frameRange: { x: 0, y: 90 } } });
+  const startedAt = Date.now();
+  await bridgeClient.send('render_start', { itemId: item.renderQueueItemId }, 120_000);
+  let outputPath = '';
+  for (let attempt = 0; attempt < 40; attempt++) {
+    const names = (await readdir(outputDir)).filter(name => name.startsWith(fileName));
+    if (names.length) {
+      outputPath = resolve(outputDir, names[0]);
+      if ((await stat(outputPath)).size > 0) break;
+    }
+    await new Promise(resolveWait => setTimeout(resolveWait, 500));
+  }
+  await bridgeClient.send('render_item_delete', { itemId: item.renderQueueItemId });
+  if (!outputPath) throw new Error('Final render did not produce an output artifact.');
+  const { stdout } = await execFileAsync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration,size:stream=codec_type,codec_name,width,height', '-of', 'json', outputPath]);
+  const probe = JSON.parse(stdout);
+  const video = probe.streams?.find((stream: any) => stream.codec_type === 'video');
+  if (!video || video.codec_name !== 'h264' || video.width !== 960 || video.height !== 540) throw new Error('Final MP4 failed codec or dimension validation.');
+  const result = { status: 'PASS', finalScene, outputPath, durationMs: Date.now() - startedAt, probe };
+  await writeFile(resolve(ROOT, '05-final-render-validation.json'), `${JSON.stringify(result, null, 2)}\n`);
+  return result;
+}
+
 async function main() {
   const phase = process.argv.find((arg) => arg.startsWith('--phase='))?.split('=')[1] ?? 'build';
   try {
-    process.stdout.write(`${JSON.stringify(phase === 'correct' ? await correct() : await build(), null, 2)}\n`);
+    const result = phase === 'correct' ? await correct() : phase === 'render' ? await render() : await build();
+    process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
   } finally {
     bridgeClient.stopCallbackServer();
   }

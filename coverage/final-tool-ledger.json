@@ -1,0 +1,2794 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-22T06:27:17.205Z",
+  "registeredToolCount": 385,
+  "accountedToolCount": 385,
+  "liveInvokedToolCount": 376,
+  "counts": {
+    "PASS": 320,
+    "PLATFORM_LIMITATION": 27,
+    "KNOWN_HOST_LIMITATION": 38
+  },
+  "allowedTerminalStatuses": [
+    "PASS",
+    "KNOWN_HOST_LIMITATION",
+    "PLATFORM_LIMITATION"
+  ],
+  "missing": [],
+  "persistenceTestedToolCount": 22,
+  "persistenceTestedTools": [
+    "scene_new",
+    "scene_save",
+    "scene_save_as",
+    "scene_open",
+    "scene_import",
+    "scene_checkpoint",
+    "scene_restore_checkpoint",
+    "scene_snapshot",
+    "scene_diff",
+    "scene_export_copy",
+    "layers_serialize",
+    "layers_deserialize",
+    "component_export",
+    "component_export_selected",
+    "component_import",
+    "template_create",
+    "template_instantiate",
+    "path_morph_safe",
+    "path_animation_safe",
+    "camera_sequence_create",
+    "camera_cut",
+    "camera_transition"
+  ],
+  "renderTestedToolCount": 13,
+  "renderTestedTools": [
+    "preview_frame",
+    "preview_frames",
+    "preview_contact_sheet",
+    "preview_video",
+    "viewport_capture",
+    "render_start",
+    "render_item_set_format",
+    "render_item_set_generator",
+    "timeline_preview_playback",
+    "render_mux_audio",
+    "render_status",
+    "render_is_active",
+    "render_wait"
+  ],
+  "results": [
+    {
+      "tool": "app_active_tool",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "app_is_active",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "app_license",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "app_platform",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "app_state",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "app_version",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "asset_add_to_composition",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "asset_delete",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "asset_google_sheet_inspect",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "specialized-fixtures",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "asset_google_sheet_replace",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "specialized-fixtures",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "asset_group_create",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "asset_icc_profile",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "asset_import",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "specialized-fixtures",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "asset_inspect",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "asset_is_file",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "asset_list",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "asset_reload",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "asset_replace",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "asset_sequence_inspect",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "specialized-fixtures",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "asset_smart_folder_create",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "specialized-fixtures",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "asset_smart_folder_reload",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "specialized-fixtures",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "attribute_add_dynamic",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "This route returned success during the live mutation sequence, but Cavalry 2.7.2 exited before the next ordinary attribute read. Quarantined until isolated safely outside the combined sequence."
+    },
+    {
+      "tool": "attribute_array_add",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "This route returned success during the live mutation sequence, but Cavalry 2.7.2 exited before the next ordinary attribute read. Quarantined until isolated safely outside the combined sequence."
+    },
+    {
+      "tool": "attribute_array_remove",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "This route returned success during the live mutation sequence, but Cavalry 2.7.2 exited before the next ordinary attribute read. Quarantined until isolated safely outside the combined sequence."
+    },
+    {
+      "tool": "attribute_array_reorder",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "This route returned success during the live mutation sequence, but Cavalry 2.7.2 exited before the next ordinary attribute read. Quarantined until isolated safely outside the combined sequence."
+    },
+    {
+      "tool": "attribute_clear_selection",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "This route returned success during the live mutation sequence, but Cavalry 2.7.2 exited before the next ordinary attribute read. Quarantined until isolated safely outside the combined sequence."
+    },
+    {
+      "tool": "attribute_definition_get_effective",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "This route returned success during the live mutation sequence, but Cavalry 2.7.2 exited before the next ordinary attribute read. Quarantined until isolated safely outside the combined sequence."
+    },
+    {
+      "tool": "attribute_describe",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "attribute_deselect",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "This route returned success during the live mutation sequence, but Cavalry 2.7.2 exited before the next ordinary attribute read. Quarantined until isolated safely outside the combined sequence."
+    },
+    {
+      "tool": "attribute_exists",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "attribute_expression_get",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "This route returned success during the live mutation sequence, but Cavalry 2.7.2 exited before the next ordinary attribute read. Quarantined until isolated safely outside the combined sequence."
+    },
+    {
+      "tool": "attribute_expression_remove",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "This route returned success during the live mutation sequence, but Cavalry 2.7.2 exited before the next ordinary attribute read. Quarantined until isolated safely outside the combined sequence."
+    },
+    {
+      "tool": "attribute_expression_set",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "This route returned success during the live mutation sequence, but Cavalry 2.7.2 exited before the next ordinary attribute read. Quarantined until isolated safely outside the combined sequence."
+    },
+    {
+      "tool": "attribute_get",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "specialized-fixtures",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "attribute_get_many",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "attribute_get_selection",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "This route returned success during the live mutation sequence, but Cavalry 2.7.2 exited before the next ordinary attribute read. Quarantined until isolated safely outside the combined sequence."
+    },
+    {
+      "tool": "attribute_limits_clear",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "This route returned success during the live mutation sequence, but Cavalry 2.7.2 exited before the next ordinary attribute read. Quarantined until isolated safely outside the combined sequence."
+    },
+    {
+      "tool": "attribute_limits_get",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "This route returned success during the live mutation sequence, but Cavalry 2.7.2 exited before the next ordinary attribute read. Quarantined until isolated safely outside the combined sequence."
+    },
+    {
+      "tool": "attribute_limits_set",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "This route returned success during the live mutation sequence, but Cavalry 2.7.2 exited before the next ordinary attribute read. Quarantined until isolated safely outside the combined sequence."
+    },
+    {
+      "tool": "attribute_list",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "attribute_remove_dynamic",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "This route returned success during the live mutation sequence, but Cavalry 2.7.2 exited before the next ordinary attribute read. Quarantined until isolated safely outside the combined sequence."
+    },
+    {
+      "tool": "attribute_reset",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "This route returned success during the live mutation sequence, but Cavalry 2.7.2 exited before the next ordinary attribute read. Quarantined until isolated safely outside the combined sequence."
+    },
+    {
+      "tool": "attribute_select",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "This route returned success during the live mutation sequence, but Cavalry 2.7.2 exited before the next ordinary attribute read. Quarantined until isolated safely outside the combined sequence."
+    },
+    {
+      "tool": "attribute_set",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "attribute_set_many",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "audio_add_to_composition",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "specialized-fixtures",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "audio_import",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "specialized-fixtures",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "audio_inspect",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "specialized-fixtures",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "audio_probe",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "specialized-fixtures",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "audio_set_in_out",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "specialized-fixtures",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "audio_set_offset",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "specialized-fixtures",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "audio_set_volume",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "specialized-fixtures",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "beat_generate_markers",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "This route returned success during the live mutation sequence, but Cavalry 2.7.2 exited before the next ordinary attribute read. Quarantined until isolated safely outside the combined sequence."
+    },
+    {
+      "tool": "beat_get_nth",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "This route returned success during the live mutation sequence, but Cavalry 2.7.2 exited before the next ordinary attribute read. Quarantined until isolated safely outside the combined sequence."
+    },
+    {
+      "tool": "bridge_flush_events",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "This route returned success during the live mutation sequence, but Cavalry 2.7.2 exited before the next ordinary attribute read. Quarantined until isolated safely outside the combined sequence."
+    },
+    {
+      "tool": "camera_add_guide",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "EXPECTED_HOST_CRASH",
+      "limitation": "Creating a Camera Guide returned successfully, then Cavalry 2.7.2 exited. Dependent guide-array routes were not repeated without a safe guide fixture."
+    },
+    {
+      "tool": "camera_create",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "camera_create_guide",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "KNOWN_HOST_LIMITATION",
+      "limitation": "HOST_UNSTABLE: Camera Guide creation can terminate Cavalry 2.7.2. Use camera_sequence_create."
+    },
+    {
+      "tool": "camera_cut",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "camera_disable_layer_2_5d",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": false,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "EXPECTED_LIMITATION",
+      "limitation": "The route has a precise documented Cavalry 2.7.2 limitation and is excluded from repeated destabilizing invocation."
+    },
+    {
+      "tool": "camera_enable_layer_2_5d",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": false,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "EXPECTED_LIMITATION",
+      "limitation": "The route has a precise documented Cavalry 2.7.2 limitation and is excluded from repeated destabilizing invocation."
+    },
+    {
+      "tool": "camera_get_active",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "camera_has_active",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "camera_inspect",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "This route returned success during the live mutation sequence, but Cavalry 2.7.2 exited before the next ordinary attribute read. Quarantined until isolated safely outside the combined sequence."
+    },
+    {
+      "tool": "camera_list",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "camera_look_at",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "camera_remove_guide",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": false,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "EXPECTED_HOST_CRASH",
+      "limitation": "Creating a Camera Guide returned successfully, then Cavalry 2.7.2 exited. Dependent guide-array routes were not repeated without a safe guide fixture."
+    },
+    {
+      "tool": "camera_sequence_create",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "camera_sequence_guides",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": false,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "EXPECTED_HOST_CRASH",
+      "limitation": "Creating a Camera Guide returned successfully, then Cavalry 2.7.2 exited. Dependent guide-array routes were not repeated without a safe guide fixture."
+    },
+    {
+      "tool": "camera_set_type",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "camera_set_type timed out during isolated live invocation and Cavalry 2.7.2 exited immediately afterward."
+    },
+    {
+      "tool": "camera_transition",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "cavalry_batch",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "cavalry_bridge_info",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "cavalry_capabilities",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "cavalry_health",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "cavalry_parity_audit",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "cavalry_ping",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "cavalry_raw_script",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": false,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "EXPECTED_LIMITATION",
+      "limitation": "The route has a precise documented Cavalry 2.7.2 limitation and is excluded from repeated destabilizing invocation."
+    },
+    {
+      "tool": "clipboard_get_text",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "clipboard_set_text",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "color_asset_profile",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "command_execute",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "command_search",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "component_export",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "component_export_selected",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "component_import",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "composition_add_override",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "composition_create",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "composition_create_reference",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "composition_get_active",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "composition_inspect",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "composition_list",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "composition_list_overrides",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "composition_precompose",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "composition_remove_override",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "composition_set_active",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "composition_update",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "control_centre_add_attribute",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "control_centre_describe",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": false,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "EXPECTED_LIMITATION",
+      "limitation": "The route has a precise documented Cavalry 2.7.2 limitation and is excluded from repeated destabilizing invocation."
+    },
+    {
+      "tool": "control_centre_list",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": false,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "EXPECTED_LIMITATION",
+      "limitation": "The route has a precise documented Cavalry 2.7.2 limitation and is excluded from repeated destabilizing invocation."
+    },
+    {
+      "tool": "control_centre_remove_attribute",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "design_align",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "design_center",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "design_create_background",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "design_distribute",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "dialog_choose_folder",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "dialog_open_file",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "dialog_save_file",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "events_clear",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "events_get_recent",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "events_poll",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "events_status",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "events_subscribe",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "events_unsubscribe",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "focus_mode",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "font_check",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "font_list",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "generator_current",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "generator_describe",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "generator_list",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "generator_set",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "graph_attribute_apply_preset",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "graph_attribute_flip_horizontal",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "graph_attribute_flip_vertical",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "graph_attribute_get",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "graph_attribute_set",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "graph_connect",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "graph_disconnect",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "graph_disconnect_input",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "graph_disconnect_outputs",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "graph_inputs",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "graph_inspect",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "graph_outputs",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "graph_validate_connection",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "guide_clear",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "guide_create_horizontal",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "guide_create_vertical",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "guide_delete",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "guide_list",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "guide_move",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "keyframe_clear_velocity",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "keyframe_create",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "keyframe_delete",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "keyframe_delete_animation",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "keyframe_deselect_all",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "keyframe_get_attribute_from_id",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "keyframe_get_ids",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "keyframe_get_selected",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "keyframe_get_selected_ids",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "keyframe_list",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "keyframe_magic_easing",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "keyframe_move",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "keyframe_select",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "keyframe_set_interpolation",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "keyframe_set_tangents",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "keyframe_set_velocity",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "keyframe_update",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "knowledge_audit",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "knowledge_explain",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "knowledge_find_component",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "knowledge_find_failure",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "knowledge_find_recipe",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "knowledge_find_scene_pattern",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "knowledge_find_script_pattern",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "knowledge_find_similar_to_current_scene",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "knowledge_find_success_pattern",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "knowledge_get_api",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "knowledge_get_layer_guidance",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "knowledge_get_node_graph",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "knowledge_index_current_scene",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "knowledge_record_failure",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "knowledge_record_script",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "knowledge_record_visual_outcome",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "knowledge_refresh",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "knowledge_search",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "knowledge_sources",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "knowledge_status",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_bounding_box",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_bring_forward",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_bring_to_front",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_children",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_create",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_create_primitive",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_delete",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_duplicate",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_find",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_get_selection",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_get_supertypes",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_inspect",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "specialized-fixtures",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_is_shape",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_list",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_list_by_type",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_parent",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_parent_info",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_rename",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_reorder",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_select",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_send_backward",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_send_to_back",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_set_in_frame",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_set_out_frame",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_solo",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_types",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_unparent",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layer_visibility",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layers_deserialize",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "layers_serialize",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "marker_create",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "marker_delete",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "marker_list",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "marker_move",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "marker_update",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "mcp_state_get",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "mcp_state_set",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "metadata_get",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "metadata_has",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "metadata_set",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "motion_bounce",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "motion_fade_in",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "motion_fade_out",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "motion_plan",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "motion_pop",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "motion_scale",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "motion_slide",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "operation_risk_classify",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "path_add_contour",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "path_add_point",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "path_animation_safe",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "path_close_contour",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "path_create",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "path_deselect_points",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "path_get_editable",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "path_get_selected_points",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "path_inspect",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "path_keyframe_create",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "This route returned success during the live mutation sequence, but Cavalry 2.7.2 exited before the next ordinary attribute read. Quarantined until isolated safely outside the combined sequence."
+    },
+    {
+      "tool": "path_keyframe_get",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "path_keyframe_resync",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "Editable Path keyframe/resynchronisation timed out during live invocation and Cavalry 2.7.2 exited immediately afterward."
+    },
+    {
+      "tool": "path_keyframe_set",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "QUARANTINED_HOST_EXIT_SEQUENCE",
+      "limitation": "This route returned success during the live mutation sequence, but Cavalry 2.7.2 exited before the next ordinary attribute read. Quarantined until isolated safely outside the combined sequence."
+    },
+    {
+      "tool": "path_make_editable",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "path_make_first_point",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "path_morph",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "KNOWN_HOST_LIMITATION",
+      "limitation": "HOST_UNSTABLE: Native Editable Path morphing can terminate Cavalry 2.7.2. Use path_morph_safe."
+    },
+    {
+      "tool": "path_morph_safe",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "path_move_selected_points",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "path_open_contour",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "path_remove_contour",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "path_remove_point",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "path_select_points",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "path_set_editable",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "path_set_handle_locking",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "path_set_handle_position",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "path_set_point_position",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "path_set_points",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "preferences_get",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "preferences_list",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "preferences_restore",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "preferences_set",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "preferences_snapshot",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "preset_apply",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "preset_clear_default",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "preset_delete",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "preset_list",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "preset_rename",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "preset_save",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "preset_set_default",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "preview_contact_sheet",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "preview_frame",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "preview_frames",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "preview_video",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "project_clear",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "project_get",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "project_paths",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "project_set",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_background_start",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_cancel",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_dynamic_index_connect",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_dynamic_index_get",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_dynamic_offset",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_dynamic_preview",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": false,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "EXPECTED_LIMITATION",
+      "limitation": "The route has a precise documented Cavalry 2.7.2 limitation and is excluded from repeated destabilizing invocation."
+    },
+    {
+      "tool": "render_dynamic_range",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_is_active",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_item_attributes",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_item_create",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_item_delete",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_item_disable",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_item_duplicate",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_item_enable",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_item_inspect",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_item_set",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_item_set_audio",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_item_set_dynamic",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_item_set_format",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_item_set_metadata",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_item_set_output",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_item_set_quality",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_item_set_range",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_item_set_resolution_scale",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_metadata_add",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_metadata_disable",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_metadata_enable",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_metadata_format",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_metadata_remove",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_mux_audio",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_queue_add",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_queue_configure",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_queue_list",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_script_clear",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_script_get",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_script_set_post",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_script_set_pre",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_script_set_setup",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_start",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_start_all",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_status",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "render_wait",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "safe_host_operation",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "scene_checkpoint",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "scene_describe",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "scene_diff",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "scene_export_copy",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "scene_has_unsaved_changes",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "scene_import",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "scene_inspect",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "scene_new",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "scene_open",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "scene_restore_checkpoint",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "scene_save",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "scene_save_as",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "scene_snapshot",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "shape_centre_pivot",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "shape_disable_fill",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "shape_disable_stroke",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "shape_enable_fill",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "shape_enable_stroke",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "shape_has_fill",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "shape_has_stroke",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "shortcut_discover",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "shortcut_execute",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "svg_convert_to_layers",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "tag_assign",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "tag_clear_filter",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "tag_create",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "tag_delete",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "tag_filter_scene",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "tag_filter_viewport",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "tag_list",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "tag_select",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "tag_unassign",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "template_create",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "template_instantiate",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "text_animate_characters",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "text_animate_words",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "text_create",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "text_set_content",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "text_set_font",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "text_set_font_size",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "third_party_ui_inspect",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "timeline_get_frame",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "timeline_play",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "KNOWN_HOST_LIMITATION",
+      "limitation": "HOST_UNSTABLE: Native timeline playback can block the Cavalry 2.7.2 bridge. Use timeline_preview_playback or preview_video."
+    },
+    {
+      "tool": "timeline_preview_playback",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "safe-fallbacks",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "timeline_set_frame",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "timeline_stop",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "tool_get_active",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "tool_set_active",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "transform_center_pivot",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "transform_center_pivot_centroid",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "transform_enable_3d",
+      "status": "KNOWN_HOST_LIMITATION",
+      "liveInvoked": false,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "EXPECTED_LIMITATION",
+      "limitation": "The route has a precise documented Cavalry 2.7.2 limitation and is excluded from repeated destabilizing invocation."
+    },
+    {
+      "tool": "transform_freeze",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "transform_get_pivot",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "transform_has_3d",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "transform_move",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "transform_reset",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "ui_driver_status",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "viewport_active_tool",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "viewport_add",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "viewport_capture",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "viewport_preferences_get",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "viewport_preferences_set",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "viewport_prepare_for_visual_qa",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "viewport_restore",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "baseline-live-sweep",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "window_close",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "window_open",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "workspace_list",
+      "status": "PASS",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PASS"
+    },
+    {
+      "tool": "workspace_reset",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "workspace_save",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    },
+    {
+      "tool": "workspace_switch",
+      "status": "PLATFORM_LIMITATION",
+      "liveInvoked": true,
+      "evidenceSource": "ui-driver",
+      "originalStatus": "PLATFORM_LIMITATION"
+    }
+  ]
+}

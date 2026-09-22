@@ -20,7 +20,7 @@ export async function audioInspect(assetOrFootageId: string): Promise<any> {
 
 export async function audioSetOffset(footageLayerId: string, frameOffset: number): Promise<Record<string, unknown>> {
   const resolved = identityResolver.resolveToLayerId(footageLayerId);
-  return attributeSet(resolved, 'timeOffset', frameOffset);
+  return attributeSet(resolved, 'frameOffset', frameOffset);
 }
 
 export async function audioSetInOut(footageLayerId: string, inFrame: number, outFrame: number): Promise<Record<string, unknown>> {
@@ -32,5 +32,5 @@ export async function audioSetInOut(footageLayerId: string, inFrame: number, out
 
 export async function audioSetVolume(footageLayerId: string, volume: number): Promise<Record<string, unknown>> {
   const resolved = identityResolver.resolveToLayerId(footageLayerId);
-  return attributeSet(resolved, 'volume', volume);
+  return attributeSet(resolved, 'playbackVolume', volume);
 }

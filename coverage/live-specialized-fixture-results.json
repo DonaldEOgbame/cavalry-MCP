@@ -1,0 +1,264 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-21T18:49:00.026Z",
+  "host": {
+    "cavalryVersion": "2.7.2",
+    "platform": "darwin"
+  },
+  "compositionId": "compNode#2",
+  "counts": {
+    "PASS": 16,
+    "KNOWN_HOST_LIMITATION": 0,
+    "PLATFORM_LIMITATION": 2
+  },
+  "results": [
+    {
+      "tool": "scene_new",
+      "status": "PASS",
+      "durationMs": 99,
+      "fixture": "",
+      "payload": {
+        "success": true
+      }
+    },
+    {
+      "tool": "composition_create",
+      "status": "PASS",
+      "durationMs": 125,
+      "fixture": "",
+      "payload": {
+        "compId": "compNode#2",
+        "name": "Specialized Fixture Validation",
+        "uuid": "deea92fe-9b45-43cc-acdc-036a8be6cf7e"
+      }
+    },
+    {
+      "tool": "asset_import",
+      "status": "PASS",
+      "durationMs": 10,
+      "fixture": "",
+      "payload": {
+        "assetId": "asset#2",
+        "name": "fixture_0001",
+        "type": "movie",
+        "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/specialized-fixtures/image-sequence/fixture_0001.png"
+      }
+    },
+    {
+      "tool": "asset_sequence_inspect",
+      "status": "PASS",
+      "durationMs": 21,
+      "fixture": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/specialized-fixtures/image-sequence",
+      "payload": {
+        "assetId": "asset#2",
+        "filePaths": [
+          "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/specialized-fixtures/image-sequence/fixture_0001.png",
+          "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/specialized-fixtures/image-sequence/fixture_0002.png",
+          "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/specialized-fixtures/image-sequence/fixture_0003.png"
+        ]
+      },
+      "assertion": "Cavalry returned all three numbered sequence frames."
+    },
+    {
+      "tool": "asset_smart_folder_create",
+      "status": "PASS",
+      "durationMs": 20,
+      "fixture": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/specialized-fixtures/smart-folder",
+      "payload": {
+        "assetId": "asset#3"
+      },
+      "assertion": "Cavalry created a first-class Smart Folder asset."
+    },
+    {
+      "tool": "asset_smart_folder_reload",
+      "status": "PASS",
+      "durationMs": 22,
+      "fixture": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/specialized-fixtures/smart-folder",
+      "payload": {
+        "assetId": "asset#3",
+        "reloaded": true
+      },
+      "assertion": "The Smart Folder reloaded through the asset reload route."
+    },
+    {
+      "tool": "audio_probe",
+      "status": "PASS",
+      "durationMs": 10,
+      "fixture": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/fixtures/test-tone-440hz-1s.wav",
+      "payload": {
+        "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/fixtures/test-tone-440hz-1s.wav",
+        "durationSeconds": 1,
+        "sampleRate": 440,
+        "channels": 2,
+        "format": "afinfo"
+      },
+      "assertion": "Local probe reported a positive duration for the deterministic WAV fixture."
+    },
+    {
+      "tool": "audio_import",
+      "status": "PASS",
+      "durationMs": 23,
+      "fixture": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/fixtures/test-tone-440hz-1s.wav",
+      "payload": {
+        "assetId": "asset#4",
+        "name": "test-tone-440hz-1s",
+        "type": "audio",
+        "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/fixtures/test-tone-440hz-1s.wav"
+      },
+      "assertion": "Cavalry imported the deterministic WAV as an asset."
+    },
+    {
+      "tool": "audio_inspect",
+      "status": "PASS",
+      "durationMs": 12,
+      "fixture": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/fixtures/test-tone-440hz-1s.wav",
+      "payload": {
+        "assetId": "asset#4",
+        "name": "test-tone-440hz-1s",
+        "type": "audio",
+        "filePath": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/fixtures/test-tone-440hz-1s.wav",
+        "isFileAsset": true
+      },
+      "assertion": "The imported WAV asset was inspected by its live asset ID."
+    },
+    {
+      "tool": "audio_add_to_composition",
+      "status": "PASS",
+      "durationMs": 20,
+      "fixture": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/fixtures/test-tone-440hz-1s.wav",
+      "payload": {
+        "assetId": "asset#4",
+        "footageLayer": {
+          "layerId": "sound#1",
+          "uuid": "6fc281b4-66de-42c7-a3bd-1783e33e2d57",
+          "name": "test-tone-440hz-1s",
+          "type": "sound"
+        }
+      },
+      "assertion": "The WAV asset produced a live footage layer."
+    },
+    {
+      "tool": "audio_set_offset",
+      "status": "PASS",
+      "durationMs": 20,
+      "fixture": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/fixtures/test-tone-440hz-1s.wav",
+      "payload": {
+        "layerId": "sound#1",
+        "applied": {
+          "frameOffset": 2
+        },
+        "current": {
+          "frameOffset": 2
+        }
+      },
+      "assertion": "The audio footage timeOffset was set to frame 2."
+    },
+    {
+      "tool": "audio_set_in_out",
+      "status": "PASS",
+      "durationMs": 29,
+      "fixture": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/fixtures/test-tone-440hz-1s.wav",
+      "payload": {
+        "layerId": "sound#1",
+        "inFrame": 2,
+        "outFrame": 28
+      },
+      "assertion": "The live audio footage in/out range was set and accepted."
+    },
+    {
+      "tool": "audio_set_volume",
+      "status": "PASS",
+      "durationMs": 14,
+      "fixture": "/Users/macbook/Documents/GitHub/calvary-MCP/coverage/fixtures/test-tone-440hz-1s.wav",
+      "payload": {
+        "layerId": "sound#1",
+        "applied": {
+          "playbackVolume": 0.5
+        },
+        "current": {
+          "playbackVolume": 0.5
+        }
+      },
+      "assertion": "The live audio footage volume was set to 0.5."
+    },
+    {
+      "tool": "layer_inspect",
+      "status": "PASS",
+      "durationMs": 14,
+      "fixture": "",
+      "payload": {
+        "layerId": "sound#1",
+        "uuid": "6fc281b4-66de-42c7-a3bd-1783e33e2d57",
+        "name": "test-tone-440hz-1s",
+        "type": "sound",
+        "parent": null,
+        "children": [],
+        "inFrame": 2,
+        "outFrame": 29,
+        "visible": false,
+        "isShape": false,
+        "attributeCount": 22,
+        "attributes": [
+          "aWeighting",
+          "outActiveBands",
+          "weightingGraph",
+          "eqGraph",
+          "falloffs",
+          "file",
+          "length",
+          "frameOffset",
+          "bands",
+          "frequencyRange",
+          "frequencyScale",
+          "id",
+          "maxDb",
+          "playbackPan",
+          "playAudio",
+          "smoothingFrames",
+          "strength",
+          "subSteps",
+          "useIndex",
+          "offset",
+          "playbackVolume",
+          "clipping"
+        ]
+      }
+    },
+    {
+      "tool": "attribute_get",
+      "status": "PASS",
+      "durationMs": 15,
+      "fixture": "",
+      "payload": {
+        "layerId": "sound#1",
+        "attrPath": "frameOffset",
+        "value": 2
+      }
+    },
+    {
+      "tool": "attribute_get",
+      "status": "PASS",
+      "durationMs": 13,
+      "fixture": "",
+      "payload": {
+        "layerId": "sound#1",
+        "attrPath": "playbackVolume",
+        "value": 0.5
+      }
+    },
+    {
+      "tool": "asset_google_sheet_inspect",
+      "status": "PLATFORM_LIMITATION",
+      "durationMs": 0,
+      "fixture": "external Google Sheets service",
+      "limitation": "Cavalry 2.7.2 requires an externally reachable Google Sheet asset; no local/offline constructor exists. A credentialed or public spreadsheet fixture is required for a valid mutation test."
+    },
+    {
+      "tool": "asset_google_sheet_replace",
+      "status": "PLATFORM_LIMITATION",
+      "durationMs": 0,
+      "fixture": "external Google Sheets service",
+      "limitation": "Cavalry 2.7.2 requires an externally reachable Google Sheet asset; no local/offline constructor exists. A credentialed or public spreadsheet fixture is required for a valid mutation test."
+    }
+  ]
+}

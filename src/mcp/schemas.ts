@@ -22,6 +22,13 @@ export const SystemSchemas = {
     stopOnError: z.boolean().optional().default(true).describe('Whether execution should abort on the first failing step'),
     expectedRevision: z.number().int().nonnegative().optional().describe('Abort with EDIT_CONFLICT if native callbacks observed a newer scene revision'),
   }),
+  safeHostOperation: z.object({
+    operation: z.string().min(1),
+    params: z.record(z.string(), z.unknown()).optional().default({}),
+    allowHostUnstable: z.boolean().optional().default(false).describe('Explicitly opt into a known host-unstable native operation'),
+    timeoutMs: z.number().int().min(100).max(120000).optional(),
+    restoreOnFailure: z.boolean().optional().default(true),
+  }),
 };
 
 const KnowledgeSourceTypeSchema = z.enum([
@@ -636,6 +643,54 @@ export const PreviewSchemas = {
   }),
 };
 
+const CameraShotSchema = z.object({
+  frame: CommonSchemas.frame,
+  position: z.record(z.string(), z.number()).optional(),
+  rotation: z.number().optional(),
+  zoom: z.number().optional(),
+  lookAt: z.record(z.string(), z.number()).optional(),
+});
+
+export const SafeOperationSchemas = {
+  pathMorph: z.object({
+    layerId: CommonSchemas.layerIdOrUuid,
+    startFrame: CommonSchemas.frame,
+    endFrame: CommonSchemas.frame,
+    fromPath: z.any(),
+    toPath: z.any(),
+    sampleEvery: z.number().int().min(1).max(30).optional().default(1),
+  }),
+  pathAnimation: z.object({
+    layerId: CommonSchemas.layerIdOrUuid,
+    keyframes: z.array(z.object({ frame: CommonSchemas.frame, pathObject: z.any() })).min(2),
+    sampleEvery: z.number().int().min(1).max(30).optional().default(1),
+    namePrefix: z.string().optional().default('Safe Path'),
+  }),
+  cameraCut: z.object({ layerId: CommonSchemas.layerIdOrUuid, shot: CameraShotSchema }),
+  cameraTransition: z.object({ layerId: CommonSchemas.layerIdOrUuid, from: CameraShotSchema, to: CameraShotSchema, easing: z.string().optional().default('SlowOut') }),
+  cameraSequence: z.object({ layerId: CommonSchemas.layerIdOrUuid, shots: z.array(CameraShotSchema).min(1) }),
+  renderMuxAudio: z.object({
+    videoPath: CommonSchemas.filePath,
+    audioPath: CommonSchemas.filePath,
+    outputPath: CommonSchemas.filePath,
+  }),
+};
+
+export const UiSchemas = {
+  commandSearch: z.object({ query: z.string().min(1) }),
+  commandExecute: z.object({ command: z.string().min(1), menu: z.string().optional() }),
+  shortcutDiscover: z.object({ query: z.string().optional() }),
+  shortcutExecute: z.object({ key: z.string().min(1).max(32), modifiers: z.array(z.enum(['command', 'option', 'control', 'shift'])).optional().default([]) }),
+  tool: z.object({ tool: z.string().min(1) }),
+  named: z.object({ name: z.string().min(1) }),
+  workspaceSave: z.object({ name: z.string().min(1) }),
+  window: z.object({ title: z.string().min(1) }),
+  dialogPath: z.object({ path: CommonSchemas.filePath }),
+  presetApply: z.object({ name: z.string().min(1), menu: z.string().optional() }),
+  presetFile: z.object({ name: z.string().min(1), sourcePath: CommonSchemas.filePath.optional(), newName: z.string().optional() }),
+  tag: z.object({ name: z.string().min(1), layerIds: z.array(CommonSchemas.layerIdOrUuid).optional() }),
+};
+
 export const RenderQueueSchemas = {
   add: z.object({
     compId: z.string().optional().describe('Composition ID (defaults to active composition)'),
@@ -647,6 +702,7 @@ export const RenderQueueSchemas = {
   start: z.object({
     itemId: z.string(),
   }),
+  status: z.object({ itemId: z.string().optional() }),
 };
 
 export const DesignSchemas = {
