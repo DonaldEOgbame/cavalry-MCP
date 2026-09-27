@@ -4,6 +4,13 @@
   "description": "Autonomous Model Context Protocol server for Cavalry motion design",
   "type": "module",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "bin": {
     "cavalry-mcp": "./dist/index.js"
   },
@@ -12,10 +19,14 @@
     "watch": "tsc --watch",
     "start": "node dist/index.js",
     "dev": "tsx src/index.ts",
+    "bridge:launch": "node scripts/launch-bridge.mjs",
     "test": "tsx --test tests/unit/*.test.ts tests/bridge/*.test.ts",
+    "test:contracts": "tsx --test tests/unit/tool-registry.test.ts tests/bridge/*.test.ts",
+    "test:coverage": "node --import tsx --test --experimental-test-coverage --test-coverage-include=src/**/*.ts --test-coverage-lines=15 tests/unit/*.test.ts tests/bridge/*.test.ts",
     "test:integration": "tsx --test tests/integration/*.test.ts",
     "coverage:api": "node scripts/generate-api-coverage.mjs",
     "coverage:tool-inventory": "tsx scripts/generate-tool-inventory.ts",
+    "contracts:generate": "tsx scripts/generate-tool-contracts.ts",
     "coverage:surface-audit": "node scripts/generate-surface-audit.mjs",
     "coverage:live-layer-types": "tsx scripts/probe-live-layer-types.ts",
     "coverage:node-definitions": "node scripts/generate-node-definition-coverage.mjs",
@@ -28,6 +39,7 @@
     "coverage:soak:analyze": "node scripts/analyze-soak.mjs",
     "coverage:render-sweep": "tsx scripts/live-render-format-sweep.ts && node scripts/regenerate-render-formats.mjs",
     "coverage:render-mux": "tsx scripts/verify-render-mux-formats.ts",
+    "knowledge:init": "tsx src/knowledge/cli.ts init",
     "knowledge:bootstrap": "tsx src/knowledge/cli.ts bootstrap",
     "knowledge:generate-sources": "node scripts/generate-knowledge-sources.mjs",
     "knowledge:generate-verified-scripts": "node scripts/generate-verified-script-records.mjs",
@@ -45,7 +57,9 @@
     "knowledge:validate-components": "tsx scripts/live-component-library.ts",
     "coverage:compatibility": "tsx scripts/live-compatibility-sweep.ts",
     "coverage:live-tool-sweep": "tsx scripts/live-mcp-tool-sweep.ts",
-    "coverage:final-ledger": "node scripts/generate-final-tool-ledger.mjs"
+    "coverage:final-ledger": "node scripts/generate-final-tool-ledger.mjs",
+    "package:check": "node scripts/verify-package.mjs",
+    "prepack": "npm run build && npm test && npm run test:contracts && npm run coverage:tool-inventory && npm run contracts:generate && npm run package:check"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",
@@ -58,8 +72,36 @@
     "tsx": "^4.23.13",
     "typescript": "^7.0.2"
   },
+  "files": [
+    "dist/",
+    "cavalry/bridge.js",
+    "cavalry/install.md",
+    "scripts/launch-bridge.mjs",
+    "coverage/cavalry-api-manifest.json",
+    "coverage/cavalry-capabilities.json",
+    "coverage/mcp-tool-inventory.json",
+    "coverage/mcp-tool-contracts.json",
+    "coverage/mcp-tool-client.d.ts",
+    "coverage/render-formats.json",
+    "knowledge/generated/knowledge-index.json",
+    "knowledge/sources/",
+    "docs/*.md",
+    "README.md",
+    "SUPPORTED.md",
+    "LICENSE",
+    ".env.example"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DonaldEOgbame/calvary-MCP.git"
+  },
+  "homepage": "https://github.com/DonaldEOgbame/calvary-MCP#readme",
+  "bugs": {
+    "url": "https://github.com/DonaldEOgbame/calvary-MCP/issues"
+  },
+  "keywords": ["cavalry", "mcp", "motion-design", "animation", "model-context-protocol"],
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   },
   "license": "MIT"
 }

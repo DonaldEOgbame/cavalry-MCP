@@ -30,6 +30,16 @@ describe('Cavalry bridge API contract', () => {
     assert.match(source, /rejected a malformed JSON request/);
   });
 
+  it('authenticates sessions and constrains callbacks, response files, and raw scripts', () => {
+    assert.match(source, /loadSession\(request\)/);
+    assert.match(source, /rejected an unauthenticated request/);
+    assert.match(source, /session\.token !== request\.token/);
+    assert.match(source, /validResponseFile\(request, session\)/);
+    assert.match(source, /127\\\.0\\\.0\\\.1\|localhost/);
+    assert.match(source, /batchContainsRawScript/);
+    assert.match(source, /RAW_SCRIPT_DISABLED/);
+  });
+
   it('splits callback URLs into the base URL and route required by WebClient', () => {
     assert.match(source, /new api\.WebClient\(target\.baseUrl\)/);
     assert.match(source, /client\.post\(target\.path,/);

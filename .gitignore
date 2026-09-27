@@ -7,4 +7,13 @@ tmp/
 cavalry-previews/
 knowledge/generated/*
 !knowledge/generated/.gitkeep
+!knowledge/generated/knowledge-index.json
 coverage/render-format-sweep-output/
+dpf/
+output/
+/build.ts
+/mcp_runner.ts
+/render_phase.ts
+/run_all.ts
+/run_all_phases.ts
+/scripts/create-product-launch.ts

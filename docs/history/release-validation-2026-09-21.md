@@ -1,4 +1,6 @@
-# Cavalry MCP Release Validation — 2026-09-21
+# Historical Cavalry MCP Release Validation — 2026-09-21
+
+This report is archived. The canonical current report is `../release-validation.md`.
 
 ## Release classification
 
@@ -130,4 +132,3 @@ bytes; its MD5 still matches the recorded evidence.
 5. Thirteen capability groups are explicitly unsupported/UI-only, not unknown.
 6. ICC inspection may be empty in a long-lived stressed host; a bounded reload
    and clean process produced the verified sRGB result.
-

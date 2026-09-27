@@ -1,13 +1,10 @@
 #!/usr/bin/env node
 
+import 'dotenv/config';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import dotenv from 'dotenv';
 import { createMcpServer } from './mcp/server.js';
 import { logger } from './utils/logger.js';
 import { bridgeClient } from './bridge/client.js';
-
-// Load environment variables if present
-dotenv.config();
 
 async function main() {
   logger.info('Initializing Cavalry MCP Server...');

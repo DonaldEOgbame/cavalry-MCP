@@ -1,27 +1,78 @@
 import { bridgeClient } from '../bridge/client.js';
 import { identityResolver } from '../utils/ids.js';
 import { attributeSetMany } from './attributes.js';
+import crypto from 'node:crypto';
+import { readdir, stat } from 'node:fs/promises';
+import path from 'node:path';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 
-type RenderState = 'STARTING' | 'COMPLETED' | 'CANCELLED' | 'UNKNOWN_AFTER_BACKGROUND_START' | 'FAILED';
+const execFileAsync = promisify(execFile);
+type RenderState = 'QUEUED' | 'RUNNING' | 'COMPLETED' | 'CANCELLED' | 'UNKNOWN_AFTER_BACKGROUND_START' | 'FAILED';
 interface TrackedRender {
   [key: string]: unknown;
   itemId: string;
+  jobId: string;
   state: RenderState;
   startedAt: string;
   updatedAt: string;
-  progress: null;
+  progress: number | null;
   reliable: boolean;
   error?: string;
 }
 
 const trackedRenders = new Map<string, TrackedRender>();
+const itemJobs = new Map<string, string>();
+const renderSettings = new Map<string, Record<string, unknown>>();
 
-function track(itemId: string, state: RenderState, reliable: boolean, error?: string): TrackedRender {
-  const previous = trackedRenders.get(itemId);
+function track(itemId: string, state: RenderState, reliable: boolean, error?: string, jobId = itemJobs.get(itemId) ?? crypto.randomUUID()): TrackedRender {
+  const previous = trackedRenders.get(jobId);
   const now = new Date().toISOString();
-  const item = { itemId, state, startedAt: previous?.startedAt ?? now, updatedAt: now, progress: null, reliable, ...(error ? { error } : {}) };
-  trackedRenders.set(itemId, item);
+  const progress = state === 'COMPLETED' ? 100 : state === 'RUNNING' ? 0 : null;
+  const item = { itemId, jobId, state, startedAt: previous?.startedAt ?? now, updatedAt: now, progress, reliable, ...(error ? { error } : {}) };
+  trackedRenders.set(jobId, item);
+  itemJobs.set(itemId, jobId);
   return item;
+}
+
+async function validateRenderOutput(itemId: string, startedAt: number): Promise<Record<string, unknown>> {
+  const settings = renderSettings.get(itemId) ?? {};
+  const directory = typeof settings.filePath === 'string' ? settings.filePath : undefined;
+  const prefix = typeof settings.fileName === 'string' ? settings.fileName : undefined;
+  if (!directory || !prefix) return { verified: null, reason: 'output_path_not_configured_through_mcp' };
+  const candidates = (await readdir(directory)).filter((name) => name.startsWith(prefix));
+  const inspected = await Promise.all(candidates.map(async (name) => ({ path: path.join(directory, name), info: await stat(path.join(directory, name)) })));
+  const fresh = inspected.filter(({ info }) => info.mtimeMs >= startedAt && info.size > 0).sort((a, b) => b.info.mtimeMs - a.info.mtimeMs);
+  if (!fresh.length) throw new Error('Render returned without creating a fresh, non-empty output file.');
+  const output = fresh[0];
+  let media: Record<string, unknown> | null = null;
+  try {
+    const { stdout } = await execFileAsync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration,size:stream=codec_type,nb_frames,width,height', '-of', 'json', output.path]);
+    media = JSON.parse(stdout);
+    const streams = (media as any).streams ?? [];
+    if (streams.some((stream: any) => stream.codec_type === 'video' && (!stream.width || !stream.height))) throw new Error('Rendered video contains invalid frame dimensions.');
+    if (streams.some((stream: any) => stream.codec_type === 'video')) {
+      const duration = Number((media as any).format?.duration || 0);
+      const sampleTimes = duration > 0 ? [0, duration / 2, Math.max(0, duration - 0.05)] : [0];
+      const luminance: number[] = [];
+      for (const sampleTime of sampleTimes) {
+        const probe = await execFileAsync('ffmpeg', ['-v', 'error', '-ss', String(sampleTime), '-i', output.path, '-frames:v', '1', '-vf', 'signalstats,metadata=print:file=-', '-f', 'null', '-']);
+        const match = probe.stdout.match(/lavfi\.signalstats\.YAVG=([0-9.]+)/);
+        if (match) luminance.push(Number(match[1]));
+      }
+      if (luminance.length && luminance.every((value) => value <= 1 || value >= 254)) {
+        throw new Error('Representative-frame validation found only blank frames.');
+      }
+      (media as any).representativeFrameLuminance = luminance;
+    }
+  } catch (error) {
+    if (/\.(?:json|svg)$/i.test(output.path)) {
+      media = { kind: path.extname(output.path).slice(1), structurallyVerified: output.info.size > 0 };
+    } else if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+      throw error;
+    }
+  }
+  return { verified: true, path: output.path, size: output.info.size, modifiedAt: output.info.mtime.toISOString(), metadata: media, representativeFramesDecoded: media !== null };
 }
 
 export async function renderQueueList(): Promise<{ count: number; items: Array<{ id: string; name: string }> }> {
@@ -37,46 +88,87 @@ export async function renderQueueAdd(compId?: string): Promise<{ renderQueueItem
 
 export async function renderQueueConfigure(itemId: string, settings: Record<string, unknown>): Promise<Record<string, unknown>> {
   const resolved = identityResolver.resolveToLayerId(itemId);
-  return attributeSetMany(resolved, settings);
+  const normalized = { ...settings };
+  if (typeof settings.startFrame === 'number' || typeof settings.endFrame === 'number') {
+    const previous = renderSettings.get(resolved) ?? {};
+    normalized.frameRangeMode = 1;
+    normalized.frameRange = {
+      x: settings.startFrame ?? (previous.frameRange as any)?.x ?? 0,
+      y: settings.endFrame ?? (previous.frameRange as any)?.y ?? settings.startFrame ?? 0,
+    };
+    delete normalized.startFrame;
+    delete normalized.endFrame;
+  }
+  const result = await attributeSetMany(resolved, normalized);
+  renderSettings.set(resolved, { ...(renderSettings.get(resolved) ?? {}), ...normalized });
+  return { ...result, resolvedFrameRange: normalized.frameRange, frameRangeMode: normalized.frameRangeMode };
 }
 
 export async function renderStart(itemId: string): Promise<Record<string, unknown>> {
   const resolved = identityResolver.resolveToLayerId(itemId);
-  track(resolved, 'STARTING', true);
+  const jobId = crypto.randomUUID();
+  const startedAt = Date.now();
+  if (!renderSettings.has(resolved)) {
+    try {
+      const inspection = await bridgeClient.send<any>('render_item_inspect', { itemId: resolved });
+      const values = inspection.result?.values ?? {};
+      renderSettings.set(resolved, { filePath: values.filePath, fileName: values.fileName, frameRange: values.frameRange, frameRangeMode: values.frameRangeMode });
+    } catch {}
+  }
+  track(resolved, 'RUNNING', true, undefined, jobId);
   try {
     const res = await bridgeClient.send<Record<string, unknown>>('render_start', { itemId: resolved });
-    return { ...res.result!, supervision: track(resolved, 'COMPLETED', true) };
+    const outputVerification = await validateRenderOutput(resolved, startedAt);
+    return { ...res.result!, jobId, outputVerification, supervision: track(resolved, 'COMPLETED', true, undefined, jobId) };
   } catch (error) {
-    track(resolved, 'FAILED', true, error instanceof Error ? error.message : String(error));
+    track(resolved, 'FAILED', true, error instanceof Error ? error.message : String(error), jobId);
     throw error;
   }
 }
 
 export async function renderStartAll(): Promise<Record<string, unknown>> {
-  track('*', 'STARTING', true);
+  const jobId = crypto.randomUUID();
+  track('*', 'RUNNING', true, undefined, jobId);
   const res = await bridgeClient.send<Record<string, unknown>>('render_start_all');
-  return { ...res.result!, supervision: track('*', 'COMPLETED', true) };
+  return { ...res.result!, jobId, supervision: track('*', 'COMPLETED', true, undefined, jobId) };
 }
 
 export async function renderCancel(): Promise<Record<string, unknown>> {
   const res = await bridgeClient.send<Record<string, unknown>>('render_cancel');
   for (const item of trackedRenders.values()) {
-    if (item.state === 'STARTING' || item.state === 'UNKNOWN_AFTER_BACKGROUND_START') track(item.itemId, 'CANCELLED', true);
+    if (item.state === 'RUNNING' || item.state === 'UNKNOWN_AFTER_BACKGROUND_START') track(item.itemId, 'CANCELLED', true, undefined, item.jobId);
   }
   return { ...res.result!, tracked: [...trackedRenders.values()] };
 }
 
 export async function renderBackgroundStart(itemId: string): Promise<Record<string, unknown>> {
   const resolved = identityResolver.resolveToLayerId(itemId);
-  track(resolved, 'STARTING', false);
+  const jobId = crypto.randomUUID();
+  track(resolved, 'RUNNING', false, undefined, jobId);
   const res = await bridgeClient.send<Record<string, unknown>>('render_background_start', { itemId: resolved });
-  return { ...res.result!, supervision: track(resolved, 'UNKNOWN_AFTER_BACKGROUND_START', false) };
+  return { ...res.result!, jobId, supervision: track(resolved, 'UNKNOWN_AFTER_BACKGROUND_START', false, undefined, jobId) };
 }
 
-export function renderStatus(itemId?: string): Record<string, unknown> {
-  if (itemId) {
-    const resolved = identityResolver.resolveToLayerId(itemId);
-    return trackedRenders.get(resolved) ?? {
+async function refreshBackground(item: TrackedRender): Promise<TrackedRender> {
+  if (item.state !== 'UNKNOWN_AFTER_BACKGROUND_START') return item;
+  try {
+    await validateRenderOutput(item.itemId, Date.parse(item.startedAt));
+    return track(item.itemId, 'COMPLETED', true, undefined, item.jobId);
+  } catch (error) {
+    const timeoutMs = Number(process.env.CAVALRY_RENDER_TIMEOUT_MS || 30 * 60 * 1000);
+    if (Date.now() - Date.parse(item.startedAt) > timeoutMs) {
+      return track(item.itemId, 'FAILED', true, error instanceof Error ? error.message : String(error), item.jobId);
+    }
+    return item;
+  }
+}
+
+export async function renderStatus(itemIdOrJobId?: string): Promise<Record<string, unknown>> {
+  if (itemIdOrJobId) {
+    const direct = trackedRenders.get(itemIdOrJobId);
+    const resolved = direct ? direct.itemId : identityResolver.resolveToLayerId(itemIdOrJobId);
+    const item = direct ?? trackedRenders.get(itemJobs.get(resolved) ?? '');
+    return item ? refreshBackground(item) : {
       itemId: resolved,
       state: 'NOT_STARTED_BY_MCP',
       progress: null,
@@ -84,23 +176,23 @@ export function renderStatus(itemId?: string): Record<string, unknown> {
       message: 'Cavalry 2.7.2 exposes no global render-status API; only MCP-launched renders can be tracked.',
     };
   }
-  return { renders: [...trackedRenders.values()], progressAvailable: false };
+  return { renders: await Promise.all([...trackedRenders.values()].map(refreshBackground)), progressAvailable: true };
 }
 
-export function renderIsActive(itemId?: string): Record<string, unknown> {
-  const status = renderStatus(itemId) as any;
+export async function renderIsActive(itemId?: string): Promise<Record<string, unknown>> {
+  const status = await renderStatus(itemId) as any;
   if (itemId) {
-    const active = status.state === 'STARTING' ? true
+    const active = status.state === 'RUNNING' || status.state === 'QUEUED' ? true
       : status.state === 'COMPLETED' || status.state === 'CANCELLED' || status.state === 'FAILED' ? false
       : null;
-    return { itemId: status.itemId, active, state: status.state, reliable: status.reliable, progress: null };
+    return { itemId: status.itemId, jobId: status.jobId, active, state: status.state, reliable: status.reliable, progress: status.progress };
   }
   const renders = status.renders as TrackedRender[];
-  return { active: renders.some(item => item.state === 'STARTING') || (renders.length ? false : null), renders, progress: null };
+  return { active: renders.some(item => item.state === 'RUNNING' || item.state === 'QUEUED') || (renders.length ? false : null), renders };
 }
 
-export function renderWait(itemId: string): Record<string, unknown> {
-  const status = renderStatus(itemId) as any;
+export async function renderWait(itemId: string): Promise<Record<string, unknown>> {
+  const status = await renderStatus(itemId) as any;
   if (status.state === 'COMPLETED') return { completed: true, status };
   if (status.state === 'CANCELLED' || status.state === 'FAILED') return { completed: false, status };
   return {

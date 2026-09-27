@@ -14,6 +14,7 @@ export type CavalryErrorCode =
   | 'UNSUPPORTED_LAYER'
   | 'ASSET_NOT_FOUND'
   | 'FONT_NOT_FOUND'
+  | 'FONT_RESTART_REQUIRED'
   | 'FILE_NOT_ALLOWED'
   | 'RENDER_FAILED'
   | 'SCENE_DIRTY'

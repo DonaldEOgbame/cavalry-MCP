@@ -2,6 +2,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
+import crypto from 'node:crypto';
 import { BridgeRequest, BridgeResponse } from './protocol.js';
 import { CavalryError } from '../mcp/errors.js';
 import { logger } from '../utils/logger.js';
@@ -22,6 +23,11 @@ export class BridgeClient {
   private timeoutMs: number;
   private callbackServer: http.Server | null = null;
   private bridgeInstanceId: string | null = null;
+  private readonly sessionId = crypto.randomUUID();
+  private readonly sessionToken = crypto.randomBytes(32).toString('hex');
+  private readonly ipcRoot = path.join(os.tmpdir(), 'cavalry-mcp');
+  private readonly responseDirectory = path.join(os.tmpdir(), 'cavalry-mcp', this.sessionId);
+  private readonly sessionFile = path.join(os.tmpdir(), 'cavalry-mcp', `session-${this.sessionId}.json`);
   private pendingRequests = new Map<string, {
     resolve: (res: BridgeResponse<any>) => void;
     reject: (err: Error) => void;
@@ -37,6 +43,22 @@ export class BridgeClient {
     this.timeoutMs = config?.timeoutMs || (process.env.CAVALRY_BRIDGE_TIMEOUT_MS ? parseInt(process.env.CAVALRY_BRIDGE_TIMEOUT_MS, 10) : 15000);
   }
 
+  private writeSessionFile(): void {
+    fs.mkdirSync(this.ipcRoot, { recursive: true, mode: 0o700 });
+    fs.mkdirSync(this.responseDirectory, { recursive: true, mode: 0o700 });
+    const temporary = `${this.sessionFile}.${process.pid}.tmp`;
+    fs.writeFileSync(temporary, JSON.stringify({
+      sessionId: this.sessionId,
+      token: this.sessionToken,
+      callbackHost: '127.0.0.1',
+      callbackPort: this.callbackServer ? this.callbackPort : null,
+      responseDirectory: this.responseDirectory,
+      allowRawScript: process.env.CAVALRY_ALLOW_RAW_SCRIPT === 'true' || process.env.CAVALRY_SECURITY_TIER?.toUpperCase() === 'RAW',
+      expiresAt: Date.now() + 24 * 60 * 60 * 1000,
+    }), { encoding: 'utf8', mode: 0o600 });
+    fs.renameSync(temporary, this.sessionFile);
+  }
+
   async startCallbackServer(): Promise<number> {
     if (this.callbackServer) return this.callbackPort;
 
@@ -48,6 +70,11 @@ export class BridgeClient {
           req.on('end', () => {
             try {
               const payload = JSON.parse(body) as BridgeResponse;
+              if (payload.token !== this.sessionToken) {
+                res.writeHead(403, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Invalid bridge session token' }));
+                return;
+              }
               res.writeHead(200, { 'Content-Type': 'application/json' });
               res.end(JSON.stringify({ received: true }));
               this.handleIncomingResponse(payload);
@@ -70,6 +97,7 @@ export class BridgeClient {
             const addr = server.address() as any;
             this.callbackPort = addr.port;
             this.callbackServer = server;
+            this.writeSessionFile();
             resolve(this.callbackPort);
           });
         } else {
@@ -79,6 +107,7 @@ export class BridgeClient {
 
       server.listen(this.callbackPort, '127.0.0.1', () => {
         this.callbackServer = server;
+        this.writeSessionFile();
         logger.info(`Bridge callback receiver listening on 127.0.0.1:${this.callbackPort}`);
         resolve(this.callbackPort);
       });
@@ -90,6 +119,8 @@ export class BridgeClient {
       this.callbackServer.close();
       this.callbackServer = null;
     }
+    try { fs.unlinkSync(this.sessionFile); } catch {}
+    try { fs.rmdirSync(this.responseDirectory); } catch {}
   }
 
   private handleIncomingResponse(response: BridgeResponse) {
@@ -139,7 +170,7 @@ export class BridgeClient {
     params: TParams = {} as TParams,
     overrideTimeoutMs?: number,
   ): Promise<BridgeResponse<TResult>> {
-    const reqId = `req_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+    const reqId = `req_${crypto.randomUUID()}`;
     const timeoutDuration = overrideTimeoutMs || this.timeoutMs;
     const startTime = Date.now();
 
@@ -152,10 +183,14 @@ export class BridgeClient {
       }
     }
 
-    const responseFile = path.join(os.tmpdir(), `cavalry_resp_${reqId}.json`);
+    this.writeSessionFile();
+
+    const responseFile = path.join(this.responseDirectory, `${reqId}.json`);
 
     const requestPayload: BridgeRequest<TParams> = {
       id: reqId,
+      sessionId: this.sessionId,
+      token: this.sessionToken,
       op,
       params,
       callbackUrl: this.callbackServer ? `http://127.0.0.1:${this.callbackPort}/response` : undefined,

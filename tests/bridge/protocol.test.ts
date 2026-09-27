@@ -73,6 +73,12 @@ describe('BridgeClient Protocol & Communication', () => {
       echoOp: 'layer_create',
       params: { layerType: 'textShape', name: 'Title' },
     });
+    const request = receivedRequests.at(-1);
+    assert.match(request.id, /^req_[0-9a-f-]{36}$/i);
+    assert.match(request.sessionId, /^[0-9a-f-]{36}$/i);
+    assert.match(request.token, /^[0-9a-f]{64}$/i);
+    assert.match(request.callbackUrl, /^http:\/\/127\.0\.0\.1:\d+\/response$/);
+    assert.ok(request.responseFile.includes(`/cavalry-mcp/${request.sessionId}/`));
 
     client.stopCallbackServer();
   });

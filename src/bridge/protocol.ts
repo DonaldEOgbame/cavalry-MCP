@@ -9,6 +9,8 @@ export interface AffectedLayer {
 
 export interface BridgeRequest<TParams = Record<string, unknown>> {
   id: string;
+  sessionId: string;
+  token: string;
   op: string;
   params: TParams;
   callbackUrl?: string;
@@ -18,6 +20,7 @@ export interface BridgeRequest<TParams = Record<string, unknown>> {
 
 export interface BridgeResponse<TResult = unknown> {
   id: string;
+  token?: string;
   ok: boolean;
   operation: string;
   result?: TResult;
@@ -41,6 +44,9 @@ export interface BatchRequestParams {
   operations: BatchOperation[];
   stopOnError?: boolean;
   expectedRevision?: number;
+  transactional?: boolean;
+  verify?: boolean;
+  operationTimeoutMs?: number;
 }
 
 export interface BatchStepResult {
@@ -49,6 +55,7 @@ export interface BatchStepResult {
   ok: boolean;
   saveAs?: string;
   result?: unknown;
+  verification?: { verified: boolean; details?: string };
   error?: CavalryErrorDetails;
   durationMs: number;
 }
@@ -58,4 +65,5 @@ export interface BatchResult {
   stepResults: BatchStepResult[];
   symbols: Record<string, unknown>;
   durationMs: number;
+  rolledBack?: boolean;
 }

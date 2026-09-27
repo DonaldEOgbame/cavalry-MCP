@@ -1,6 +1,7 @@
 import { mkdir, readFile, rename, unlink, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { KnowledgeRecord, KnowledgeScope, KnowledgeSourceType } from './types.js';
+import { knowledgeDataPath, knowledgeSeedPath } from '../utils/paths.js';
 
 interface StoreFile {
   schemaVersion: 1;
@@ -13,22 +14,30 @@ const EMPTY: StoreFile = { schemaVersion: 1, updatedAt: new Date(0).toISOString(
 
 export class DocumentKnowledgeStore {
   readonly filePath: string;
+  readonly seedPath?: string;
   private loaded = false;
   private records = new Map<string, KnowledgeRecord>();
+  private seedRecords = new Map<string, KnowledgeRecord>();
 
-  constructor(filePath = process.env.CAVALRY_KNOWLEDGE_DB || resolve(process.cwd(), 'knowledge/generated/knowledge-index.json')) {
-    this.filePath = filePath;
+  constructor(filePath?: string, seedPath?: string) {
+    this.filePath = filePath ? resolve(filePath) : knowledgeDataPath();
+    this.seedPath = seedPath ?? (filePath ? undefined : knowledgeSeedPath());
   }
 
   async load(): Promise<void> {
     if (this.loaded) return;
-    try {
-      const data = JSON.parse(await readFile(this.filePath, 'utf8')) as StoreFile;
+    const loadFile = async (target: string, seed: boolean): Promise<void> => {
+      const data = JSON.parse(await readFile(target, 'utf8')) as StoreFile;
       if (data.schemaVersion !== 1 || !Array.isArray(data.records)) throw new Error('Unsupported knowledge store schema');
-      for (const record of data.records) this.records.set(record.id, record);
-    } catch (error: any) {
-      if (error?.code !== 'ENOENT') throw error;
+      for (const record of data.records) {
+        this.records.set(record.id, record);
+        if (seed) this.seedRecords.set(record.id, record);
+      }
+    };
+    if (this.seedPath && this.seedPath !== this.filePath) {
+      try { await loadFile(this.seedPath, true); } catch (error: any) { if (error?.code !== 'ENOENT') throw error; }
     }
+    try { await loadFile(this.filePath, false); } catch (error: any) { if (error?.code !== 'ENOENT') throw error; }
     this.loaded = true;
   }
 
@@ -84,14 +93,18 @@ export class DocumentKnowledgeStore {
       ...EMPTY,
       embeddingProvider,
       updatedAt: new Date().toISOString(),
-      records: [...this.records.values()].sort((a, b) => a.id.localeCompare(b.id)),
+      // Keep the installed seed immutable. Only user records and overrides are
+      // written to the private user-data store.
+      records: [...this.records.values()]
+        .filter((record) => this.seedRecords.get(record.id)?.provenance.contentHash !== record.provenance.contentHash)
+        .sort((a, b) => a.id.localeCompare(b.id)),
     };
     await writeFile(temporary, `${JSON.stringify(data, null, 2)}\n`, { encoding: 'utf8', mode: 0o600 });
     await rename(temporary, this.filePath);
   }
 
   async clear(): Promise<void> {
-    this.records.clear();
+    this.records = new Map(this.seedRecords);
     this.loaded = true;
     try { await unlink(this.filePath); } catch (error: any) { if (error?.code !== 'ENOENT') throw error; }
   }

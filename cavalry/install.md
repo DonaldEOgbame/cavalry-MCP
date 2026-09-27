@@ -46,6 +46,10 @@ cp cavalry/bridge.js ~/Library/Application\ Support/Cavalry/Scripts/CavalryBridg
    ```
 4. Keep this window open while running AI workflows via Claude Code.
 
+For supervised macOS workflows, set `CAVALRY_WATCHDOG_AUTO_RESTART=true`. The MCP watchdog relaunches Cavalry, activates `Scripts > CavalryBridge`, waits for authenticated bridge health, and restores its checkpoint after a host failure.
+
+On macOS, `npm run bridge:launch` installs the current packaged bridge, opens Cavalry, and activates it. This requires Accessibility permission for the terminal or Codex host that invokes the launcher.
+
 ---
 
 ## 4. Troubleshooting

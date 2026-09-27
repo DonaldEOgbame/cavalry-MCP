@@ -1,7 +1,7 @@
 # Cavalry Model Context Protocol (MCP) Server
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue.svg)](https://www.typescriptlang.org/)
-[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D18.0.0-green.svg)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-7-blue.svg)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20.0.0-green.svg)](https://nodejs.org/)
 [![Cavalry](https://img.shields.io/badge/Cavalry-2.7%2B-purple.svg)](https://cavalry.scenegroup.co/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -37,7 +37,7 @@ limitations. Windows installation is available, but the current certification
 evidence is macOS-only.
 
 See **[SUPPORTED.md](SUPPORTED.md)** for the exact scope and limitations, and
-the [release validation report](docs/release-validation-2026-09-22.md) for the
+the [release validation report](docs/release-validation.md) for the
 underlying live-test evidence. This project reports measured coverage, not a
 claim of universal or maximum practical parity.
 
@@ -59,6 +59,8 @@ Local Cavalry Bridge (Cavalry JavaScript UI Script)
        ▼
 Live Cavalry Scene Graph
 ```
+
+The loopback bridge is an authenticated internal transport. MCP clients should connect through stdio and must not call the bridge endpoint directly.
 
 ### Core Features
 
@@ -82,7 +84,7 @@ Live Cavalry Scene Graph
 ## Requirements
 
 * **macOS** or **Windows**
-* **Node.js** >= 18.0.0
+* **Node.js** >= 20.0.0
 * **Cavalry** >= 2.4.0 (tested on **Cavalry 2.7.2**)
 * *(Optional)* **FFmpeg** on system PATH for compiling MP4 preview videos (fallback uses image sequences).
 
@@ -115,6 +117,8 @@ copy cavalry\bridge.js "%APPDATA%\Cavalry\Scripts\CavalryBridge.js"
 ```
 
 ### 3. Activate the Bridge in Cavalry
+
+On macOS, run `npm run bridge:launch` to install, open Cavalry, and activate the bridge automatically (Accessibility permission is required). For manual activation:
 
 1. Launch **Cavalry**.
 2. Go to the menu bar: **Scripts > CavalryBridge**.
@@ -181,13 +185,18 @@ Configuration can be set via environment variables or a `.env` file in the proje
 | `CAVALRY_BRIDGE_PORT` | `8080` | Port for Cavalry WebServer. |
 | `CAVALRY_CALLBACK_PORT` | `8082` | Port for ultra-low latency MCP receiver. |
 | `CAVALRY_BRIDGE_TIMEOUT_MS` | `15000` | Bridge request timeout (ms). |
+| `CAVALRY_RENDER_TIMEOUT_MS` | `1800000` | Deadline before an unverified background render becomes `FAILED`. |
+| `CAVALRY_TOOL_PROFILE` | `core` | Bounded stdio schema surface; set `full` to explicitly expose all 385 tools. |
 | `CAVALRY_SECURITY_TIER` | `SAFE` | `SAFE`, `EXTENDED`, `RAW`, or `SYSTEM_EXEC`. |
 | `CAVALRY_ALLOW_RAW_SCRIPT` | `false` | Enables `cavalry_raw_script` tool when `true`. |
+| `CAVALRY_DATA_DIR` | platform user-data directory | Writable knowledge and application data; package resources remain read-only. |
 | `CAVALRY_UI_DRIVER` | `false` | Enables optional Command Search, shortcut, and macOS Accessibility tools. |
 | `CAVALRY_WATCHDOG_AUTO_RESTART` | `false` | Allows supervised host recovery to restart Cavalry and relaunch the bridge on macOS. |
 | `CAVALRY_ALLOWED_ROOTS` | `""` | Comma-separated list of approved filesystem paths. |
 | `CAVALRY_PREVIEW_DIR` | `os.tmpdir()/cavalry-previews` | Output directory for rendered frames and contact sheets. |
 | `CAVALRY_LOG_LEVEL` | `info` | `debug`, `info`, `warn`, or `error`. |
+
+Initialize the writable Knowledge Engine overlay deterministically with `npm run knowledge:init`. The packaged 1,701-record public seed remains read-only; project/private additions are written only to the user-data store.
 
 ---
 
@@ -229,7 +238,8 @@ npm run test:integration
 ## Documentation
 
 * [Supported Compatibility and Known Limitations](SUPPORTED.md)
-* [Release Validation Report](docs/release-validation-2026-09-21.md)
+* [Release Validation Report](docs/release-validation.md)
+* [Historical Release Reports](docs/history/)
 * [Architecture Specification](docs/architecture.md)
 * [Cavalry Scripting API Notes & Introspection Reference](docs/cavalry-api-notes.md)
 * [Security & Sandboxing Guide](docs/security.md)

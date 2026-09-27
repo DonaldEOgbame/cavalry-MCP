@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-22T06:27:16.496Z",
-  "method": "Runtime introspection of McpServer._registeredTools after createMcpServer().",
+  "generatedAt": "2026-09-27T12:34:28.908Z",
+  "method": "Canonical runtime tool registry populated by createMcpServer().",
   "count": 385,
   "tools": [
     "app_active_tool",

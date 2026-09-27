@@ -8,6 +8,8 @@ import { KnowledgeIngestor } from './ingestion.js';
 import { CORE_RECIPES } from './recipes.js';
 import { HybridKnowledgeSearch } from './search.js';
 import { DocumentKnowledgeStore } from './store.js';
+import { packagePath } from '../utils/paths.js';
+import { runtimeToolRegistry } from '../mcp/tool-registry.js';
 import {
   FailureKnowledge,
   KnowledgeRecord,
@@ -28,20 +30,15 @@ const COVERAGE_AREAS = [
   'Audio', 'Assets', 'Data', 'Camera', 'Render Manager', 'Components', 'Control Centre', 'JavaScript', 'Third-party plugins',
 ];
 
-const toolNamePattern = /server\.tool\('([^']+)'/g;
-
 async function localMcpOperations(): Promise<string[]> {
-  try {
-    const source = await readFile(resolve(process.cwd(), 'src/mcp/server.ts'), 'utf8');
-    return [...source.matchAll(toolNamePattern)].map((match) => match[1]);
-  } catch { return []; }
+  return runtimeToolRegistry.activeNames();
 }
 
 async function runtimeContext(live = false): Promise<RuntimeKnowledgeContext> {
   const availableOperations = await localMcpOperations();
   if (!live) {
     try {
-      const matrix = JSON.parse(await readFile(resolve(process.cwd(), 'coverage/cavalry-capabilities.json'), 'utf8'));
+      const matrix = JSON.parse(await readFile(packagePath('coverage', 'cavalry-capabilities.json'), 'utf8'));
       return { cavalryVersion: matrix.supportedCavalryVersion, availableOperations };
     } catch { return { availableOperations }; }
   }
@@ -197,6 +194,13 @@ export class CavalryKnowledgeEngine {
     return totals;
   }
 
+  async initialize() {
+    await this.store.load();
+    const recipes = await this.bootstrapRecipes();
+    await this.store.save();
+    return { initialized: true, path: this.store.filePath, seedPath: this.store.seedPath, recipes, status: await this.status() };
+  }
+
   async addFailure(failure: FailureKnowledge, scope: KnowledgeScope = 'project', projectId?: string, cavalryVersion?: string) {
     if (scope === 'project' && !projectId) throw new Error('projectId is required for project-scoped failure memory');
     return this.ingestion.ingestFailure(failure, { scope, projectId, cavalryVersion });
@@ -283,7 +287,7 @@ export class CavalryKnowledgeEngine {
     };
   }
 
-  async refresh(sourceDirectory = resolve(process.cwd(), 'knowledge/sources')) {
+  async refresh(sourceDirectory = packagePath('knowledge', 'sources')) {
     const aggregate = { added: 0, updated: 0, deleted: 0, unchanged: 0, failed: [] as Array<{ source: string; error: string }> };
     if (!existsSync(sourceDirectory)) return aggregate;
     for (const entry of await readdir(sourceDirectory, { withFileTypes: true })) {

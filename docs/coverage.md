@@ -8,7 +8,7 @@ noted as such.
 
 The consolidated release evidence, live-tool accounting, Knowledge Engine
 counts, soak metrics, compatibility results, and remaining limitations are in
-[`release-validation-2026-09-22.md`](release-validation-2026-09-22.md). The
+[`release-validation.md`](release-validation.md). The
 tool-count and helper decision is recorded separately in
 [`tool-ergonomics-audit.md`](tool-ergonomics-audit.md).
 

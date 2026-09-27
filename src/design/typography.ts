@@ -1,12 +1,9 @@
 import { layerCreate, layerBoundingBox } from '../cavalry/layers.js';
 import { attributeSet, attributeSetMany, attributeGet } from '../cavalry/attributes.js';
 import { executeBatch } from '../cavalry/capabilities.js';
-import { execFile } from 'node:child_process';
-import { promisify } from 'node:util';
 import { CavalryError } from '../mcp/errors.js';
 import { identityResolver } from '../utils/ids.js';
-
-const execFileAsync = promisify(execFile);
+import { bridgeClient } from '../bridge/client.js';
 
 export interface TextCreateParams {
   text: string;
@@ -21,6 +18,7 @@ export interface TextCreateParams {
 }
 
 export async function textCreate(params: TextCreateParams) {
+  if (params.fontFamily) await assertFontAvailable(params.fontFamily, params.fontStyle || 'Regular');
   // Give unnamed text layers a stable, searchable name so they can be
   // resolved after save/reopen even when Cavalry does not expose text content
   // through layer identity metadata.
@@ -47,10 +45,17 @@ export async function textCreate(params: TextCreateParams) {
 
   await attributeSetMany(layer.layerId, updates);
   await attributeSet(layer.layerId, 'text', { text: params.text, overrides: [] });
+  const calibration = await layerBoundingBox(layer.layerId, false);
   return {
     ...layer,
     ...updates,
     text: params.text,
+    typographyCalibration: {
+      boundingBox: calibration.boundingBox,
+      alignment: params.alignment ?? 'center',
+      coordinateSpace: 'layer-local',
+      pivotCorrectionApplied: false,
+    },
   };
 }
 
@@ -60,6 +65,7 @@ export async function textSetContent(layerId: string, text: string) {
 }
 
 export async function textSetFont(layerId: string, fontFamily: string, fontStyle: string = 'Regular') {
+  await assertFontAvailable(fontFamily, fontStyle);
   const resolved = identityResolver.resolveToLayerId(layerId);
   return attributeSet(resolved, 'font', { font: fontFamily, style: fontStyle });
 }
@@ -178,26 +184,23 @@ export async function textAnimateWords(layerId: string, startFrame: number, dura
 }
 
 export async function listInstalledFonts(): Promise<string[]> {
-  try {
-    const { stdout } = await execFileAsync('fc-list', [':', 'family']);
-    const lines = stdout.split('\n').map(l => l.trim()).filter(Boolean);
-    const unique = Array.from(new Set(lines)).sort();
-    if (unique.length) return unique;
-  } catch {}
-
-  try {
-    const { stdout } = await execFileAsync('system_profiler', ['SPFontsDataType', '-detailLevel', 'mini']);
-    const matches = stdout.match(/Family:\s*(.+)/g);
-    if (matches) {
-      const families = matches.map(m => m.replace(/Family:\s*/, '').trim());
-      return Array.from(new Set(families)).sort();
-    }
-  } catch {}
-
-  return ['Arial', 'Helvetica', 'Inter', 'Times New Roman', 'Courier New', 'System Font'];
+  const response = await bridgeClient.send<{ fonts: string[] }>('font_list');
+  return response.result?.fonts ?? [];
 }
 
-export async function checkFontExists(fontFamily: string): Promise<boolean> {
-  const fonts = await listInstalledFonts();
-  return fonts.some(f => f.toLowerCase() === fontFamily.toLowerCase());
+export async function checkFontExists(fontFamily: string, fontStyle = 'Regular'): Promise<Record<string, unknown>> {
+  const response = await bridgeClient.send<Record<string, unknown>>('font_check', { fontFamily, fontStyle });
+  return response.result!;
+}
+
+async function assertFontAvailable(fontFamily: string, fontStyle: string): Promise<void> {
+  const result = await checkFontExists(fontFamily, fontStyle);
+  if (!result.available) {
+    throw new CavalryError({
+      code: 'FONT_RESTART_REQUIRED',
+      message: String(result.message),
+      operation: 'text_set_font',
+      suggestion: 'Install the requested font if needed, restart Cavalry, and retry.',
+    });
+  }
 }

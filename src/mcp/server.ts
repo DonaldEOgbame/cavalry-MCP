@@ -2,6 +2,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import * as Schemas from './schemas.js';
 import { CavalryError } from './errors.js';
 import { logger } from '../utils/logger.js';
+import { runtimeToolRegistry } from './tool-registry.js';
 
 // Cavalry modules
 import { getCapabilities, executeBatch, getBridgeInfo } from '../cavalry/capabilities.js';
@@ -37,10 +38,19 @@ import { renderMuxAudio } from '../cavalry/render-mux.js';
 import * as UI from '../ui/driver.js';
 
 export function createMcpServer(): McpServer {
+  runtimeToolRegistry.clear();
   const server = new McpServer({
     name: 'cavalry-mcp',
     version: '1.0.0',
   });
+
+  // Capture the exact runtime registrations in one canonical registry. Tool
+  // inventory, motion planning, and contract tests consume this same data.
+  const registerSdkTool = server.tool.bind(server) as any;
+  (server as any).tool = (name: string, description: string, schema: Record<string, unknown>, handler: unknown) => {
+    runtimeToolRegistry.register(name, description, schema);
+    return registerSdkTool(name, description, schema, handler);
+  };
 
   // Helper to wrap tool execution with structured JSON response & error safety
   function handleTool(operation: string, fn: (args: any) => Promise<unknown>) {
@@ -467,7 +477,7 @@ export function createMcpServer(): McpServer {
   server.tool('timeline_play', 'Start timeline playback in Cavalry', {}, handleTool('timeline_play', async () => Anim.timelinePlay()));
   server.tool('timeline_stop', 'Stop timeline playback in Cavalry', {}, handleTool('timeline_stop', async () => Anim.timelineStop()));
   server.tool('keyframe_list', 'List all frame numbers with keyframes on an attribute', Schemas.AnimationSchemas.keyframes.shape, handleTool('keyframe_list', async (args) => Anim.keyframeList(args.layerId, args.attrPath)));
-  server.tool('keyframe_create', 'Set a keyframe on a layer attribute at a specific frame', Schemas.AnimationSchemas.createKeyframe.shape, handleTool('keyframe_create', async (args) => Anim.keyframeCreate(args.layerId, args.attrPath, args.frame, args.value)));
+  server.tool('keyframe_create', 'Set a verified keyframe; compound colours use r/g/b/a child attributes', Schemas.AnimationSchemas.createKeyframe.shape, handleTool('keyframe_create', async (args) => Anim.keyframeCreate(args.layerId, args.attrPath, args.frame, args.value)));
   server.tool('keyframe_update', 'Modify the value of an existing keyframe', Schemas.AnimationSchemas.updateKeyframe.shape, handleTool('keyframe_update', async (args) => Anim.keyframeUpdate(args.layerId, args.attrPath, args.frame, args.newValue)));
   server.tool('keyframe_move', 'Move a keyframe to a new frame number', Schemas.AnimationSchemas.moveKeyframe.shape, handleTool('keyframe_move', async (args) => Anim.keyframeMove(args.layerId, args.attrPath, args.fromFrame, args.toFrame)));
   server.tool('keyframe_delete', 'Delete a keyframe at a specific frame', Schemas.AnimationSchemas.deleteKeyframe.shape, handleTool('keyframe_delete', async (args) => Anim.keyframeDelete(args.layerId, args.attrPath, args.frame)));
@@ -497,8 +507,8 @@ export function createMcpServer(): McpServer {
   server.tool('text_set_font_size', 'Set font point size on a text layer', Schemas.TypographySchemas.setFontSize.shape, handleTool('text_set_font_size', async (args) => Typo.textSetFontSize(args.layerId, args.fontSize)));
   server.tool('text_animate_characters', 'Build procedural per-character animation with subMesh and stagger', Schemas.TypographySchemas.animateChars.shape, handleTool('text_animate_characters', async (args) => Typo.textAnimateCharacters(args.layerId, args.startFrame, args.duration, args.staggerFrames)));
   server.tool('text_animate_words', 'Build procedural per-word entrance animation', Schemas.TypographySchemas.animateWords.shape, handleTool('text_animate_words', async (args) => Typo.textAnimateWords(args.layerId, args.startFrame, args.duration, args.staggerFrames)));
-  server.tool('font_list', 'Discover installed fonts on the host machine', {}, handleTool('font_list', async () => Typo.listInstalledFonts()));
-  server.tool('font_check', 'Check if a specific font family is installed', Schemas.TypographySchemas.fontCheck.shape, handleTool('font_check', async (args) => Typo.checkFontExists(args.fontFamily)));
+  server.tool('font_list', 'Discover fonts currently loaded by Cavalry', {}, handleTool('font_list', async () => Typo.listInstalledFonts()));
+  server.tool('font_check', 'Check whether a font is loaded by Cavalry and report when a restart is required', Schemas.TypographySchemas.fontCheck.shape, handleTool('font_check', async (args) => Typo.checkFontExists(args.fontFamily, args.fontStyle)));
 
   // ============================================================================
   // PATH & VECTOR GEOMETRY TOOLS
@@ -579,6 +589,26 @@ export function createMcpServer(): McpServer {
   server.tool('design_align', 'Align multiple layers along an axis (left, center, right, top, middle, bottom)', Schemas.DesignSchemas.align.shape, handleTool('design_align', async (args) => Layout.designAlign(args.layerIds, args.alignment)));
   server.tool('design_distribute', 'Distribute layers evenly along X or Y axis with specified spacing', Schemas.DesignSchemas.distribute.shape, handleTool('design_distribute', async (args) => Layout.designDistribute(args.layerIds, args.axis, args.spacing)));
   server.tool('design_create_background', 'Create a background solid shape matching composition resolution', Schemas.DesignSchemas.background.shape, handleTool('design_create_background', async (args) => Layout.designCreateBackground(args.color, args.name)));
+
+  // MCP clients commonly request every schema in one tools/list exchange. The
+  // compact profile keeps stdio startup bounded; set CAVALRY_TOOL_PROFILE=full
+  // when the complete specialist surface is needed.
+  const profile = process.env.CAVALRY_TOOL_PROFILE?.toLowerCase() === 'full' ? 'full' : 'core';
+  if (profile === 'core') {
+    const corePrefixes = [
+      'cavalry_', 'knowledge_', 'motion_plan', 'operation_', 'safe_host_',
+      'events_', 'app_', 'bridge_', 'scene_', 'composition_', 'layer_',
+      'attribute_', 'graph_', 'timeline_', 'keyframe_', 'motion_', 'text_',
+      'font_', 'path_', 'asset_', 'audio_', 'marker_', 'preview_', 'contact_',
+      'render_', 'design_',
+    ];
+    const registered = (server as any)._registeredTools ?? {};
+    for (const name of runtimeToolRegistry.names()) {
+      const active = corePrefixes.some((prefix) => name.startsWith(prefix));
+      runtimeToolRegistry.setActive(name, active);
+      if (!active) registered[name]?.disable?.();
+    }
+  }
 
   return server;
 }

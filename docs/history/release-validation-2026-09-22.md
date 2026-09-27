@@ -1,4 +1,6 @@
-# Cavalry MCP Release Validation — 2026-09-22
+# Historical Cavalry MCP Release Validation — 2026-09-22
+
+This report is archived. The canonical current report is `../release-validation.md`.
 
 ## Release classification
 

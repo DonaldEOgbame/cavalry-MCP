@@ -59,4 +59,8 @@ All file paths passed into MCP tools (including `scene_open`, `scene_save_as`, `
 
 * **Localhost Loopback Only**: The Cavalry bridge listener binds strictly to `127.0.0.1` (port 8080).
 * **No Public Exposure**: The bridge server must never be exposed to public network interfaces.
-* **Correlated Payloads**: Every request uses an ephemeral UUID request ID and timeout cleanup to prevent replay or dangling requests.
+* **Authenticated Sessions**: Every server process creates a 256-bit random token and UUID session record with owner-only permissions. The bridge rejects missing, expired, or mismatched credentials.
+* **Approved Callbacks**: Callback URLs must exactly match the authenticated session's loopback host, assigned port, and `/response` route.
+* **Restricted Response Files**: Response files must exactly match the authenticated request ID beneath that session's dedicated temporary directory; traversal and out-of-root paths are rejected.
+* **Correlated Payloads**: Every request uses `crypto.randomUUID()` and timeout cleanup to prevent replay or dangling requests.
+* **Defence in Depth for Raw Scripts**: The bridge independently checks the authenticated session's raw-script policy, including raw operations nested inside batches.

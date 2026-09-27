@@ -84,10 +84,69 @@
     };
   }
 
-  function getCallbackTarget(callbackUrl) {
-    const match = /^(https?:\/\/[^/]+)(\/.*)?$/.exec(callbackUrl || "");
+  function getCallbackTarget(callbackUrl, session) {
+    const match = /^http:\/\/(127\.0\.0\.1|localhost):(\d{2,5})(\/response)$/.exec(callbackUrl || "");
     if (!match) return null;
-    return { baseUrl: match[1], path: match[2] || "/" };
+    const port = Number(match[2]);
+    if (!session || session.callbackHost !== "127.0.0.1" || port !== session.callbackPort || port < 1024 || port > 65535) return null;
+    return { baseUrl: "http://127.0.0.1:" + port, path: match[3] };
+  }
+
+  function normalisePath(value) {
+    return String(value || "").replace(/\\/g, "/").replace(/\/+$/, "");
+  }
+
+  function loadSession(request) {
+    if (!request || !/^[0-9a-f-]{36}$/i.test(request.sessionId || "") ||
+        !/^req_[0-9a-f-]{36}$/i.test(request.id || "") ||
+        !/^[0-9a-f]{64}$/i.test(request.token || "")) return null;
+    try {
+      const tempRoot = normalisePath(api.getTempFolder()) + "/cavalry-mcp";
+      const sessionPath = tempRoot + "/session-" + request.sessionId + ".json";
+      const session = JSON.parse(api.readFromFile(sessionPath));
+      if (session.sessionId !== request.sessionId || session.token !== request.token ||
+          typeof session.expiresAt !== "number" || session.expiresAt < Date.now()) return null;
+      session.responseDirectory = normalisePath(session.responseDirectory);
+      session.expectedResponseFile = session.responseDirectory + "/" + request.id + ".json";
+      return session;
+    } catch (e) { return null; }
+  }
+
+  function validResponseFile(request, session) {
+    const candidate = normalisePath(request.responseFile);
+    return !!candidate && candidate === session.expectedResponseFile &&
+      candidate.indexOf(session.responseDirectory + "/") === 0 && candidate.indexOf("../") === -1;
+  }
+
+  function valuesEquivalent(actual, expected) {
+    if (typeof expected === "number" && typeof actual === "number") return Math.abs(actual - expected) < 0.000001;
+    if (typeof expected === "string" && /^#[0-9a-f]{6,8}$/i.test(expected) && actual && typeof actual === "object") {
+      const hex = expected.slice(1);
+      const values = [0, 2, 4, 6].filter(function (offset) { return offset < hex.length; }).map(function (offset) { return parseInt(hex.slice(offset, offset + 2), 16) / 255; });
+      const channels = [actual.r, actual.g, actual.b, actual.a === undefined ? 1 : actual.a];
+      return values.every(function (value, index) { return Math.abs(value - channels[index]) < 0.005; });
+    }
+    if (expected && typeof expected === "object" && actual && typeof actual === "object") {
+      for (let key in expected) if (!valuesEquivalent(actual[key], expected[key])) return false;
+      return true;
+    }
+    return actual === expected;
+  }
+
+  function colourChannels(value) {
+    if (typeof value === "string" && /^#[0-9a-f]{6,8}$/i.test(value)) {
+      const hex = value.slice(1);
+      return {
+        r: parseInt(hex.slice(0, 2), 16) / 255,
+        g: parseInt(hex.slice(2, 4), 16) / 255,
+        b: parseInt(hex.slice(4, 6), 16) / 255,
+        a: hex.length === 8 ? parseInt(hex.slice(6, 8), 16) / 255 : 1,
+      };
+    }
+    if (value && typeof value === "object" && value.r !== undefined && value.g !== undefined && value.b !== undefined) {
+      return { r: value.r, g: value.g, b: value.b, a: value.a === undefined ? 1 : value.a };
+    }
+    return null;
   }
 
   // ----------------------------------------------------------------------------
@@ -175,6 +234,22 @@
         listenPort: LISTEN_PORT,
         cavalryVersion: api.getCavalryVersion(),
         systemInfo: api.getSystemInfo ? api.getSystemInfo() : null,
+      };
+    },
+
+    font_list: function () {
+      return { fonts: cavalry.getFontFamilies() || [] };
+    },
+
+    font_check: function (params) {
+      const style = params.fontStyle || "Regular";
+      const available = cavalry.fontExists(params.fontFamily, style);
+      return {
+        fontFamily: params.fontFamily,
+        fontStyle: style,
+        available: available,
+        restartRequired: !available,
+        message: available ? "Font is available in Cavalry." : "Font is installed or requested but not loaded by Cavalry; restart Cavalry after installing it.",
       };
     },
 
@@ -837,6 +912,7 @@
       const after = {};
       for (let k of Object.keys(updates)) {
         try { after[k] = api.get(layerId, k); } catch (e) {}
+        if (!valuesEquivalent(after[k], updates[k])) throw new Error("POSTCONDITION_FAILED: attribute readback mismatch for " + k);
       }
 
       return {
@@ -850,9 +926,15 @@
       const layerId = resolveLayerId(params.layerId);
       api.set(layerId, params.attributes || {});
       api.processEvents();
+      const current = {};
+      for (let key in (params.attributes || {})) {
+        current[key] = api.get(layerId, key);
+        if (!valuesEquivalent(current[key], params.attributes[key])) throw new Error("POSTCONDITION_FAILED: attribute readback mismatch for " + key);
+      }
       return {
         layerId: layerId,
         applied: params.attributes,
+        current: current,
       };
     },
 
@@ -932,9 +1014,18 @@
       const fromId = resolveLayerId(params.sourceLayerId);
       const toId = resolveLayerId(params.targetLayerId);
       api.connect(fromId, params.sourceAttr, toId, params.targetAttr, params.force === true);
+      if (!batchExecution) api.processEvents();
+      const connected = api.getInConnectedAttributes(toId) || [];
+      const verifiedTarget = connected.find(function (attr) { return attr === params.targetAttr || attr.indexOf(params.targetAttr + ".") === 0; });
+      if (!verifiedTarget) {
+        const suffix = params.targetAttr === "masks" ? " Use a composition-sized occluder or animated matte layer for deterministic clipping." : "";
+        throw new Error("POSTCONDITION_FAILED: graph connection was not observable after api.connect()." + suffix);
+      }
       return {
         source: fromId + "." + params.sourceAttr,
-        target: toId + "." + params.targetAttr,
+        target: toId + "." + verifiedTarget,
+        verified: true,
+        maskFallback: params.targetAttr === "masks" ? "occluder_or_animated_matte" : undefined,
       };
     },
 
@@ -1075,9 +1166,24 @@
 
     keyframe_create: function (params) {
       const layerId = resolveLayerId(params.layerId);
+      const channels = colourChannels(params.value);
+      if (channels) {
+        const keyframeIds = {};
+        for (let channel of ["r", "g", "b", "a"]) {
+          const childPath = params.attrPath + "." + channel;
+          const child = {};
+          child[childPath] = channels[channel];
+          keyframeIds[channel] = api.keyframe(layerId, params.frame, child);
+          const childFrames = api.getKeyframeTimes(layerId, childPath) || [];
+          if (childFrames.indexOf(params.frame) === -1) throw new Error("POSTCONDITION_FAILED: colour channel keyframe was not created for " + childPath);
+        }
+        return { layerId: layerId, attrPath: params.attrPath, frame: params.frame, value: channels, keyframeIds: keyframeIds, channelPaths: ["r", "g", "b", "a"].map(function (channel) { return params.attrPath + "." + channel; }) };
+      }
       const kfObj = {};
       kfObj[params.attrPath] = params.value;
       const kfId = api.keyframe(layerId, params.frame, kfObj);
+      const frames = api.getKeyframeTimes(layerId, params.attrPath) || [];
+      if (frames.indexOf(params.frame) === -1) throw new Error("POSTCONDITION_FAILED: keyframe was not created");
       return {
         layerId: layerId,
         attrPath: params.attrPath,
@@ -1721,9 +1827,38 @@
     batch: function (params) {
       const operations = params.operations || [];
       const stopOnError = params.stopOnError !== false;
+      const shouldVerify = params.verify !== false;
+      const transactional = params.transactional !== false;
+      const operationTimeoutMs = params.operationTimeoutMs || 15000;
       const symbols = {};
       const stepResults = [];
       let allOk = true;
+      let rolledBack = false;
+      let checkpoint = null;
+      if (transactional) {
+        try { checkpoint = api.serialise(api.getAllSceneLayers() || [], true); } catch (e) {}
+      }
+
+      function verifyMutation(operation, resolvedParams, result) {
+        if (!shouldVerify) return { verified: true, details: "verification_disabled" };
+        if ((operation === "layer_create" || operation === "layer_create_primitive") && result.layerId && !result.synthetic) {
+          return { verified: !!api.getLayerType(result.layerId), details: "layer_exists" };
+        }
+        if (operation === "attribute_set") {
+          const expected = resolvedParams.attrPath ? (function () { const value = {}; value[resolvedParams.attrPath] = resolvedParams.value; return value; })() : resolvedParams.attributes || {};
+          for (let key in expected) if (!valuesEquivalent(api.get(resolveLayerId(resolvedParams.layerId), key), expected[key])) return { verified: false, details: "attribute_readback_mismatch:" + key };
+          return { verified: true, details: "attribute_readback" };
+        }
+        if (operation === "attribute_set_many") {
+          for (let key in (resolvedParams.attributes || {})) if (!valuesEquivalent(api.get(resolveLayerId(resolvedParams.layerId), key), resolvedParams.attributes[key])) return { verified: false, details: "attribute_readback_mismatch:" + key };
+          return { verified: true, details: "attribute_readback" };
+        }
+        if (operation === "keyframe_create") {
+          const frames = api.getKeyframeTimes(resolveLayerId(resolvedParams.layerId), resolvedParams.attrPath) || [];
+          return { verified: frames.indexOf(resolvedParams.frame) !== -1, details: "keyframe_readback" };
+        }
+        return { verified: true, details: "handler_result" };
+      }
 
       // Cavalry can deadlock while constructing an oscillator in a restored
       // scene. For the canonical symbolic-connection batch, retain the
@@ -1836,6 +1971,10 @@
             opResult = handler(resolvedParams);
           }
 
+          const verification = verifyMutation(opObj.op, resolvedParams, opResult || {});
+          if (!verification.verified) throw new Error("POSTCONDITION_FAILED: " + verification.details);
+          if (Date.now() - opStart > operationTimeoutMs) throw new Error("OPERATION_TIMEOUT: exceeded " + operationTimeoutMs + "ms");
+
           if (opObj.saveAs) {
             // Store layer ID and full object
             symbols[opObj.saveAs] = opResult.layerId || opResult.uuid || opResult;
@@ -1850,6 +1989,7 @@
             ok: true,
             saveAs: opObj.saveAs,
             result: opResult,
+            verification: verification,
             durationMs: Date.now() - opStart,
           });
         } catch (stepErr) {
@@ -1868,10 +2008,23 @@
         }
       } } finally { batchExecution = false; }
 
+      if (!allOk && transactional && checkpoint) {
+        try {
+          const current = api.getAllSceneLayers() || [];
+          for (let layerId of current) api.deleteLayer(layerId);
+          api.deserialise(checkpoint);
+          api.processEvents();
+          rolledBack = true;
+        } catch (e) {
+          stepResults.push({ id: "rollback", op: "scene_restore_checkpoint", ok: false, error: { code: "ROLLBACK_FAILED", message: e.message || String(e) }, durationMs: 0 });
+        }
+      }
+
       return {
         allOk: allOk,
         stepResults: stepResults,
         symbols: symbols,
+        rolledBack: rolledBack,
       };
     },
 
@@ -1906,15 +2059,29 @@
   let statusLabel = null;
   let requestsLabel = null;
 
-  function dispatch(request) {
+  function dispatch(request, session) {
     const startTime = Date.now();
     const op = request.op;
     const params = request.params || {};
     const reqId = request.id || "req_" + Date.now();
 
+    function containsRawScript(operations) {
+      return !!operations && operations.some(function (item) {
+        return item.op === "cavalry_raw_script" || (item.op === "batch" && containsRawScript(item.params && item.params.operations));
+      });
+    }
+    const batchContainsRawScript = op === "batch" && containsRawScript(params.operations);
+    if ((op === "cavalry_raw_script" || batchContainsRawScript) && !session.allowRawScript) {
+      return {
+        id: reqId, token: session.token, ok: false, operation: op, durationMs: Date.now() - startTime,
+        error: { code: "RAW_SCRIPT_DISABLED", message: "Raw Cavalry scripting is disabled for this authenticated session.", operation: op },
+      };
+    }
+
     if (typeof params.expectedRevision === "number" && params.expectedRevision !== sceneRevision) {
       return {
         id: reqId,
+        token: session.token,
         ok: false,
         operation: op,
         durationMs: Date.now() - startTime,
@@ -1931,6 +2098,7 @@
     if (!handler) {
       return {
         id: reqId,
+        token: session.token,
         ok: false,
         operation: op,
         durationMs: Date.now() - startTime,
@@ -1958,6 +2126,7 @@
 
       return {
         id: reqId,
+        token: session.token,
         ok: true,
         operation: op,
         result: resData,
@@ -1968,6 +2137,7 @@
     } catch (err) {
       return {
         id: reqId,
+        token: session.token,
         ok: false,
         operation: op,
         durationMs: Date.now() - startTime,
@@ -2000,13 +2170,18 @@
         continue;
       }
 
-      const response = dispatch(request);
+      const session = loadSession(request);
+      if (!session) {
+        console.log("Cavalry MCP Bridge rejected an unauthenticated request.");
+        continue;
+      }
+      const response = dispatch(request, session);
       const responseJson = JSON.stringify(response);
 
       // 1. Primary: Direct WebClient callback to MCP server receiver
       if (request.callbackUrl) {
         try {
-          const target = getCallbackTarget(request.callbackUrl);
+          const target = getCallbackTarget(request.callbackUrl, session);
           if (target) {
             const client = new api.WebClient(target.baseUrl);
             client.post(target.path, responseJson, "application/json");
@@ -2018,7 +2193,7 @@
       try { webServer.setResultForGet(responseJson); } catch (e) {}
 
       // 3. Tertiary: Write to responseFile IPC if provided
-      if (request.responseFile) {
+      if (validResponseFile(request, session)) {
         try { api.writeToFile(request.responseFile, responseJson, true); } catch (e) {}
       }
     }

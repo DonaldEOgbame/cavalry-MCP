@@ -3,6 +3,7 @@
 import { readFile, readdir } from 'node:fs/promises';
 import { basename, extname, resolve } from 'node:path';
 import { knowledgeEngine } from './engine.js';
+import { packagePath } from '../utils/paths.js';
 import { ComponentKnowledge, FailureKnowledge, MotionRecipe, ScriptKnowledge } from './types.js';
 
 function argument(name: string): string | undefined {
@@ -24,12 +25,13 @@ async function main(): Promise<void> {
   const version = argument('version') ?? '2.7.2';
   let result: unknown;
 
-  if (command === 'bootstrap') result = await knowledgeEngine.bootstrapRecipes();
+  if (command === 'init') result = await knowledgeEngine.initialize();
+  else if (command === 'bootstrap') result = await knowledgeEngine.bootstrapRecipes();
   else if (command === 'ingest-docs') {
     if (!target) throw new Error('ingest-docs requires --path=/absolute/or/relative/directory');
     result = await knowledgeEngine.ingestion.ingestDirectory(target, { sourceType: 'official_docs', verified: true, cavalryVersion: version });
   } else if (command === 'ingest-api') {
-    result = await knowledgeEngine.ingestion.ingestApiFile(target ?? resolve('coverage/cavalry-api-manifest.json'), { cavalryVersion: version });
+    result = await knowledgeEngine.ingestion.ingestApiFile(target ?? packagePath('coverage', 'cavalry-api-manifest.json'), { cavalryVersion: version });
   } else if (command === 'ingest-scenes') {
     if (!target) throw new Error('ingest-scenes requires --path to JSON scene inspections. Raw .cv parsing is deliberately refused.');
     const summaries = [];

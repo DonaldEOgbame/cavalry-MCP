@@ -20,6 +20,9 @@ export const SystemSchemas = {
       saveAs: z.string().optional().describe('Symbol name to save this operation result as (e.g. "$headline")'),
     })).describe('Array of atomic batch operations to execute sequentially in fail-fast mode'),
     stopOnError: z.boolean().optional().default(true).describe('Whether execution should abort on the first failing step'),
+    transactional: z.boolean().optional().default(true).describe('Restore the pre-batch layer snapshot when a step fails, where Cavalry supports it'),
+    verify: z.boolean().optional().default(true).describe('Read back critical mutations and fail steps whose expected state is absent'),
+    operationTimeoutMs: z.number().int().min(100).max(120000).optional().default(15000),
     expectedRevision: z.number().int().nonnegative().optional().describe('Abort with EDIT_CONFLICT if native callbacks observed a newer scene revision'),
   }),
   safeHostOperation: z.object({
@@ -500,6 +503,7 @@ export const TypographySchemas = {
   }),
   fontCheck: z.object({
     fontFamily: z.string().describe('Font family name to verify'),
+    fontStyle: z.string().optional().default('Regular'),
   }),
 };
 

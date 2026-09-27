@@ -53,6 +53,16 @@ export async function keyframeCreate(layerId: string, attrPath: string, frame: n
   return res.result!;
 }
 
+/** Animate a compound colour through Cavalry's reliable r/g/b/a children. */
+export async function keyframeCreateColor(
+  layerId: string,
+  attrPath: string,
+  frame: number,
+  value: string | { r: number; g: number; b: number; a?: number },
+): Promise<Record<string, unknown>> {
+  return keyframeCreate(layerId, attrPath, frame, value);
+}
+
 export async function keyframeUpdate(layerId: string, attrPath: string, frame: number, newValue: unknown): Promise<Record<string, unknown>> {
   const resolved = identityResolver.resolveToLayerId(layerId);
   const res = await bridgeClient.send<Record<string, unknown>>('keyframe_update', { layerId: resolved, attrPath, frame, newValue });
