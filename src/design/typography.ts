@@ -40,7 +40,8 @@ export async function textCreate(params: TextCreateParams) {
     const alignMap = { left: 0, center: 1, right: 2 };
     updates.horizontalAlignment = alignMap[params.alignment] ?? 1;
   }
-  if (params.tracking !== undefined) updates.tracking = params.tracking;
+  // Cavalry 2.7+ exposes typographic tracking as `letterSpacing`.
+  if (params.tracking !== undefined) updates.letterSpacing = params.tracking;
   if (params.lineSpacing !== undefined) updates.lineSpacing = params.lineSpacing;
 
   await attributeSetMany(layer.layerId, updates);

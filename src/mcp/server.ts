@@ -36,6 +36,8 @@ import { executeSupervised, operationRisk } from '../bridge/watchdog.js';
 import * as Safe from '../cavalry/safe-operations.js';
 import { renderMuxAudio } from '../cavalry/render-mux.js';
 import * as UI from '../ui/driver.js';
+import { MotionCompilerSchemas } from '../motion/schemas.js';
+import * as MotionCompiler from '../motion/service.js';
 
 export function createMcpServer(): McpServer {
   runtimeToolRegistry.clear();
@@ -128,6 +130,42 @@ export function createMcpServer(): McpServer {
 
   server.tool('operation_risk_classify', 'Classify a bridge operation as SAFE, CAUTION, or HOST_UNSTABLE before execution', Schemas.SystemSchemas.safeHostOperation.pick({ operation: true }).shape, handleTool('operation_risk_classify', async (args) => ({ operation: args.operation, risk: operationRisk(args.operation) })));
   server.tool('safe_host_operation', 'Checkpoint and supervise a bridge operation, block known host-unstable routes by default, and return structured recovery state', Schemas.SystemSchemas.safeHostOperation.shape, handleTool('safe_host_operation', async (args) => executeSupervised(args.operation, args.params, args)));
+
+  // ============================================================================
+  // MOTION COMPILER — HIGH-LEVEL PRODUCTION SURFACE
+  // ============================================================================
+  server.tool('motion_brief_plan', 'Convert a detailed line-oriented creative brief into one declarative motion-project manifest', MotionCompilerSchemas.briefPlan.shape, handleTool('motion_brief_plan', async (args) => MotionCompiler.planBrief(args)));
+  server.tool('motion_project_create', 'Validate and register a complete declarative motion project without mutating Cavalry', MotionCompilerSchemas.projectCreate.shape, handleTool('motion_project_create', async (args) => MotionCompiler.createProject(args.project)));
+  server.tool('motion_project_compile', 'Compile all dirty scenes into optimized verified Cavalry batches in one high-level call', MotionCompilerSchemas.projectCompile.shape, handleTool('motion_project_compile', async (args) => MotionCompiler.compileProject(args.projectId, args.force, args.dryRun)));
+  server.tool('motion_project_update', 'Replace a project manifest and incrementally compile only changed scenes', MotionCompilerSchemas.projectUpdate.shape, handleTool('motion_project_update', async (args) => MotionCompiler.updateProject(args.projectId, args.project, args.compile, args.dryRun)));
+  server.tool('motion_project_verify', 'Verify compiled hash, dirty state, scene size, timing, and live Cavalry structure', MotionCompilerSchemas.projectVerify.shape, handleTool('motion_project_verify', async (args) => MotionCompiler.verifyProject(args.projectId, args.detailed)));
+  server.tool('motion_project_attach_current', 'Attach a matching declarative manifest to an already compiled active scene for recovery or render resumption', MotionCompilerSchemas.attachCurrent.shape, handleTool('motion_project_attach_current', async (args) => MotionCompiler.attachCurrentProject(args.projectId)));
+  server.tool('motion_scene_build', 'Compile one declarative scene, including layers, typography, visibility, and motion primitives', MotionCompilerSchemas.sceneBuild.shape, handleTool('motion_scene_build', async (args) => MotionCompiler.buildScenes(args.projectId, [args.sceneId], args.dryRun)));
+  server.tool('motion_scene_batch_build', 'Compile a selected group of declarative scenes into internal scene-sized batches', MotionCompilerSchemas.sceneBatchBuild.shape, handleTool('motion_scene_batch_build', async (args) => MotionCompiler.buildScenes(args.projectId, args.sceneIds, args.dryRun)));
+  server.tool('motion_sequence_retime', 'Retime a scene sequence and rebuild affected absolute frame ranges', MotionCompilerSchemas.sequenceRetime.shape, handleTool('motion_sequence_retime', async (args) => MotionCompiler.retimeSequence(args.projectId, args.sceneDurations, args.compile, args.dryRun)));
+  server.tool('typography_system_create', 'Define or update reusable project typography styles once for all scenes', MotionCompilerSchemas.typographySystem.shape, handleTool('typography_system_create', async (args) => MotionCompiler.defineTypographySystem(args.projectId, args.styles, args.compile, args.dryRun)));
+  server.tool('motion_component_define', 'Register a reusable declarative multi-element motion component', MotionCompilerSchemas.componentDefine.shape, handleTool('motion_component_define', async (args) => MotionCompiler.defineComponent(args.projectId, args.component)));
+  server.tool('motion_component_apply', 'Instantiate a reusable component across multiple scenes and compile only those scenes', MotionCompilerSchemas.componentApply.shape, handleTool('motion_component_apply', async (args) => MotionCompiler.applyComponent(args.projectId, args.componentId, args.sceneIds, args.instancePrefix, args.offset, args.compile, args.dryRun)));
+  server.tool('transition_sequence_apply', 'Apply one verified transition primitive to a sequence of scenes and compile incrementally', MotionCompilerSchemas.transitionSequence.shape, handleTool('transition_sequence_apply', async (args) => MotionCompiler.applyTransitionSequence(args.projectId, args.sceneIds, args.primitive, args.edge, args.compile, args.dryRun)));
+  server.tool('scene_timeline_compile', 'Compile the complete scene timeline and all dirty scene manifests', MotionCompilerSchemas.projectCompile.shape, handleTool('scene_timeline_compile', async (args) => MotionCompiler.compileProject(args.projectId, args.force, args.dryRun)));
+  server.tool('motion_project_apply_corrections', 'Apply a structured visual-QC correction manifest as one verified batch and selectively rebuild timing changes', MotionCompilerSchemas.corrections.shape, handleTool('motion_project_apply_corrections', async (args) => MotionCompiler.applyCorrections(args.projectId, args.corrections, args.dryRun)));
+  server.tool('motion_project_render', 'Configure, supervise, and validate an H.264 project or partial-scene render without exposing bridge polling details', MotionCompilerSchemas.render.shape, handleTool('motion_project_render', async (args) => MotionCompiler.renderProject(args)));
+  server.tool('motion_project_metrics', 'Report compiler call counts, bridge operations, batches, timing categories, hashes, and dirty state', MotionCompilerSchemas.metrics.shape, handleTool('motion_project_metrics', async (args) => MotionCompiler.projectMetrics(args.projectId)));
+  server.tool('motion_project_render_review', 'Render representative frames and return actual MCP image content for one-pass visual review', MotionCompilerSchemas.review.shape, async (args: any) => {
+    const started = Date.now();
+    try {
+      const review = await MotionCompiler.reviewProject(args.projectId, args.frames, args.scalePercentage);
+      return {
+        content: [
+          { type: 'text' as const, text: JSON.stringify({ ok: true, operation: 'motion_project_render_review', result: review.metadata, durationMs: Date.now() - started }, null, 2) },
+          ...review.images.map((item) => ({ type: 'image' as const, data: item.data, mimeType: item.mimeType })),
+        ],
+      } as any;
+    } catch (err) {
+      const cavalryErr = CavalryError.fromUnknown(err, 'motion_project_render_review');
+      return { isError: true, content: [{ type: 'text' as const, text: JSON.stringify({ ok: false, operation: 'motion_project_render_review', error: cavalryErr.toJSON(), durationMs: Date.now() - started }, null, 2) }] } as any;
+    }
+  });
 
   // ============================================================================
   // CAVALRY KNOWLEDGE ENGINE
@@ -593,18 +631,28 @@ export function createMcpServer(): McpServer {
   // MCP clients commonly request every schema in one tools/list exchange. The
   // compact profile keeps stdio startup bounded; set CAVALRY_TOOL_PROFILE=full
   // when the complete specialist surface is needed.
-  const profile = process.env.CAVALRY_TOOL_PROFILE?.toLowerCase() === 'full' ? 'full' : 'core';
-  if (profile === 'core') {
-    const corePrefixes = [
-      'cavalry_', 'knowledge_', 'motion_plan', 'operation_', 'safe_host_',
+  const requestedProfile = process.env.CAVALRY_TOOL_PROFILE?.toLowerCase();
+  const profile = requestedProfile === 'full' ? 'full' : requestedProfile === 'standard' ? 'standard' : 'core';
+  if (profile !== 'full') {
+    const productionPrefixes = ['motion_', 'knowledge_'];
+    const productionNames = new Set([
+      'cavalry_ping', 'cavalry_health', 'cavalry_capabilities', 'cavalry_parity_audit', 'cavalry_bridge_info',
+      'operation_risk_classify', 'safe_host_operation', 'events_status',
+      'scene_describe', 'scene_inspect', 'scene_save', 'scene_save_as', 'scene_open',
+      'render_status', 'render_is_active', 'render_wait', 'render_cancel',
+    ]);
+    const standardPrefixes = [
+      ...productionPrefixes, 'cavalry_', 'operation_', 'safe_host_',
       'events_', 'app_', 'bridge_', 'scene_', 'composition_', 'layer_',
-      'attribute_', 'graph_', 'timeline_', 'keyframe_', 'motion_', 'text_',
+      'attribute_', 'graph_', 'timeline_', 'keyframe_', 'text_',
       'font_', 'path_', 'asset_', 'audio_', 'marker_', 'preview_', 'contact_',
       'render_', 'design_',
     ];
     const registered = (server as any)._registeredTools ?? {};
     for (const name of runtimeToolRegistry.names()) {
-      const active = corePrefixes.some((prefix) => name.startsWith(prefix));
+      const active = profile === 'standard'
+        ? standardPrefixes.some((prefix) => name.startsWith(prefix))
+        : productionNames.has(name) || productionPrefixes.some((prefix) => name.startsWith(prefix));
       runtimeToolRegistry.setActive(name, active);
       if (!active) registered[name]?.disable?.();
     }

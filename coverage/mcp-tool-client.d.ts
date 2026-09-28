@@ -218,11 +218,26 @@ export type CavalryToolName =
   "metadata_has" |
   "metadata_set" |
   "motion_bounce" |
+  "motion_brief_plan" |
+  "motion_component_apply" |
+  "motion_component_define" |
   "motion_fade_in" |
   "motion_fade_out" |
   "motion_plan" |
   "motion_pop" |
+  "motion_project_apply_corrections" |
+  "motion_project_attach_current" |
+  "motion_project_compile" |
+  "motion_project_create" |
+  "motion_project_metrics" |
+  "motion_project_render" |
+  "motion_project_render_review" |
+  "motion_project_update" |
+  "motion_project_verify" |
   "motion_scale" |
+  "motion_scene_batch_build" |
+  "motion_scene_build" |
+  "motion_sequence_retime" |
   "motion_slide" |
   "operation_risk_classify" |
   "path_add_contour" |
@@ -328,6 +343,7 @@ export type CavalryToolName =
   "scene_save" |
   "scene_save_as" |
   "scene_snapshot" |
+  "scene_timeline_compile" |
   "shape_centre_pivot" |
   "shape_disable_fill" |
   "shape_disable_stroke" |
@@ -371,6 +387,8 @@ export type CavalryToolName =
   "transform_has_3d" |
   "transform_move" |
   "transform_reset" |
+  "transition_sequence_apply" |
+  "typography_system_create" |
   "ui_driver_status" |
   "viewport_active_tool" |
   "viewport_add" |

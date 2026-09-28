@@ -20,10 +20,23 @@
     "start": "node dist/index.js",
     "dev": "tsx src/index.ts",
     "bridge:launch": "node scripts/launch-bridge.mjs",
+    "doctor": "node scripts/doctor.mjs",
+    "benchmark": "tsx scripts/benchmark.ts",
+    "benchmark:ci": "tsx scripts/benchmark.ts --ci",
+    "benchmark:live": "tsx scripts/live-benchmark.ts",
+    "benchmark:motion": "npm run build && tsx scripts/benchmark-motion-compiler.ts",
+    "benchmark:motion:live": "npm run build && tsx scripts/benchmark-motion-compiler.ts --live",
+    "benchmark:motion:render": "npm run build && tsx scripts/benchmark-motion-compiler.ts --live --render",
+    "benchmark:motion:render:resume": "npm run build && tsx scripts/benchmark-motion-compiler.ts --live --render --resume-render",
+    "stress:tools": "tsx scripts/stress-tools.ts",
+    "stress:scene": "tsx scripts/live-large-scene.ts",
+    "stress:keyframes": "tsx scripts/live-keyframe-stress.ts",
+    "security:live": "tsx scripts/live-security.ts",
+    "font:live": "tsx scripts/live-font-edge-cases.ts",
     "test": "tsx --test tests/unit/*.test.ts tests/bridge/*.test.ts",
     "test:contracts": "tsx --test tests/unit/tool-registry.test.ts tests/bridge/*.test.ts",
     "test:coverage": "node --import tsx --test --experimental-test-coverage --test-coverage-include=src/**/*.ts --test-coverage-lines=15 tests/unit/*.test.ts tests/bridge/*.test.ts",
-    "test:integration": "tsx --test tests/integration/*.test.ts",
+    "test:integration": "CAVALRY_WATCHDOG_AUTO_RESTART=true tsx --test tests/integration/*.test.ts",
     "coverage:api": "node scripts/generate-api-coverage.mjs",
     "coverage:tool-inventory": "tsx scripts/generate-tool-inventory.ts",
     "contracts:generate": "tsx scripts/generate-tool-contracts.ts",
@@ -58,7 +71,11 @@
     "coverage:compatibility": "tsx scripts/live-compatibility-sweep.ts",
     "coverage:live-tool-sweep": "tsx scripts/live-mcp-tool-sweep.ts",
     "coverage:final-ledger": "node scripts/generate-final-tool-ledger.mjs",
+    "generated:check": "node scripts/check-generated.mjs",
+    "docs:check": "node scripts/validate-docs.mjs",
     "package:check": "node scripts/verify-package.mjs",
+    "package:tarball": "node scripts/verify-tarball.mjs",
+    "release:verify": "npm run build && npm test && npm run test:contracts && npm run generated:check && npm run docs:check && npm run benchmark:ci && npm run stress:tools && npm run package:check && npm run package:tarball",
     "prepack": "npm run build && npm test && npm run test:contracts && npm run coverage:tool-inventory && npm run contracts:generate && npm run package:check"
   },
   "dependencies": {
@@ -77,6 +94,7 @@
     "cavalry/bridge.js",
     "cavalry/install.md",
     "scripts/launch-bridge.mjs",
+    "scripts/doctor.mjs",
     "coverage/cavalry-api-manifest.json",
     "coverage/cavalry-capabilities.json",
     "coverage/mcp-tool-inventory.json",
@@ -84,6 +102,7 @@
     "coverage/mcp-tool-client.d.ts",
     "coverage/render-formats.json",
     "knowledge/generated/knowledge-index.json",
+    "knowledge/generated/knowledge-index.json.sha256",
     "knowledge/sources/",
     "docs/*.md",
     "README.md",
@@ -101,7 +120,7 @@
   },
   "keywords": ["cavalry", "mcp", "motion-design", "animation", "model-context-protocol"],
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=20 <21 || >=22 <23 || >=24 <25 || >=26 <27"
   },
   "license": "MIT"
 }

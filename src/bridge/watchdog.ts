@@ -48,7 +48,10 @@ export async function recoverCavalryBridge(): Promise<boolean> {
   } catch {}
   await new Promise(resolve => setTimeout(resolve, 2_000));
   await execFileAsync('/usr/bin/open', ['-a', 'Cavalry']);
-  await new Promise(resolve => setTimeout(resolve, 5_000));
+  // Cavalry restores the bridge script window after a crash/restart. Prefer
+  // that native recovery path before attempting menu automation (Qt menus are
+  // not exposed consistently through macOS System Events).
+  if (await waitForBridge(15_000)) return true;
   try {
     await execFileAsync('/usr/bin/osascript', [
       '-e', 'tell application "Cavalry" to activate',

@@ -1,8 +1,8 @@
 # Cavalry Model Context Protocol (MCP) Server
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-7-blue.svg)](https://www.typescriptlang.org/)
-[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20.0.0-green.svg)](https://nodejs.org/)
-[![Cavalry](https://img.shields.io/badge/Cavalry-2.7%2B-purple.svg)](https://cavalry.scenegroup.co/)
+[![Node.js](https://img.shields.io/badge/Node.js-20%20%7C%2022%20%7C%2024%20%7C%2026-green.svg)](https://nodejs.org/)
+[![Cavalry](https://img.shields.io/badge/Cavalry-2.7.2%20tested-purple.svg)](https://cavalry.scenegroup.co/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 An introspection-driven **Model Context Protocol (MCP)** server designed to let AI agents (such as **Claude Code**) operate [Cavalry](https://cavalry.scenegroup.co/).
@@ -15,11 +15,11 @@ The server also includes a Cavalry-specific Knowledge Engine for provenance-awar
 
 ## Tested Compatibility
 
-Measured on **Cavalry 2.7.2 for macOS** on 22 September 2026:
+Measured on **Cavalry 2.7.2 for macOS** and refreshed on 27 September 2026:
 
 | Validation boundary | Result |
 |---|---:|
-| Registered MCP tools | 385 |
+| Registered MCP tools | 403 (59 in the default production profile) |
 | Concrete node types | 436 |
 | Node attributes | 3,168 |
 | Installed render generators | 14 |
@@ -27,6 +27,8 @@ Measured on **Cavalry 2.7.2 for macOS** on 22 September 2026:
 | Verified real scenes | 75 |
 | Verified Knowledge Engine records | 1,700 of 1,701 |
 | Unclassified callable or node-schema routes (`UNKNOWN`) | 0 |
+| Disposable live acceptance | 22/22 |
+| Large-scene stress | 1,000 layers, 2,000 keyframes, transactional rollback |
 
 Native Camera Guides, native Editable Path morph/keyframe routes, shared-process
 timeline playback, and native HEVC/ProRes audio export remain Cavalry 2.7.2
@@ -46,18 +48,16 @@ claim of universal or maximum practical parity.
 ## Architecture
 
 ```text
-Claude Code (AI Agent)
-       │ (JSON-RPC 2.0 via Stdio)
+MCP-capable AI client
+       │ JSON-RPC 2.0 over stdio
        ▼
-Cavalry MCP Server (TypeScript / Node.js)
-       │
-       │ HTTP POST (127.0.0.1:8080/post)
+High-level motion/project compiler tools
+       │ declarative project and scene manifests
        ▼
-Local Cavalry Bridge (Cavalry JavaScript UI Script)
-       │
-       │ api.* / cavalry.*
+Cavalry MCP Server (typed compilation, batching, verification, QC)
+       │ authenticated loopback HTTP (internal only)
        ▼
-Live Cavalry Scene Graph
+Local Cavalry Bridge → Cavalry API → editable scene graph
 ```
 
 The loopback bridge is an authenticated internal transport. MCP clients should connect through stdio and must not call the bridge endpoint directly.
@@ -73,6 +73,7 @@ The loopback bridge is an authenticated internal transport. MCP clients should c
   * **Recovery**: Risk-classified host supervision with checkpoint, timeout, bridge-health verification, optional Cavalry restart, and checkpoint restoration (`CAVALRY_WATCHDOG_AUTO_RESTART=true`).
 * **Stable UUID Layer Identities**: Dual-indexing (`uuid` ↔ `layerId`) prevents broken references when layers are reordered or scenes are reloaded.
 * **Single Round-Trip Batch Execution**: Fail-fast batch engine with `$symbol` reference resolution across dependent operations.
+* **Declarative Motion Compiler**: Whole projects, scenes, typography systems, reusable components, transitions, corrections, review frames, and renders are expressed through high-level typed tools and compiled into internal batches. See [docs/motion-compiler.md](docs/motion-compiler.md).
 * **Native Event Stream**: Cavalry application callbacks feed subscribed scene, layer, attribute, asset, selection, tool, licence, and preference events into a bounded queue. Polling those events invalidates MCP caches immediately.
 * **Co-edit Conflict Guard**: `events_status` exposes a scene revision. Pass it as `expectedRevision` to `cavalry_batch` to abort with `EDIT_CONFLICT` if a human edited the scene after the operation was planned.
 * **Measured Parity**: `cavalry_parity_audit` reports structured, raw-script, UI-fallback, render-format, and manual-editor coverage from the checked-in `coverage/` databases. Known gaps are reported rather than described as 100% complete.
@@ -84,8 +85,8 @@ The loopback bridge is an authenticated internal transport. MCP clients should c
 ## Requirements
 
 * **macOS** or **Windows**
-* **Node.js** >= 20.0.0
-* **Cavalry** >= 2.4.0 (tested on **Cavalry 2.7.2**)
+* **Node.js** 20, 22, 24, or 26
+* **Cavalry 2.7.2** (newer versions remain compatibility candidates until the live matrix passes)
 * *(Optional)* **FFmpeg** on system PATH for compiling MP4 preview videos (fallback uses image sequences).
 
 ---
@@ -186,7 +187,7 @@ Configuration can be set via environment variables or a `.env` file in the proje
 | `CAVALRY_CALLBACK_PORT` | `8082` | Port for ultra-low latency MCP receiver. |
 | `CAVALRY_BRIDGE_TIMEOUT_MS` | `15000` | Bridge request timeout (ms). |
 | `CAVALRY_RENDER_TIMEOUT_MS` | `1800000` | Deadline before an unverified background render becomes `FAILED`. |
-| `CAVALRY_TOOL_PROFILE` | `core` | Bounded stdio schema surface; set `full` to explicitly expose all 385 tools. |
+| `CAVALRY_TOOL_PROFILE` | `core` | Production compiler/knowledge/health surface (59 tools); use `standard` for broad typed editing or `full` for all 403 tools. |
 | `CAVALRY_SECURITY_TIER` | `SAFE` | `SAFE`, `EXTENDED`, `RAW`, or `SYSTEM_EXEC`. |
 | `CAVALRY_ALLOW_RAW_SCRIPT` | `false` | Enables `cavalry_raw_script` tool when `true`. |
 | `CAVALRY_DATA_DIR` | platform user-data directory | Writable knowledge and application data; package resources remain read-only. |
@@ -197,6 +198,8 @@ Configuration can be set via environment variables or a `.env` file in the proje
 | `CAVALRY_LOG_LEVEL` | `info` | `debug`, `info`, `warn`, or `error`. |
 
 Initialize the writable Knowledge Engine overlay deterministically with `npm run knowledge:init`. The packaged 1,701-record public seed remains read-only; project/private additions are written only to the user-data store.
+
+Run `npm run doctor -- --require-live` for one actionable check of Node, package files, seed integrity, Cavalry/bridge authentication and protocol, temporary paths, fonts, permissions, FFmpeg/FFprobe, and render availability.
 
 ---
 
@@ -219,6 +222,16 @@ Run unit and bridge tests:
 ```bash
 npm test
 ```
+
+Run the external stdio production benchmark (55 scenes, 3,120 frames, 2,095
+keyframes) in deterministic dry-run mode:
+
+```bash
+npm run benchmark:motion
+```
+
+Use `npm run benchmark:motion:live` for live compile/verification/QC/correction
+and `npm run benchmark:motion:render` for the full H.264 acceptance boundary.
 
 Regenerate the installed Cavalry API manifest (all four shipped metadata catalogs):
 

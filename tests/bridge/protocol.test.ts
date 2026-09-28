@@ -2,6 +2,7 @@ import { describe, it, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import http from 'node:http';
 import { BridgeClient } from '../../src/bridge/client.js';
+import { BRIDGE_PROTOCOL_VERSION } from '../../src/bridge/protocol.js';
 
 describe('BridgeClient Protocol & Communication', () => {
   let mockCavalryServer: http.Server;
@@ -19,6 +20,9 @@ describe('BridgeClient Protocol & Communication', () => {
 
           const responseData = {
             id: parsed.id,
+            token: parsed.token,
+            protocolVersion: BRIDGE_PROTOCOL_VERSION,
+            bridgeCapabilities: ['protocol-negotiation'],
             ok: true,
             operation: parsed.op,
             result: { echoOp: parsed.op, params: parsed.params },
@@ -80,7 +84,7 @@ describe('BridgeClient Protocol & Communication', () => {
     assert.match(request.callbackUrl, /^http:\/\/127\.0\.0\.1:\d+\/response$/);
     assert.ok(request.responseFile.includes(`/cavalry-mcp/${request.sessionId}/`));
 
-    client.stopCallbackServer();
+    await client.stopCallbackServer();
   });
 
   it('rejects with BRIDGE_TIMEOUT when bridge fails to respond in time', async () => {
@@ -96,6 +100,44 @@ describe('BridgeClient Protocol & Communication', () => {
       (err: any) => err.code === 'BRIDGE_OFFLINE' || err.code === 'BRIDGE_TIMEOUT',
     );
 
-    deadClient.stopCallbackServer();
+    await deadClient.stopCallbackServer();
+  });
+
+  it('isolates concurrent clients with unique sessions, tokens, callbacks, and response directories', async () => {
+    const first = new BridgeClient({ host: '127.0.0.1', port: mockPort, callbackPort: 8998 });
+    const second = new BridgeClient({ host: '127.0.0.1', port: mockPort, callbackPort: 8996 });
+    await Promise.all([first.send('first'), second.send('second')]);
+    const [a, b] = receivedRequests.slice(-2);
+    assert.notEqual(a.sessionId, b.sessionId);
+    assert.notEqual(a.token, b.token);
+    assert.notEqual(a.callbackUrl, b.callbackUrl);
+    assert.notEqual(a.responseFile.split('/').slice(0, -1).join('/'), b.responseFile.split('/').slice(0, -1).join('/'));
+    await Promise.all([first.stopCallbackServer(), second.stopCallbackServer()]);
+  });
+
+  it('rejects forged callback tokens', async () => {
+    const client = new BridgeClient({ host: '127.0.0.1', port: mockPort, callbackPort: 8998 });
+    await client.send('auth_probe');
+    const request = receivedRequests.at(-1);
+    const response = await fetch(request.callbackUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: request.id, token: '0'.repeat(64), protocolVersion: BRIDGE_PROTOCOL_VERSION, ok: true, operation: 'auth_probe', durationMs: 0 }),
+    });
+    assert.equal(response.status, 403);
+    await client.stopCallbackServer();
+  });
+
+  it('cancels a request and cleans the session without waiting for the host timeout', async () => {
+    const hanging = http.createServer((_req, _res) => {});
+    await new Promise<void>((resolve) => hanging.listen(8995, '127.0.0.1', resolve));
+    const client = new BridgeClient({ host: '127.0.0.1', port: 8995, callbackPort: 8994, timeoutMs: 30_000 });
+    const controller = new AbortController();
+    const request = client.send('slow_op', {}, { signal: controller.signal });
+    controller.abort();
+    await assert.rejects(request, (error: any) => error.code === 'OPERATION_CANCELLED');
+    await client.stopCallbackServer();
+    hanging.closeAllConnections();
+    await new Promise<void>((resolve) => hanging.close(() => resolve()));
   });
 });

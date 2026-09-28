@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-22T06:27:16.864Z",
+  "generatedAt": "2026-09-28T05:59:07.890Z",
   "cavalryVersion": "2.7.2",
   "sources": {
     "metadataFiles": [
@@ -14,7 +14,7 @@
     "mcpServer": "/Users/macbook/Documents/GitHub/calvary-MCP/src/mcp/server.ts"
   },
   "counts": {
-    "mcpTools": 385,
+    "mcpTools": 403,
     "callableApiMethodsUniqueByName": 358,
     "callableApiMethodsQualified": 359,
     "apiProperties": 9,
@@ -28,8 +28,8 @@
     "unknown": 0
   },
   "apiBreakdown": {
-    "STRUCTURED": 182,
-    "RAW_SCRIPT": 131,
+    "STRUCTURED": 185,
+    "RAW_SCRIPT": 128,
     "CONTEXT_ONLY": 27,
     "SCRIPT_UI_BRIDGE": 4,
     "SCRIPT_UI": 31
@@ -1445,8 +1445,8 @@
       "namespace": "@JS_GUI_API",
       "kind": "function",
       "callable": true,
-      "coverage": "RAW_SCRIPT",
-      "usedByBridge": false,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
       "availability": "Script UI global api",
       "description": "Returns an absolute, canonical path string (resolving relative paths ../../)."
     },
@@ -2479,8 +2479,8 @@
       "namespace": "@JS_GUI_API",
       "kind": "function",
       "callable": true,
-      "coverage": "RAW_SCRIPT",
-      "usedByBridge": false,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
       "availability": "Script UI global api",
       "description": "Returns the path to the system's temporary files directory."
     },
@@ -3216,8 +3216,8 @@
       "namespace": "@JS_GUI_API",
       "kind": "function",
       "callable": true,
-      "coverage": "RAW_SCRIPT",
-      "usedByBridge": false,
+      "coverage": "STRUCTURED",
+      "usedByBridge": true,
       "availability": "Script UI global api",
       "description": "Reads and returns the content of a specified file."
     },
@@ -3976,7 +3976,7 @@
       "kind": "function",
       "callable": true,
       "coverage": "RAW_SCRIPT",
-      "usedByBridge": false,
+      "usedByBridge": true,
       "availability": "JavaScript Layer/expression global cavalry",
       "description": "Checks if a font with the given family and style exists."
     },
@@ -3987,7 +3987,7 @@
       "kind": "function",
       "callable": true,
       "coverage": "RAW_SCRIPT",
-      "usedByBridge": false,
+      "usedByBridge": true,
       "availability": "JavaScript Layer/expression global cavalry",
       "description": "Retrieves a list of available font families."
     },

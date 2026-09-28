@@ -1,16 +1,27 @@
 import { mkdir, readFile, rename, unlink, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
+import { createHash } from 'node:crypto';
 import { KnowledgeRecord, KnowledgeScope, KnowledgeSourceType } from './types.js';
 import { knowledgeDataPath, knowledgeSeedPath } from '../utils/paths.js';
 
 interface StoreFile {
-  schemaVersion: 1;
+  schemaVersion: 2;
+  storeKind: 'seed' | 'overlay';
   embeddingProvider?: string;
   updatedAt: string;
   records: KnowledgeRecord[];
 }
 
-const EMPTY: StoreFile = { schemaVersion: 1, updatedAt: new Date(0).toISOString(), records: [] };
+interface LegacyStoreFile extends Omit<StoreFile, 'schemaVersion' | 'storeKind'> { schemaVersion: 1 }
+
+export const KNOWLEDGE_SCHEMA_VERSION = 2;
+const EMPTY: StoreFile = { schemaVersion: KNOWLEDGE_SCHEMA_VERSION, storeKind: 'overlay', updatedAt: new Date(0).toISOString(), records: [] };
+
+function migrateStore(data: StoreFile | LegacyStoreFile): StoreFile {
+  if (data.schemaVersion === 1) return { ...data, schemaVersion: 2, storeKind: 'overlay' };
+  if (data.schemaVersion === 2) return data;
+  throw new Error(`Unsupported knowledge store schema ${(data as any).schemaVersion}`);
+}
 
 export class DocumentKnowledgeStore {
   readonly filePath: string;
@@ -18,6 +29,8 @@ export class DocumentKnowledgeStore {
   private loaded = false;
   private records = new Map<string, KnowledgeRecord>();
   private seedRecords = new Map<string, KnowledgeRecord>();
+  readonly loadWarnings: string[] = [];
+  seedIntegrity: { verified: boolean; checksum?: string } = { verified: false };
 
   constructor(filePath?: string, seedPath?: string) {
     this.filePath = filePath ? resolve(filePath) : knowledgeDataPath();
@@ -27,8 +40,20 @@ export class DocumentKnowledgeStore {
   async load(): Promise<void> {
     if (this.loaded) return;
     const loadFile = async (target: string, seed: boolean): Promise<void> => {
-      const data = JSON.parse(await readFile(target, 'utf8')) as StoreFile;
-      if (data.schemaVersion !== 1 || !Array.isArray(data.records)) throw new Error('Unsupported knowledge store schema');
+      const bytes = await readFile(target);
+      if (seed) {
+        try {
+          const expected = (await readFile(`${target}.sha256`, 'utf8')).trim().split(/\s+/)[0]?.toLowerCase();
+          const actual = createHash('sha256').update(bytes).digest('hex');
+          if (!expected || !/^[0-9a-f]{64}$/.test(expected) || expected !== actual) throw new Error(`Knowledge seed checksum mismatch for ${target}`);
+          this.seedIntegrity = { verified: true, checksum: actual };
+        } catch (error: any) {
+          if (error?.code !== 'ENOENT') throw error;
+          this.loadWarnings.push(`No checksum sidecar found for knowledge seed ${target}`);
+        }
+      }
+      const data = migrateStore(JSON.parse(bytes.toString('utf8')) as StoreFile | LegacyStoreFile);
+      if (!Array.isArray(data.records)) throw new Error('Knowledge store records must be an array');
       for (const record of data.records) {
         this.records.set(record.id, record);
         if (seed) this.seedRecords.set(record.id, record);
@@ -37,7 +62,15 @@ export class DocumentKnowledgeStore {
     if (this.seedPath && this.seedPath !== this.filePath) {
       try { await loadFile(this.seedPath, true); } catch (error: any) { if (error?.code !== 'ENOENT') throw error; }
     }
-    try { await loadFile(this.filePath, false); } catch (error: any) { if (error?.code !== 'ENOENT') throw error; }
+    try {
+      await loadFile(this.filePath, false);
+    } catch (error: any) {
+      if (error?.code !== 'ENOENT') {
+        const backup = `${this.filePath}.corrupt-${Date.now()}`;
+        await rename(this.filePath, backup);
+        this.loadWarnings.push(`Recovered from an unreadable knowledge overlay; preserved it at ${backup}`);
+      }
+    }
     this.loaded = true;
   }
 
@@ -91,6 +124,7 @@ export class DocumentKnowledgeStore {
     const temporary = `${this.filePath}.${process.pid}.tmp`;
     const data: StoreFile = {
       ...EMPTY,
+      storeKind: 'overlay',
       embeddingProvider,
       updatedAt: new Date().toISOString(),
       // Keep the installed seed immutable. Only user records and overrides are

@@ -5,8 +5,12 @@ import { permissions } from '../mcp/permissions.js';
 
 export interface CapabilitiesResult {
   bridgeVersion: string;
+  protocolVersion: number;
+  bridgeCapabilities: string[];
   bridgeInstanceId?: string;
   cavalryVersion: string;
+  minimumSupportedCavalryVersion: string;
+  cavalryVersionSupported: boolean;
   layerTypesCount: number;
   supportedLayerTypes: Array<{ name: string; type: string }>;
   supportsUUID: boolean;
@@ -45,7 +49,14 @@ export async function executeBatch(params: BatchRequestParams): Promise<BatchRes
       durationMs: 0,
     } as unknown as BatchResult;
   }
-  const res = await bridgeClient.send<BatchResult>('batch', params);
+  // A batch's native work is sequential, so its transport envelope must grow
+  // with the number of verified steps instead of inheriting the single-call
+  // 15s timeout. Keep a hard five-minute ceiling for host responsiveness.
+  const timeoutMs = Math.max(
+    15_000,
+    Math.min(300_000, (params.operationTimeoutMs ?? 15_000) + ops.length * 500),
+  );
+  const res = await bridgeClient.send<BatchResult>('batch', params, timeoutMs);
   return res.result!;
 }
 

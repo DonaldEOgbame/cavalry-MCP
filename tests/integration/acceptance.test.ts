@@ -40,7 +40,12 @@ describe('Cavalry Acceptance Tests Suite', () => {
     }
   });
 
-  after(() => bridgeClient.stopCallbackServer());
+  after(async () => {
+    if (isCavalryOnline) {
+      try { await Scene.sceneNew(true); } catch {}
+    }
+    await bridgeClient.stopCallbackServer();
+  });
 
   function runLiveTest(name: string, fn: (context?: any) => Promise<void>) {
     it(name, async (t) => {
@@ -511,10 +516,30 @@ describe('Cavalry Acceptance Tests Suite', () => {
     // 6. Preview frame
     const preview = await Preview.previewFrame(35, 50);
     assert.ok(fs.existsSync(preview.filePath));
+    const firstRender = fs.readFileSync(preview.filePath);
+    assert.ok(firstRender.length > 1024);
+    assert.deepEqual([...firstRender.subarray(0, 8)], [137, 80, 78, 71, 13, 10, 26, 10]);
 
-    // 7. Save editable scene file
+    // 7. Save, reopen, resolve by stable identity, and make a production edit.
     const saveFile = path.join(os.tmpdir(), 'autonomous_cavalry_final.cv');
     await Scene.sceneSaveAs(saveFile);
     assert.ok(fs.existsSync(saveFile));
+    await Scene.sceneNew(true);
+    await Scene.sceneOpen(saveFile, true);
+    const reopenedSubtitle = (await bridgeClient.send<any>('layer_find', { pattern: 'Subtitle' })).result?.layers[0]?.layerId;
+    assert.ok(reopenedSubtitle);
+    await Typo.textSetContent(reopenedSubtitle, 'Production MCP Operator');
+    await Attr.attributeSet(reopenedSubtitle, 'position.y', 90);
+    await Scene.sceneSave();
+
+    // 8. Render the modified scene and verify the output is a non-empty PNG
+    // whose bytes differ from the pre-edit render.
+    const finalPreview = await Preview.previewFrame(35, 50);
+    const finalRender = fs.readFileSync(finalPreview.filePath);
+    assert.ok(finalRender.length > 1024);
+    assert.notEqual(Buffer.compare(firstRender, finalRender), 0);
+    fs.unlinkSync(saveFile);
+    fs.unlinkSync(preview.filePath);
+    if (finalPreview.filePath !== preview.filePath) fs.unlinkSync(finalPreview.filePath);
   });
 });

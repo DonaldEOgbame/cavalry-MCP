@@ -28,6 +28,7 @@ Spawns a mock HTTP receiver simulating Cavalry's `api.WebServer` on `127.0.0.1:8
 * Validates request encoding and unique request ID assignment.
 * Tests the tri-modal response mechanism (WebClient callback, `/get` polling, and response file IPC).
 * Tests timeout rejection (`BRIDGE_TIMEOUT`) when the bridge is unresponsive.
+* Verifies protocol-v2 negotiation, forged callback rejection, concurrent-session isolation, cancellation, and graceful cleanup.
 
 Run bridge tests:
 ```bash
@@ -73,4 +74,22 @@ npm run test:integration
 | **TEST 19 — BATCH SYMBOL REFERENCES** | Create $A, $B, connect, mutate in 1 round trip | Executes atomic `cavalry_batch` with `$symbol` substitution. |
 | **TEST 20 — ERROR SAFETY** | Test invalid paths and permissions | Verifies clean structured errors for disabled raw scripting and forbidden paths. |
 | **TEST 21 — THIRD-PARTY LAYER** | Discover, instantiate, mutate, and render a plugin filter | Discovers any `sceneGroup::*` bundled plugin filter via generic `layer_types` (no hardcoded plugin name), creates it with `layer_create`, mutates a plugin-declared attribute via generic `attribute_set`/`attribute_get`, wires it into a target layer's `filters` array via `graph_connect`, and asserts the rendered frame actually changes. Marks `SKIPPED` only if no plugin-style layer is installed at all. |
-| **TEST 22 — END-TO-END MOTION GRAPHIC** | Complete autonomous project workflow | Constructs comp, background, kinetic text, subtitle, markers, renders preview, saves project. |
+| **TEST 22 — END-TO-END MOTION GRAPHIC** | Complete autonomous project workflow | Constructs, animates, saves, reopens, modifies, saves again, renders, verifies PNG structure/size, and proves the post-edit pixels changed. |
+
+## Release and stress gates
+
+```bash
+npm run doctor -- --require-live
+npm run security:live
+npm run font:live
+npm run stress:tools
+npm run stress:scene
+npm run stress:keyframes
+npm run benchmark:ci
+npm run benchmark:live
+npm run generated:check
+npm run docs:check
+npm run package:tarball
+```
+
+`stress:scene` defaults to 1,000 layers and a forced transactional failure. If a host interruption occurs after the construction target is reached, rerun with `CAVALRY_LARGE_SCENE_RESUME=true` to execute the rollback/readback phase against the current disposable stress scene.

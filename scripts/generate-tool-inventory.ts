@@ -10,7 +10,6 @@ const definitions = runtimeToolRegistry.snapshot();
 const tools = definitions.map((definition) => definition.name);
 const report = {
   schemaVersion: 1,
-  generatedAt: new Date().toISOString(),
   method: 'Canonical runtime tool registry populated by createMcpServer().',
   count: tools.length,
   tools,

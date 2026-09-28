@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, readdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { CavalryKnowledgeEngine } from '../../src/knowledge/engine.js';
@@ -30,6 +30,38 @@ const radialScene = {
 };
 
 describe('Cavalry Knowledge Engine acceptance foundation', () => {
+  it('migrates schema v1 overlays deterministically to schema v2', async () => {
+    const directory = await mkdtemp(join(tmpdir(), 'cavalry-knowledge-migration-'));
+    const file = join(directory, 'index.json');
+    await writeFile(file, JSON.stringify({ schemaVersion: 1, updatedAt: '2020-01-01T00:00:00.000Z', records: [] }));
+    const store = new DocumentKnowledgeStore(file);
+    await store.load();
+    await store.save();
+    const migrated = JSON.parse(await readFile(file, 'utf8'));
+    assert.equal(migrated.schemaVersion, 2);
+    assert.equal(migrated.storeKind, 'overlay');
+  });
+
+  it('quarantines a corrupted writable overlay without losing its bytes', async () => {
+    const directory = await mkdtemp(join(tmpdir(), 'cavalry-knowledge-corrupt-'));
+    const file = join(directory, 'index.json');
+    await writeFile(file, '{ definitely not json');
+    const store = new DocumentKnowledgeStore(file);
+    assert.deepEqual(await store.all(), []);
+    const names = await readdir(directory);
+    assert.ok(names.some((name) => name.startsWith('index.json.corrupt-')));
+    assert.match(store.loadWarnings[0], /preserved it/);
+  });
+
+  it('rejects a corrupted bundled seed when its checksum does not match', async () => {
+    const directory = await mkdtemp(join(tmpdir(), 'cavalry-knowledge-integrity-'));
+    const seed = join(directory, 'seed.json');
+    await writeFile(seed, JSON.stringify({ schemaVersion: 1, updatedAt: '2020-01-01T00:00:00.000Z', records: [] }));
+    await writeFile(`${seed}.sha256`, `${'0'.repeat(64)}  seed.json\n`);
+    const store = new DocumentKnowledgeStore(join(directory, 'overlay.json'), seed);
+    await assert.rejects(() => store.load(), /checksum mismatch/);
+  });
+
   it('chunks Markdown on semantic headings without splitting fenced code', () => {
     const sections = parseMarkdownSemantically('# Duplicator\nIntro\n## Create\n```js\napi.create("duplicator")\n```\n## Connect\nUse shapes.', 'fallback');
     assert.equal(sections.length, 3);

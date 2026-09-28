@@ -6,6 +6,8 @@
 
 (function () {
   const BRIDGE_VERSION = "1.0.0";
+  const PROTOCOL_VERSION = 2;
+  const BRIDGE_CAPABILITIES = ["authenticated-sessions", "callback-v1", "response-file-v1", "protocol-negotiation", "transactional-batch"];
   const BRIDGE_INSTANCE_ID = "bridge_" + Date.now() + "_" + Math.random().toString(36).slice(2);
   const LISTEN_HOST = "127.0.0.1";
   const LISTEN_PORT = 8080;
@@ -16,6 +18,7 @@
   let appState = "unknown";
   let sceneRevision = 0;
   let batchExecution = false;
+  const seenRequestIds = {};
 
   function emitEvent(eventName, details) {
     if (eventName === "scene.changed" || eventName === "composition.changed" || eventName === "attribute.changed" || eventName === "attribute.connected" || eventName === "attribute.disconnected" || eventName.startsWith("layer.") || eventName.startsWith("asset.")) {
@@ -99,7 +102,8 @@
   function loadSession(request) {
     if (!request || !/^[0-9a-f-]{36}$/i.test(request.sessionId || "") ||
         !/^req_[0-9a-f-]{36}$/i.test(request.id || "") ||
-        !/^[0-9a-f]{64}$/i.test(request.token || "")) return null;
+        !/^[0-9a-f]{64}$/i.test(request.token || "") ||
+        typeof request.timestamp !== "number" || Math.abs(Date.now() - request.timestamp) > 5 * 60 * 1000) return null;
     try {
       const tempRoot = normalisePath(api.getTempFolder()) + "/cavalry-mcp";
       const sessionPath = tempRoot + "/session-" + request.sessionId + ".json";
@@ -114,17 +118,26 @@
 
   function validResponseFile(request, session) {
     const candidate = normalisePath(request.responseFile);
-    return !!candidate && candidate === session.expectedResponseFile &&
-      candidate.indexOf(session.responseDirectory + "/") === 0 && candidate.indexOf("../") === -1;
+    if (!candidate || candidate !== session.expectedResponseFile ||
+        candidate.indexOf(session.responseDirectory + "/") !== 0 || candidate.indexOf("../") !== -1) return false;
+    try {
+      const canonicalCandidate = normalisePath(api.getAbsolutePath(candidate));
+      const canonicalExpected = normalisePath(api.getAbsolutePath(session.expectedResponseFile));
+      const canonicalDirectory = normalisePath(api.getAbsolutePath(session.responseDirectory));
+      return canonicalCandidate === canonicalExpected && canonicalCandidate.indexOf(canonicalDirectory + "/") === 0;
+    } catch (e) { return false; }
   }
 
   function valuesEquivalent(actual, expected) {
     if (typeof expected === "number" && typeof actual === "number") return Math.abs(actual - expected) < 0.000001;
     if (typeof expected === "string" && /^#[0-9a-f]{6,8}$/i.test(expected) && actual && typeof actual === "object") {
       const hex = expected.slice(1);
-      const values = [0, 2, 4, 6].filter(function (offset) { return offset < hex.length; }).map(function (offset) { return parseInt(hex.slice(offset, offset + 2), 16) / 255; });
-      const channels = [actual.r, actual.g, actual.b, actual.a === undefined ? 1 : actual.a];
-      return values.every(function (value, index) { return Math.abs(value - channels[index]) < 0.005; });
+      const byteValues = [0, 2, 4, 6].filter(function (offset) { return offset < hex.length; }).map(function (offset) { return parseInt(hex.slice(offset, offset + 2), 16); });
+      const actualUsesBytes = Math.max(actual.r || 0, actual.g || 0, actual.b || 0, actual.a || 0) > 1;
+      const values = actualUsesBytes ? byteValues : byteValues.map(function (value) { return value / 255; });
+      const defaultAlpha = actualUsesBytes ? 255 : 1;
+      const channels = [actual.r, actual.g, actual.b, actual.a === undefined ? defaultAlpha : actual.a];
+      return values.every(function (value, index) { return Math.abs(value - channels[index]) < (actualUsesBytes ? 0.5 : 0.005); });
     }
     if (expected && typeof expected === "object" && actual && typeof actual === "object") {
       for (let key in expected) if (!valuesEquivalent(actual[key], expected[key])) return false;
@@ -149,6 +162,32 @@
     return null;
   }
 
+  function animationAttrPath(layerId, attrPath) {
+    if (attrPath !== "rotation") return attrPath;
+    try {
+      const definition = api.getEffectiveAttributeDefinition(layerId, attrPath);
+      if (definition && (definition.type === "double3" || definition.type === "double2")) return attrPath + ".z";
+    } catch (e) {}
+    return attrPath;
+  }
+
+  function frameExists(frames, expected) {
+    return (frames || []).some(function (frame) { return typeof frame === "number" && Math.abs(frame - expected) < 0.000001; });
+  }
+
+  function isSupportedCavalryVersion() {
+    try {
+      const current = String(api.getCavalryVersion()).match(/\d+/g) || [];
+      const minimum = [2, 7, 2];
+      for (let index = 0; index < minimum.length; index++) {
+        const part = Number(current[index] || 0);
+        if (part > minimum[index]) return true;
+        if (part < minimum[index]) return false;
+      }
+      return true;
+    } catch (e) { return false; }
+  }
+
   // ----------------------------------------------------------------------------
   // Modular Handlers
   // ----------------------------------------------------------------------------
@@ -160,6 +199,8 @@
       return {
         pong: true,
         bridgeVersion: BRIDGE_VERSION,
+        protocolVersion: PROTOCOL_VERSION,
+        bridgeCapabilities: BRIDGE_CAPABILITIES,
         bridgeInstanceId: BRIDGE_INSTANCE_ID,
         timestamp: Date.now(),
       };
@@ -179,8 +220,12 @@
       return {
         online: true,
         bridgeVersion: BRIDGE_VERSION,
+        protocolVersion: PROTOCOL_VERSION,
+        bridgeCapabilities: BRIDGE_CAPABILITIES,
         bridgeInstanceId: BRIDGE_INSTANCE_ID,
         cavalryVersion: cavalryVersion,
+        minimumSupportedCavalryVersion: "2.7.2",
+        cavalryVersionSupported: isSupportedCavalryVersion(),
         activeComp: activeComp,
         activeScenePath: api.getSceneFilePath() || "",
         unsavedChanges: api.sceneHasUnsavedChanges(),
@@ -200,6 +245,8 @@
 
       return {
         bridgeVersion: BRIDGE_VERSION,
+        protocolVersion: PROTOCOL_VERSION,
+        bridgeCapabilities: BRIDGE_CAPABILITIES,
         bridgeInstanceId: BRIDGE_INSTANCE_ID,
         cavalryVersion: cavalryVersion,
         layerTypesCount: layerTypes.length,
@@ -229,6 +276,8 @@
     cavalry_bridge_info: function (params) {
       return {
         bridgeVersion: BRIDGE_VERSION,
+        protocolVersion: PROTOCOL_VERSION,
+        bridgeCapabilities: BRIDGE_CAPABILITIES,
         bridgeInstanceId: BRIDGE_INSTANCE_ID,
         listenHost: LISTEN_HOST,
         listenPort: LISTEN_PORT,
@@ -244,12 +293,20 @@
     font_check: function (params) {
       const style = params.fontStyle || "Regular";
       const available = cavalry.fontExists(params.fontFamily, style);
+      const families = cavalry.getFontFamilies() || [];
+      const requested = String(params.fontFamily || "").toLowerCase();
+      const familyMatches = families.filter(function (family) { return String(family).toLowerCase() === requested; });
+      const familyAvailable = familyMatches.length > 0;
       return {
         fontFamily: params.fontFamily,
         fontStyle: style,
         available: available,
         restartRequired: !available,
-        message: available ? "Font is available in Cavalry." : "Font is installed or requested but not loaded by Cavalry; restart Cavalry after installing it.",
+        familyAvailable: familyAvailable,
+        duplicateFamilyEntries: familyMatches.length,
+        variableFontRequested: /variable/i.test(style),
+        reason: available ? "available" : familyAvailable ? "weight_style_or_postscript_name_unavailable" : "family_not_loaded",
+        message: available ? "Font is available in Cavalry." : familyAvailable ? "The font family is loaded, but this weight/style or PostScript name is unavailable. Check the exact style name and restart Cavalry if the font was installed while it was running." : "The font family is not loaded by Cavalry. Install it if needed, then restart Cavalry and retry.",
       };
     },
 
@@ -925,7 +982,7 @@
     attribute_set_many: function (params) {
       const layerId = resolveLayerId(params.layerId);
       api.set(layerId, params.attributes || {});
-      api.processEvents();
+      if (!batchExecution) api.processEvents();
       const current = {};
       for (let key in (params.attributes || {})) {
         current[key] = api.get(layerId, key);
@@ -1156,10 +1213,12 @@
 
     keyframe_list: function (params) {
       const layerId = resolveLayerId(params.layerId);
-      const times = api.getKeyframeTimes(layerId, params.attrPath) || [];
+      const attrPath = animationAttrPath(layerId, params.attrPath);
+      const times = api.getKeyframeTimes(layerId, attrPath) || [];
       return {
         layerId: layerId,
-        attrPath: params.attrPath,
+        attrPath: attrPath,
+        requestedAttrPath: params.attrPath,
         keyframes: times,
       };
     },
@@ -1175,75 +1234,135 @@
           child[childPath] = channels[channel];
           keyframeIds[channel] = api.keyframe(layerId, params.frame, child);
           const childFrames = api.getKeyframeTimes(layerId, childPath) || [];
-          if (childFrames.indexOf(params.frame) === -1) throw new Error("POSTCONDITION_FAILED: colour channel keyframe was not created for " + childPath);
+          if (!frameExists(childFrames, params.frame)) throw new Error("POSTCONDITION_FAILED: colour channel keyframe was not created for " + childPath);
         }
         return { layerId: layerId, attrPath: params.attrPath, frame: params.frame, value: channels, keyframeIds: keyframeIds, channelPaths: ["r", "g", "b", "a"].map(function (channel) { return params.attrPath + "." + channel; }) };
       }
+      const attrPath = animationAttrPath(layerId, params.attrPath);
       const kfObj = {};
-      kfObj[params.attrPath] = params.value;
+      kfObj[attrPath] = params.value;
       const kfId = api.keyframe(layerId, params.frame, kfObj);
-      const frames = api.getKeyframeTimes(layerId, params.attrPath) || [];
-      if (frames.indexOf(params.frame) === -1) throw new Error("POSTCONDITION_FAILED: keyframe was not created");
+      const frames = api.getKeyframeTimes(layerId, attrPath) || [];
+      if (!frameExists(frames, params.frame)) throw new Error("POSTCONDITION_FAILED: keyframe was not created for " + attrPath);
       return {
         layerId: layerId,
-        attrPath: params.attrPath,
+        attrPath: attrPath,
+        requestedAttrPath: params.attrPath,
         frame: params.frame,
         value: params.value,
         keyframeId: kfId,
       };
     },
 
+    // Compiler-only timeline primitive. It collapses thousands of individual
+    // handler/readback cycles into one host pass, then verifies each distinct
+    // layer/attribute timeline once. It is intentionally not exposed as a
+    // low-level MCP tool; declarative motion tools generate this operation.
+    timeline_compile_bulk: function (params) {
+      const keyframes = params.keyframes || [];
+      const easings = params.easings || [];
+      const interpolations = params.interpolations || [];
+      const expected = {};
+      const grouped = {};
+      for (let item of keyframes) {
+        const layerId = resolveLayerId(item.layerId);
+        const channels = colourChannels(item.value);
+        const groupKey = layerId + "\u0000" + item.frame;
+        if (!grouped[groupKey]) grouped[groupKey] = { layerId: layerId, frame: item.frame, values: {} };
+        if (channels) {
+          for (let channel of ["r", "g", "b", "a"]) {
+            const childPath = item.attrPath + "." + channel;
+            grouped[groupKey].values[childPath] = channels[channel];
+            const key = layerId + "\u0000" + childPath;
+            if (!expected[key]) expected[key] = [];
+            expected[key].push(item.frame);
+          }
+        } else {
+          const attrPath = animationAttrPath(layerId, item.attrPath);
+          grouped[groupKey].values[attrPath] = item.value;
+          const key = layerId + "\u0000" + attrPath;
+          if (!expected[key]) expected[key] = [];
+          expected[key].push(item.frame);
+        }
+      }
+      for (let groupKey of Object.keys(grouped)) {
+        const group = grouped[groupKey];
+        api.keyframe(group.layerId, group.frame, group.values);
+      }
+      for (let key of Object.keys(expected)) {
+        const separator = key.indexOf("\u0000");
+        const layerId = key.slice(0, separator);
+        const attrPath = key.slice(separator + 1);
+        const actual = api.getKeyframeTimes(layerId, attrPath) || [];
+        for (let frame of expected[key]) if (!frameExists(actual, frame)) throw new Error("POSTCONDITION_FAILED: bulk keyframe missing for " + layerId + "." + attrPath + " at " + frame);
+      }
+      for (let item of easings) api.magicEasing(resolveLayerId(item.layerId), animationAttrPath(resolveLayerId(item.layerId), item.attrPath), item.frame, item.easingType);
+      for (let item of interpolations) {
+        const layerId = resolveLayerId(item.layerId);
+        const attrPath = animationAttrPath(layerId, item.attrPath);
+        const value = {}; value[attrPath] = { frame: item.frame, type: item.type };
+        api.modifyKeyframe(layerId, value);
+      }
+      return { keyframesCreated: keyframes.length, nativeKeyframeCalls: Object.keys(grouped).length, easingsApplied: easings.length, interpolationsApplied: interpolations.length, timelinesVerified: Object.keys(expected).length };
+    },
+
     keyframe_update: function (params) {
       const layerId = resolveLayerId(params.layerId);
+      const attrPath = animationAttrPath(layerId, params.attrPath);
       const modObj = {};
-      modObj[params.attrPath] = {
+      modObj[attrPath] = {
         frame: params.frame,
         newValue: params.newValue,
       };
       api.modifyKeyframe(layerId, modObj);
-      return { layerId: layerId, attrPath: params.attrPath, frame: params.frame, newValue: params.newValue };
+      return { layerId: layerId, attrPath: attrPath, requestedAttrPath: params.attrPath, frame: params.frame, newValue: params.newValue };
     },
 
     keyframe_move: function (params) {
       const layerId = resolveLayerId(params.layerId);
+      const attrPath = animationAttrPath(layerId, params.attrPath);
       const modObj = {};
-      modObj[params.attrPath] = {
+      modObj[attrPath] = {
         frame: params.fromFrame,
         newFrame: params.toFrame,
       };
       api.modifyKeyframe(layerId, modObj);
-      return { layerId: layerId, attrPath: params.attrPath, fromFrame: params.fromFrame, toFrame: params.toFrame };
+      return { layerId: layerId, attrPath: attrPath, requestedAttrPath: params.attrPath, fromFrame: params.fromFrame, toFrame: params.toFrame };
     },
 
     keyframe_delete: function (params) {
       const layerId = resolveLayerId(params.layerId);
-      api.deleteKeyframe(layerId, params.attrPath, params.frame);
-      return { layerId: layerId, attrPath: params.attrPath, frame: params.frame };
+      const attrPath = animationAttrPath(layerId, params.attrPath);
+      api.deleteKeyframe(layerId, attrPath, params.frame);
+      return { layerId: layerId, attrPath: attrPath, requestedAttrPath: params.attrPath, frame: params.frame };
     },
 
     keyframe_delete_animation: function (params) {
       const layerId = resolveLayerId(params.layerId);
-      const times = api.getKeyframeTimes(layerId, params.attrPath) || [];
+      const attrPath = animationAttrPath(layerId, params.attrPath);
+      const times = api.getKeyframeTimes(layerId, attrPath) || [];
       for (let t of times) {
-        api.deleteKeyframe(layerId, params.attrPath, t);
+        api.deleteKeyframe(layerId, attrPath, t);
       }
-      return { layerId: layerId, attrPath: params.attrPath, deletedCount: times.length };
+      return { layerId: layerId, attrPath: attrPath, requestedAttrPath: params.attrPath, deletedCount: times.length };
     },
 
     keyframe_set_interpolation: function (params) {
       const layerId = resolveLayerId(params.layerId);
+      const attrPath = animationAttrPath(layerId, params.attrPath);
       // type: 0 Bezier, 1 Linear, 2 Step
       const modObj = {};
-      modObj[params.attrPath] = {
+      modObj[attrPath] = {
         frame: params.frame,
         type: params.type,
       };
       api.modifyKeyframe(layerId, modObj);
-      return { layerId: layerId, attrPath: params.attrPath, frame: params.frame, type: params.type };
+      return { layerId: layerId, attrPath: attrPath, requestedAttrPath: params.attrPath, frame: params.frame, type: params.type };
     },
 
     keyframe_set_tangents: function (params) {
       const layerId = resolveLayerId(params.layerId);
+      const attrPath = animationAttrPath(layerId, params.attrPath);
       const tanOpts = {
         frame: params.frame,
       };
@@ -1257,18 +1376,20 @@
       if (params.yValue !== undefined) tanOpts.yValue = params.yValue;
 
       const tanDict = {};
-      tanDict[params.attrPath] = tanOpts;
+      tanDict[attrPath] = tanOpts;
       api.modifyKeyframeTangent(layerId, tanDict);
 
       return {
         layerId: layerId,
-        attrPath: params.attrPath,
+        attrPath: attrPath,
+        requestedAttrPath: params.attrPath,
         tangents: tanOpts,
       };
     },
 
     keyframe_set_velocity: function (params) {
       const layerId = resolveLayerId(params.layerId);
+      const attrPath = animationAttrPath(layerId, params.attrPath);
       const velOpts = {
         frame: params.frame,
       };
@@ -1278,30 +1399,34 @@
       if (params.rightInfluence !== undefined) velOpts.rightInfluence = params.rightInfluence;
 
       const velDict = {};
-      velDict[params.attrPath] = velOpts;
+      velDict[attrPath] = velOpts;
       api.setKeyframeVelocity(layerId, velDict);
 
       return {
         layerId: layerId,
-        attrPath: params.attrPath,
+        attrPath: attrPath,
+        requestedAttrPath: params.attrPath,
         velocity: velOpts,
       };
     },
 
     keyframe_clear_velocity: function (params) {
       const layerId = resolveLayerId(params.layerId);
+      const attrPath = animationAttrPath(layerId, params.attrPath);
       const clearDict = {};
-      clearDict[params.attrPath] = { frame: params.frame };
+      clearDict[attrPath] = { frame: params.frame };
       api.clearKeyframeVelocity(layerId, clearDict);
-      return { layerId: layerId, attrPath: params.attrPath, frame: params.frame };
+      return { layerId: layerId, attrPath: attrPath, requestedAttrPath: params.attrPath, frame: params.frame };
     },
 
     keyframe_magic_easing: function (params) {
       const layerId = resolveLayerId(params.layerId);
-      api.magicEasing(layerId, params.attrPath, params.frame, params.easingType);
+      const attrPath = animationAttrPath(layerId, params.attrPath);
+      api.magicEasing(layerId, attrPath, params.frame, params.easingType);
       return {
         layerId: layerId,
-        attrPath: params.attrPath,
+        attrPath: attrPath,
+        requestedAttrPath: params.attrPath,
         frame: params.frame,
         easingType: params.easingType,
       };
@@ -1854,6 +1979,13 @@
           return { verified: true, details: "attribute_readback" };
         }
         if (operation === "keyframe_create") {
+          if (result && Array.isArray(result.channelPaths)) {
+            for (let channelPath of result.channelPaths) {
+              const channelFrames = api.getKeyframeTimes(resolveLayerId(resolvedParams.layerId), channelPath) || [];
+              if (channelFrames.indexOf(resolvedParams.frame) === -1) return { verified: false, details: "colour_keyframe_readback_mismatch:" + channelPath };
+            }
+            return { verified: true, details: "colour_keyframe_readback" };
+          }
           const frames = api.getKeyframeTimes(resolveLayerId(resolvedParams.layerId), resolvedParams.attrPath) || [];
           return { verified: frames.indexOf(resolvedParams.frame) !== -1, details: "keyframe_readback" };
         }
@@ -2008,6 +2140,11 @@
         }
       } } finally { batchExecution = false; }
 
+      // Flush once for the complete batch. Individual setters still perform
+      // immediate readback against Cavalry's in-memory graph, but avoiding a
+      // full event-loop drain after every layer is critical for large scenes.
+      try { api.processEvents(); } catch (e) {}
+
       if (!allOk && transactional && checkpoint) {
         try {
           const current = api.getAllSceneLayers() || [];
@@ -2065,6 +2202,22 @@
     const params = request.params || {};
     const reqId = request.id || "req_" + Date.now();
 
+    if (request.protocolVersion !== PROTOCOL_VERSION) {
+      return {
+        id: reqId, token: session.token, protocolVersion: PROTOCOL_VERSION, bridgeCapabilities: BRIDGE_CAPABILITIES,
+        ok: false, operation: op, durationMs: Date.now() - startTime,
+        error: { code: "BRIDGE_PROTOCOL_MISMATCH", message: "Unsupported bridge protocol " + request.protocolVersion + "; expected " + PROTOCOL_VERSION + ".", operation: op, suggestion: "Install matching cavalry-mcp client and bridge versions." },
+      };
+    }
+
+    if (!["cavalry_ping", "cavalry_health", "cavalry_capabilities", "cavalry_bridge_info"].includes(op) && !isSupportedCavalryVersion()) {
+      return {
+        id: reqId, token: session.token, protocolVersion: PROTOCOL_VERSION, bridgeCapabilities: BRIDGE_CAPABILITIES,
+        ok: false, operation: op, durationMs: Date.now() - startTime,
+        error: { code: "UNSUPPORTED_CAVALRY_VERSION", message: "This bridge requires Cavalry 2.7.2 or newer; detected " + api.getCavalryVersion() + ".", operation: op, suggestion: "Upgrade Cavalry or install a cavalry-mcp release compatible with this host version." },
+      };
+    }
+
     function containsRawScript(operations) {
       return !!operations && operations.some(function (item) {
         return item.op === "cavalry_raw_script" || (item.op === "batch" && containsRawScript(item.params && item.params.operations));
@@ -2073,7 +2226,7 @@
     const batchContainsRawScript = op === "batch" && containsRawScript(params.operations);
     if ((op === "cavalry_raw_script" || batchContainsRawScript) && !session.allowRawScript) {
       return {
-        id: reqId, token: session.token, ok: false, operation: op, durationMs: Date.now() - startTime,
+        id: reqId, token: session.token, protocolVersion: PROTOCOL_VERSION, bridgeCapabilities: BRIDGE_CAPABILITIES, ok: false, operation: op, durationMs: Date.now() - startTime,
         error: { code: "RAW_SCRIPT_DISABLED", message: "Raw Cavalry scripting is disabled for this authenticated session.", operation: op },
       };
     }
@@ -2082,6 +2235,8 @@
       return {
         id: reqId,
         token: session.token,
+        protocolVersion: PROTOCOL_VERSION,
+        bridgeCapabilities: BRIDGE_CAPABILITIES,
         ok: false,
         operation: op,
         durationMs: Date.now() - startTime,
@@ -2099,6 +2254,8 @@
       return {
         id: reqId,
         token: session.token,
+        protocolVersion: PROTOCOL_VERSION,
+        bridgeCapabilities: BRIDGE_CAPABILITIES,
         ok: false,
         operation: op,
         durationMs: Date.now() - startTime,
@@ -2127,6 +2284,8 @@
       return {
         id: reqId,
         token: session.token,
+        protocolVersion: PROTOCOL_VERSION,
+        bridgeCapabilities: BRIDGE_CAPABILITIES,
         ok: true,
         operation: op,
         result: resData,
@@ -2138,6 +2297,8 @@
       return {
         id: reqId,
         token: session.token,
+        protocolVersion: PROTOCOL_VERSION,
+        bridgeCapabilities: BRIDGE_CAPABILITIES,
         ok: false,
         operation: op,
         durationMs: Date.now() - startTime,
@@ -2175,7 +2336,22 @@
         console.log("Cavalry MCP Bridge rejected an unauthenticated request.");
         continue;
       }
-      const response = dispatch(request, session);
+      const replayKey = request.sessionId + ":" + request.id;
+      let response;
+      if (seenRequestIds[replayKey]) {
+        response = {
+          id: request.id, token: session.token, protocolVersion: PROTOCOL_VERSION, bridgeCapabilities: BRIDGE_CAPABILITIES,
+          ok: false, operation: request.op, durationMs: 0,
+          error: { code: "REPLAYED_REQUEST", message: "This authenticated request id has already been processed.", operation: request.op, suggestion: "Generate a new UUID request id before retrying." },
+        };
+      } else {
+        seenRequestIds[replayKey] = Date.now();
+        response = dispatch(request, session);
+      }
+      if (Object.keys(seenRequestIds).length > 10000) {
+        const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+        for (let key of Object.keys(seenRequestIds)) if (seenRequestIds[key] < cutoff) delete seenRequestIds[key];
+      }
       const responseJson = JSON.stringify(response);
 
       // 1. Primary: Direct WebClient callback to MCP server receiver

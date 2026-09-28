@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 import crypto from 'node:crypto';
-import { BridgeRequest, BridgeResponse } from './protocol.js';
+import { BRIDGE_PROTOCOL_VERSION, BridgeRequest, BridgeResponse } from './protocol.js';
 import { CavalryError } from '../mcp/errors.js';
 import { logger } from '../utils/logger.js';
 import { identityResolver } from '../utils/ids.js';
@@ -14,6 +14,11 @@ export interface BridgeClientConfig {
   port?: number;
   callbackPort?: number;
   timeoutMs?: number;
+}
+
+export interface BridgeSendOptions {
+  timeoutMs?: number;
+  signal?: AbortSignal;
 }
 
 export class BridgeClient {
@@ -32,6 +37,7 @@ export class BridgeClient {
     resolve: (res: BridgeResponse<any>) => void;
     reject: (err: Error) => void;
     timer: NodeJS.Timeout;
+    controller: AbortController;
     startTime: number;
     op: string;
   }>();
@@ -42,6 +48,8 @@ export class BridgeClient {
     this.callbackPort = config?.callbackPort || (process.env.CAVALRY_CALLBACK_PORT ? parseInt(process.env.CAVALRY_CALLBACK_PORT, 10) : 8082);
     this.timeoutMs = config?.timeoutMs || (process.env.CAVALRY_BRIDGE_TIMEOUT_MS ? parseInt(process.env.CAVALRY_BRIDGE_TIMEOUT_MS, 10) : 15000);
   }
+
+  get sessionIdentifier(): string { return this.sessionId; }
 
   private writeSessionFile(): void {
     fs.mkdirSync(this.ipcRoot, { recursive: true, mode: 0o700 });
@@ -114,13 +122,19 @@ export class BridgeClient {
     });
   }
 
-  stopCallbackServer() {
-    if (this.callbackServer) {
-      this.callbackServer.close();
-      this.callbackServer = null;
+  async stopCallbackServer(): Promise<void> {
+    const shutdownError = new CavalryError({ code: 'OPERATION_CANCELLED', message: 'Bridge client session closed.', suggestion: 'Retry the operation in a new MCP session.' });
+    for (const pending of this.pendingRequests.values()) {
+      clearTimeout(pending.timer);
+      pending.controller.abort();
+      pending.reject(shutdownError);
     }
+    this.pendingRequests.clear();
+    const server = this.callbackServer;
+    this.callbackServer = null;
+    if (server) await new Promise<void>((resolve) => server.close(() => resolve()));
     try { fs.unlinkSync(this.sessionFile); } catch {}
-    try { fs.rmdirSync(this.responseDirectory); } catch {}
+    try { fs.rmSync(this.responseDirectory, { recursive: true, force: true }); } catch {}
   }
 
   private handleIncomingResponse(response: BridgeResponse) {
@@ -129,6 +143,26 @@ export class BridgeClient {
 
     clearTimeout(pending.timer);
     this.pendingRequests.delete(response.id);
+
+    if (response.token !== this.sessionToken) {
+      pending.reject(new CavalryError({
+        code: 'BRIDGE_AUTH_FAILED',
+        message: 'Bridge response did not authenticate to this MCP session.',
+        operation: pending.op,
+        suggestion: 'Restart the MCP server and reinstall the matching Cavalry bridge if this persists.',
+      }));
+      return;
+    }
+
+    if (response.protocolVersion !== BRIDGE_PROTOCOL_VERSION) {
+      pending.reject(new CavalryError({
+        code: 'BRIDGE_PROTOCOL_MISMATCH',
+        message: `Bridge protocol mismatch: client requires v${BRIDGE_PROTOCOL_VERSION}, bridge returned ${response.protocolVersion ?? 'no version'}.`,
+        operation: pending.op,
+        suggestion: 'Reinstall cavalry/bridge.js from the same cavalry-mcp package version and restart Cavalry.',
+      }));
+      return;
+    }
 
     const result = response.result as { bridgeInstanceId?: string } | undefined;
     if (result?.bridgeInstanceId && result.bridgeInstanceId !== this.bridgeInstanceId) {
@@ -168,11 +202,13 @@ export class BridgeClient {
   async send<TResult = unknown, TParams = any>(
     op: string,
     params: TParams = {} as TParams,
-    overrideTimeoutMs?: number,
+    overrideTimeoutOrOptions?: number | BridgeSendOptions,
   ): Promise<BridgeResponse<TResult>> {
     const reqId = `req_${crypto.randomUUID()}`;
-    const timeoutDuration = overrideTimeoutMs || this.timeoutMs;
+    const options = typeof overrideTimeoutOrOptions === 'number' ? { timeoutMs: overrideTimeoutOrOptions } : (overrideTimeoutOrOptions ?? {});
+    const timeoutDuration = options.timeoutMs || this.timeoutMs;
     const startTime = Date.now();
+    if (options.signal?.aborted) throw new CavalryError({ code: 'OPERATION_CANCELLED', message: `Bridge operation '${op}' was cancelled before dispatch.`, operation: op });
 
     // Ensure local callback server is active
     if (!this.callbackServer) {
@@ -183,11 +219,16 @@ export class BridgeClient {
       }
     }
 
+    if (options.signal?.aborted) throw new CavalryError({ code: 'OPERATION_CANCELLED', message: `Bridge operation '${op}' was cancelled before dispatch.`, operation: op });
+
     this.writeSessionFile();
 
     const responseFile = path.join(this.responseDirectory, `${reqId}.json`);
+    fs.writeFileSync(responseFile, '', { encoding: 'utf8', mode: 0o600, flag: 'wx' });
 
     const requestPayload: BridgeRequest<TParams> = {
+      protocolVersion: BRIDGE_PROTOCOL_VERSION,
+      clientCapabilities: ['authenticated-sessions', 'callback-v1', 'response-file-v1', 'request-cancellation', 'transactional-batch'],
       id: reqId,
       sessionId: this.sessionId,
       token: this.sessionToken,
@@ -199,9 +240,21 @@ export class BridgeClient {
     };
 
     return new Promise<BridgeResponse<TResult>>((resolve, reject) => {
+      const controller = new AbortController();
+      const abort = () => {
+        const pending = this.pendingRequests.get(reqId);
+        if (!pending) return;
+        clearTimeout(pending.timer);
+        pending.controller.abort();
+        this.pendingRequests.delete(reqId);
+        try { if (fs.existsSync(responseFile)) fs.unlinkSync(responseFile); } catch {}
+        reject(new CavalryError({ code: 'OPERATION_CANCELLED', message: `Bridge operation '${op}' was cancelled.`, operation: op, suggestion: 'The host may finish an already-dispatched native call; refresh scene state before retrying.' }));
+      };
+      options.signal?.addEventListener('abort', abort, { once: true });
       // Set overall request timeout
       const timer = setTimeout(async () => {
         this.pendingRequests.delete(reqId);
+        controller.abort();
         metadataCache.clear();
         identityResolver.invalidate();
         // Clean up responseFile if left behind
@@ -219,16 +272,19 @@ export class BridgeClient {
 
       this.pendingRequests.set(reqId, {
         resolve: (res) => {
+          options.signal?.removeEventListener('abort', abort);
           try { if (fs.existsSync(responseFile)) fs.unlinkSync(responseFile); } catch {}
           logger.debug(`Operation '${op}' completed`, { requestId: reqId, durationMs: Date.now() - startTime, success: true });
           resolve(res);
         },
         reject: (err) => {
+          options.signal?.removeEventListener('abort', abort);
           try { if (fs.existsSync(responseFile)) fs.unlinkSync(responseFile); } catch {}
           logger.error(`Operation '${op}' failed`, err, { requestId: reqId, durationMs: Date.now() - startTime, success: false });
           reject(err);
         },
         timer,
+        controller,
         startTime,
         op,
       });
@@ -238,6 +294,7 @@ export class BridgeClient {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestPayload),
+        signal: controller.signal,
       }).then(async (postRes) => {
         if (!postRes.ok) {
           throw new Error(`Cavalry WebServer returned HTTP status ${postRes.status}`);
@@ -258,6 +315,7 @@ export class BridgeClient {
         // Start fallback poller for GET /get and file check
         this.startFallbackPoller(reqId, responseFile, startTime);
       }).catch((postErr) => {
+        if (!this.pendingRequests.has(reqId)) return;
         clearTimeout(timer);
         this.pendingRequests.delete(reqId);
         try { if (fs.existsSync(responseFile)) fs.unlinkSync(responseFile); } catch {}

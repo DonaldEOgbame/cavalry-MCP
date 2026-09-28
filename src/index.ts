@@ -5,6 +5,7 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { createMcpServer } from './mcp/server.js';
 import { logger } from './utils/logger.js';
 import { bridgeClient } from './bridge/client.js';
+import { shutdownRenderTracking } from './cavalry/rendering.js';
 
 async function main() {
   logger.info('Initializing Cavalry MCP Server...');
@@ -13,14 +14,18 @@ async function main() {
   const transport = new StdioServerTransport();
 
   // Cleanup on process termination
-  const cleanup = () => {
+  let shuttingDown = false;
+  const cleanup = async () => {
+    if (shuttingDown) return;
+    shuttingDown = true;
     logger.info('Shutting down Cavalry MCP Server...');
-    bridgeClient.stopCallbackServer();
+    await shutdownRenderTracking();
+    await bridgeClient.stopCallbackServer();
     process.exit(0);
   };
 
-  process.on('SIGINT', cleanup);
-  process.on('SIGTERM', cleanup);
+  process.on('SIGINT', () => { void cleanup(); });
+  process.on('SIGTERM', () => { void cleanup(); });
 
   await server.connect(transport);
   logger.info('Cavalry MCP Server connected to stdio transport and ready.');

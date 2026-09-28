@@ -31,9 +31,9 @@ export async function attributeSet(layerId: string, attrPath: string, value: unk
   return res.result!;
 }
 
-export async function attributeSetMany(layerId: string, attributes: Record<string, unknown>): Promise<Record<string, unknown>> {
+export async function attributeSetMany(layerId: string, attributes: Record<string, unknown>, timeoutMs?: number): Promise<Record<string, unknown>> {
   const resolved = identityResolver.resolveToLayerId(layerId);
-  const res = await bridgeClient.send<Record<string, unknown>>('attribute_set_many', { layerId: resolved, attributes });
+  const res = await bridgeClient.send<Record<string, unknown>>('attribute_set_many', { layerId: resolved, attributes }, timeoutMs);
   return res.result!;
 }
 

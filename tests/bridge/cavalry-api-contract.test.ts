@@ -38,6 +38,29 @@ describe('Cavalry bridge API contract', () => {
     assert.match(source, /127\\\.0\\\.0\\\.1\|localhost/);
     assert.match(source, /batchContainsRawScript/);
     assert.match(source, /RAW_SCRIPT_DISABLED/);
+    assert.match(source, /session\.expiresAt < Date\.now\(\)/);
+    assert.match(source, /candidate !== session\.expectedResponseFile/);
+    assert.match(source, /candidate\.indexOf\("\.\.\/"\) !== -1/);
+    assert.match(source, /api\.getAbsolutePath\(candidate\)/);
+    assert.match(source, /Math\.abs\(Date\.now\(\) - request\.timestamp\)/);
+    assert.doesNotMatch(source, /\[::1\]/);
+  });
+
+  it('negotiates an explicit bridge protocol version and capabilities', () => {
+    assert.match(source, /const PROTOCOL_VERSION = 2/);
+    assert.match(source, /request\.protocolVersion !== PROTOCOL_VERSION/);
+    assert.match(source, /BRIDGE_PROTOCOL_MISMATCH/);
+    assert.match(source, /bridgeCapabilities: BRIDGE_CAPABILITIES/);
+    assert.match(source, /REPLAYED_REQUEST/);
+    assert.match(source, /seenRequestIds\[replayKey\]/);
+  });
+
+  it('finds raw-script calls recursively in nested batches without aliases', () => {
+    assert.match(source, /item\.op === "cavalry_raw_script"/);
+    assert.match(source, /item\.op === "batch" && containsRawScript/);
+    for (const bypass of ['raw_script', 'execute_script', 'eval', 'script']) {
+      assert.doesNotMatch(source, new RegExp(`handlers\\.${bypass}\\s*=`));
+    }
   });
 
   it('splits callback URLs into the base URL and route required by WebClient', () => {

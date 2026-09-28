@@ -1,5 +1,8 @@
 import { CavalryErrorDetails } from '../mcp/errors.js';
 
+export const BRIDGE_PROTOCOL_VERSION = 2;
+export const SUPPORTED_BRIDGE_PROTOCOL_VERSIONS = [BRIDGE_PROTOCOL_VERSION] as const;
+
 export interface AffectedLayer {
   uuid: string;
   layerId: string;
@@ -8,6 +11,8 @@ export interface AffectedLayer {
 }
 
 export interface BridgeRequest<TParams = Record<string, unknown>> {
+  protocolVersion: number;
+  clientCapabilities: string[];
   id: string;
   sessionId: string;
   token: string;
@@ -19,6 +24,8 @@ export interface BridgeRequest<TParams = Record<string, unknown>> {
 }
 
 export interface BridgeResponse<TResult = unknown> {
+  protocolVersion?: number;
+  bridgeCapabilities?: string[];
   id: string;
   token?: string;
   ok: boolean;

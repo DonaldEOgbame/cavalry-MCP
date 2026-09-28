@@ -8,6 +8,7 @@ cavalry-previews/
 knowledge/generated/*
 !knowledge/generated/.gitkeep
 !knowledge/generated/knowledge-index.json
+!knowledge/generated/knowledge-index.json.sha256
 coverage/render-format-sweep-output/
 dpf/
 output/

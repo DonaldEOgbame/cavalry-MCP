@@ -6,6 +6,7 @@ import { readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
+import { classifyFrameSamples, validateMediaMetadata } from './render-validation.js';
 
 const execFileAsync = promisify(execFile);
 type RenderState = 'QUEUED' | 'RUNNING' | 'COMPLETED' | 'CANCELLED' | 'UNKNOWN_AFTER_BACKGROUND_START' | 'FAILED';
@@ -35,6 +36,54 @@ function track(itemId: string, state: RenderState, reliable: boolean, error?: st
   return item;
 }
 
+export async function validateRenderedFile(filePath: string, settings: Record<string, unknown> = {}): Promise<Record<string, unknown>> {
+  const info = await stat(filePath);
+  if (info.size <= 0) throw new Error('Rendered output is empty.');
+  let media: Record<string, unknown> | null = null;
+  try {
+    const { stdout } = await execFileAsync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration,size:stream=codec_type,codec_name,nb_frames,width,height,pix_fmt,channels,sample_rate', '-of', 'json', filePath]);
+    media = JSON.parse(stdout);
+    const streams = (media as any).streams ?? [];
+    const expectedFrames = Number(settings.expectedFrameCount);
+    const expectedFps = Number(settings.expectedFps);
+    const mediaValidation = validateMediaMetadata(media, {
+      video: settings.expectedVideo === true,
+      codec: typeof settings.expectedCodec === 'string' ? settings.expectedCodec : undefined,
+      width: Number.isFinite(Number(settings.expectedWidth)) ? Number(settings.expectedWidth) : undefined,
+      height: Number.isFinite(Number(settings.expectedHeight)) ? Number(settings.expectedHeight) : undefined,
+      durationSeconds: Number.isFinite(expectedFrames) && Number.isFinite(expectedFps) && expectedFps > 0 ? expectedFrames / expectedFps : undefined,
+      durationToleranceSeconds: Number.isFinite(expectedFps) && expectedFps > 0 ? Math.max(0.1, 1.5 / expectedFps) : undefined,
+    });
+    if (!mediaValidation.valid) throw new Error(`Rendered media validation failed: ${mediaValidation.errors.join(', ')}`);
+    (media as any).validation = mediaValidation;
+    if (streams.some((stream: any) => stream.codec_type === 'video')) {
+      const duration = Number((media as any).format?.duration || 0);
+      const sampleTimes = duration > 0 ? [0, duration / 2, Math.max(0, duration - 0.05)] : [0];
+      const luminance: number[] = [];
+      for (const sampleTime of sampleTimes) {
+        const probe = await execFileAsync('ffmpeg', ['-v', 'error', '-ss', String(sampleTime), '-i', filePath, '-frames:v', '1', '-vf', 'signalstats,metadata=print:file=-', '-f', 'null', '-']);
+        const match = probe.stdout.match(/lavfi\.signalstats\.YAVG=([0-9.]+)/);
+        if (match) luminance.push(Number(match[1]));
+      }
+      const frameClassification = classifyFrameSamples(luminance);
+      const allowUniformFrames = settings.allowUniformFrames === true;
+      if ((frameClassification === 'uniform-dark' || frameClassification === 'uniform-light') && settings.strictVisualValidation === true && !allowUniformFrames) {
+        throw new Error(`Representative-frame validation found ${frameClassification} frames; set allowUniformFrames=true only when this is intentional.`);
+      }
+      (media as any).representativeFrameLuminance = luminance;
+      (media as any).frameClassification = frameClassification;
+      (media as any).visualContentVerified = frameClassification === 'content';
+    }
+  } catch (error) {
+    if (/\.(?:json|svg)$/i.test(filePath)) {
+      media = { kind: path.extname(filePath).slice(1), structurallyVerified: info.size > 0 };
+    } else if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+      throw error;
+    }
+  }
+  return { verified: true, path: filePath, size: info.size, modifiedAt: info.mtime.toISOString(), metadata: media, representativeFramesDecoded: media !== null };
+}
+
 async function validateRenderOutput(itemId: string, startedAt: number): Promise<Record<string, unknown>> {
   const settings = renderSettings.get(itemId) ?? {};
   const directory = typeof settings.filePath === 'string' ? settings.filePath : undefined;
@@ -44,35 +93,21 @@ async function validateRenderOutput(itemId: string, startedAt: number): Promise<
   const inspected = await Promise.all(candidates.map(async (name) => ({ path: path.join(directory, name), info: await stat(path.join(directory, name)) })));
   const fresh = inspected.filter(({ info }) => info.mtimeMs >= startedAt && info.size > 0).sort((a, b) => b.info.mtimeMs - a.info.mtimeMs);
   if (!fresh.length) throw new Error('Render returned without creating a fresh, non-empty output file.');
-  const output = fresh[0];
-  let media: Record<string, unknown> | null = null;
-  try {
-    const { stdout } = await execFileAsync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration,size:stream=codec_type,nb_frames,width,height', '-of', 'json', output.path]);
-    media = JSON.parse(stdout);
-    const streams = (media as any).streams ?? [];
-    if (streams.some((stream: any) => stream.codec_type === 'video' && (!stream.width || !stream.height))) throw new Error('Rendered video contains invalid frame dimensions.');
-    if (streams.some((stream: any) => stream.codec_type === 'video')) {
-      const duration = Number((media as any).format?.duration || 0);
-      const sampleTimes = duration > 0 ? [0, duration / 2, Math.max(0, duration - 0.05)] : [0];
-      const luminance: number[] = [];
-      for (const sampleTime of sampleTimes) {
-        const probe = await execFileAsync('ffmpeg', ['-v', 'error', '-ss', String(sampleTime), '-i', output.path, '-frames:v', '1', '-vf', 'signalstats,metadata=print:file=-', '-f', 'null', '-']);
-        const match = probe.stdout.match(/lavfi\.signalstats\.YAVG=([0-9.]+)/);
-        if (match) luminance.push(Number(match[1]));
-      }
-      if (luminance.length && luminance.every((value) => value <= 1 || value >= 254)) {
-        throw new Error('Representative-frame validation found only blank frames.');
-      }
-      (media as any).representativeFrameLuminance = luminance;
-    }
-  } catch (error) {
-    if (/\.(?:json|svg)$/i.test(output.path)) {
-      media = { kind: path.extname(output.path).slice(1), structurallyVerified: output.info.size > 0 };
-    } else if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
-      throw error;
+  return validateRenderedFile(fresh[0].path, settings);
+}
+
+async function waitForRenderOutput(itemId: string, startedAt: number, pollIntervalMs = 2_000): Promise<Record<string, unknown>> {
+  const timeoutMs = Number(process.env.CAVALRY_RENDER_TIMEOUT_MS || 30 * 60 * 1000);
+  let lastError: unknown;
+  while (Date.now() - startedAt <= timeoutMs) {
+    try {
+      return await validateRenderOutput(itemId, startedAt);
+    } catch (error) {
+      lastError = error;
+      await new Promise((resolve) => setTimeout(resolve, pollIntervalMs));
     }
   }
-  return { verified: true, path: output.path, size: output.info.size, modifiedAt: output.info.mtime.toISOString(), metadata: media, representativeFramesDecoded: media !== null };
+  throw lastError instanceof Error ? lastError : new Error('Timed out waiting for a fresh render output.');
 }
 
 export async function renderQueueList(): Promise<{ count: number; items: Array<{ id: string; name: string }> }> {
@@ -89,6 +124,17 @@ export async function renderQueueAdd(compId?: string): Promise<{ renderQueueItem
 export async function renderQueueConfigure(itemId: string, settings: Record<string, unknown>): Promise<Record<string, unknown>> {
   const resolved = identityResolver.resolveToLayerId(itemId);
   const normalized = { ...settings };
+  const validationSettings = {
+    allowUniformFrames: settings.allowUniformFrames === true,
+    strictVisualValidation: settings.strictVisualValidation === true,
+    expectedVideo: settings.expectedVideo === true,
+    expectedCodec: settings.expectedCodec,
+    expectedWidth: settings.expectedWidth,
+    expectedHeight: settings.expectedHeight,
+    expectedFrameCount: settings.expectedFrameCount,
+    expectedFps: settings.expectedFps,
+  };
+  for (const key of Object.keys(validationSettings)) delete normalized[key];
   if (typeof settings.startFrame === 'number' || typeof settings.endFrame === 'number') {
     const previous = renderSettings.get(resolved) ?? {};
     normalized.frameRangeMode = 1;
@@ -99,8 +145,10 @@ export async function renderQueueConfigure(itemId: string, settings: Record<stri
     delete normalized.startFrame;
     delete normalized.endFrame;
   }
-  const result = await attributeSetMany(resolved, normalized);
-  renderSettings.set(resolved, { ...(renderSettings.get(resolved) ?? {}), ...normalized });
+  // Large compiled scenes can make Render Manager mutation slower than an
+  // ordinary layer edit even before rendering begins.
+  const result = await attributeSetMany(resolved, normalized, 120_000);
+  renderSettings.set(resolved, { ...(renderSettings.get(resolved) ?? {}), ...normalized, ...validationSettings });
   return { ...result, resolvedFrameRange: normalized.frameRange, frameRangeMode: normalized.frameRangeMode };
 }
 
@@ -118,7 +166,9 @@ export async function renderStart(itemId: string): Promise<Record<string, unknow
   track(resolved, 'RUNNING', true, undefined, jobId);
   try {
     const res = await bridgeClient.send<Record<string, unknown>>('render_start', { itemId: resolved });
-    const outputVerification = await validateRenderOutput(resolved, startedAt);
+    // Cavalry 2.7.2 can return from api.render() after creating the output
+    // container but before the encoder has flushed any media bytes.
+    const outputVerification = await waitForRenderOutput(resolved, startedAt);
     return { ...res.result!, jobId, outputVerification, supervision: track(resolved, 'COMPLETED', true, undefined, jobId) };
   } catch (error) {
     track(resolved, 'FAILED', true, error instanceof Error ? error.message : String(error), jobId);
@@ -200,4 +250,14 @@ export async function renderWait(itemId: string): Promise<Record<string, unknown
     status,
     message: 'Reliable waiting is unavailable for background or externally started renders in Cavalry 2.7.2; no percentage is fabricated.',
   };
+}
+
+export async function shutdownRenderTracking(): Promise<void> {
+  const active = [...trackedRenders.values()].some((item) => item.state === 'RUNNING' || item.state === 'UNKNOWN_AFTER_BACKGROUND_START');
+  if (active) {
+    try { await bridgeClient.send('render_cancel', {}, 1_000); } catch {}
+  }
+  trackedRenders.clear();
+  itemJobs.clear();
+  renderSettings.clear();
 }

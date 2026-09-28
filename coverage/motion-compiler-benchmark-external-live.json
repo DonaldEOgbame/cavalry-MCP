@@ -1,0 +1,85 @@
+{
+  "mode": "external-live",
+  "transport": "stdio-json-rpc",
+  "toolProfile": "core",
+  "discoveredTools": 59,
+  "mcpCalls": 6,
+  "rawScriptCalls": 0,
+  "directBridgeCalls": 0,
+  "project": {
+    "scenes": 55,
+    "durationFrames": 3120,
+    "expectedLayers": 138,
+    "expectedKeyframes": 2095,
+    "compiledOperations": 2864
+  },
+  "timings": {
+    "connectMs": 309.92,
+    "toolsListMs": 16.09,
+    "compileMs": 51724.57,
+    "verifyMs": 459.36,
+    "qcMs": 9790.14,
+    "correctionMs": 86.18
+  },
+  "totalMs": 62414.04,
+  "serverTelemetry": {
+    "projectId": "external-production-benchmark",
+    "highLevelCallCount": 5,
+    "bridgeOperationCount": 421,
+    "batchCount": 12,
+    "averageBatchSize": 35.083333333333336,
+    "planningMs": 0,
+    "compilationMs": 18,
+    "cavalryExecutionMs": 51684,
+    "validationMs": 455,
+    "renderMs": 0,
+    "qcMs": 9784,
+    "correctionMs": 83,
+    "totalServerMs": 62056,
+    "modelReasoningMs": null,
+    "notes": [
+      "Model reasoning time is client-side and cannot be measured by the MCP server."
+    ],
+    "manifestHash": "41140dee36d50ee03f35d7c2c31c8fa1d68153e223e2a472d17feff99870dd1f",
+    "compiledHash": "41140dee36d50ee03f35d7c2c31c8fa1d68153e223e2a472d17feff99870dd1f",
+    "dirtyScenes": [],
+    "sceneCount": 55,
+    "expectedLayers": 138,
+    "expectedKeyframes": 2095,
+    "compiledOperationCount": 2864,
+    "estimatedLegacyMcpCalls": 2984,
+    "highLevelTargetCalls": 5
+  },
+  "transcript": [
+    {
+      "tool": "motion_project_create",
+      "durationMs": 25.5,
+      "imageCount": 0
+    },
+    {
+      "tool": "motion_project_compile",
+      "durationMs": 51724.12,
+      "imageCount": 0
+    },
+    {
+      "tool": "motion_project_verify",
+      "durationMs": 458.94,
+      "imageCount": 0
+    },
+    {
+      "tool": "motion_project_render_review",
+      "durationMs": 9789.84,
+      "imageCount": 12
+    },
+    {
+      "tool": "motion_project_apply_corrections",
+      "durationMs": 86.11,
+      "imageCount": 0
+    },
+    {
+      "tool": "motion_project_metrics",
+      "durationMs": 1.84,
+      "imageCount": 0
+    }
+  ]
+}
