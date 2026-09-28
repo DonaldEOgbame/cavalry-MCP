@@ -1,0 +1,65 @@
+{
+  "measuredAt": "2026-09-28T08:52:20+01:00",
+  "host": {
+    "application": "Cavalry",
+    "version": "2.7.2",
+    "platform": "macOS",
+    "pid": 82048,
+    "javascriptErrorDialogsObserved": 0
+  },
+  "baseline": {
+    "branch": "main",
+    "commit": "bbd2ae0ad7a477865ca7e227f1291e9a5b1b5fc1"
+  },
+  "project": {
+    "scenes": 55,
+    "layers": 138,
+    "keyframes": 2095,
+    "durationFrames": 3120,
+    "qcImages": 12,
+    "correctionApplied": true
+  },
+  "timingsMs": {
+    "compile": 53279.33,
+    "verify": 439.27,
+    "qc": 10189.4,
+    "correction": 80.57,
+    "total": 64392.16
+  },
+  "bridge": {
+    "operations": 421,
+    "batches": 12,
+    "averageBatchSize": 35.083333333333336
+  },
+  "cavalryLog": {
+    "path": "/Users/macbook/Library/Application Support/Cavalry/logs/js_log.txt",
+    "startOffset": 554961867,
+    "endOffset": 558758859,
+    "appendedBytes": 3796992,
+    "totalLines": 55403,
+    "errorLines": 55366,
+    "attributeNotFoundCompleteLines": 55365,
+    "truncatedTrailingAttributeNotFoundLines": 1,
+    "topFamilies": [
+      { "family": "animationCurve.uuid", "count": 37430 },
+      { "family": "textShape.out", "count": 2158 },
+      { "family": "textShape.time", "count": 1577 },
+      { "family": "basicShape.out", "count": 1485 },
+      { "family": "basicShape.time", "count": 1045 },
+      { "family": "timeMarker.uuid", "count": 990 },
+      { "family": "textShape.gradient.N.interpolation", "count": 166 },
+      { "family": "textShape.gradient.N.position", "count": 166 },
+      { "family": "textShape.gradient.N.color", "count": 166 },
+      { "family": "color", "count": 55 }
+    ]
+  },
+  "rssKiB": {
+    "samples": [311216, 305888, 352704, 388144, 417952, 502640],
+    "minimum": 305888,
+    "maximum": 502640
+  },
+  "notes": [
+    "The log ended with a partial '[error] Attribute not' record when the measurement window closed; it is reported separately rather than silently classified.",
+    "No JavaScript Error dialog was visible at the end of the run."
+  ]
+}

@@ -36,10 +36,13 @@ export function summarizeHostLog(text: string, logPath = ''): HostLogSummary {
   for (const line of lines) {
     const isError = /error|exception|not found|failed/i.test(line);
     if (isError) errorLines += 1;
-    const match = line.match(/Attribute not found:\s*([A-Za-z]+)#\d+\.(\S+)/);
-    if (match) {
+    const attributeMatch = line.match(/Attribute not found:\s*(\S.*)?$/i);
+    const qualifiedMatch = line.match(/Attribute not found:\s*([A-Za-z]+)#\d+\.(\S+)/i);
+    if (attributeMatch) {
       attributeNotFound += 1;
-      const family = `${match[1]}.${match[2].replace(/\.\d+/g, '.N')}`;
+      const family = qualifiedMatch
+        ? `${qualifiedMatch[1]}.${qualifiedMatch[2].replace(/\.\d+/g, '.N')}`
+        : (attributeMatch[1]?.trim() || '<unspecified>').replace(/#\d+/g, '#N').replace(/\.\d+/g, '.N');
       families.set(family, (families.get(family) ?? 0) + 1);
     } else if (isError && others.length < 20) {
       others.push(line.slice(0, 300));
