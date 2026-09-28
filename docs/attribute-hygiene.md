@@ -85,9 +85,11 @@ waiting for Cavalry to throw.
     range, marker time, render-item metadata).
 - **Explicit identity.** UUID support is decided once per node type (known
   layer-id classes such as `animationCurve`, `timeMarker` and render items;
-  otherwise enumeration, then `hasAttribute`). Each object's UUID is read at
-  most once and cached. Caches are dropped when a scene is replaced or a
-  layer is removed, because Cavalry reuses layer ids.
+  otherwise positive membership in the active composition or
+  `getAllSceneLayers`). Cavalry 2.7.2 reads `uuid` on ordinary scene layers but
+  neither enumerates it nor returns true from `hasAttribute`. Each object's
+  UUID is read at most once and cached. Caches are dropped when a scene is
+  replaced or a layer is removed, because Cavalry reuses layer ids.
 - **Notifications carry no reads.** `onAttrChanged` / `onLayerAdded` emit
   `{layerId, attribute}` / `{layerId, type}`. Only an explicit event
   subscription enriches them, and then only with enumerated value
@@ -104,8 +106,8 @@ waiting for Cavalry to throw.
   Cavalry does not apply as requested still fails the step (covered by a
   test).
 - **Pseudo-properties use their own APIs.** Keyframes through keyframe APIs,
-  markers through marker APIs, graph ports through connection APIs. None of
-  them is routed through attribute reads.
+  markers through create/remove plus bridge-owned marker state, graph ports
+  through connection APIs. None of them is routed through attribute reads.
 
 ## Telemetry
 
@@ -153,33 +155,51 @@ The model reproduces the live log's families in the same order of dominance
 `basicShape.out/time` > `timeMarker.uuid`, then `keyframes.N`, `gradient.*`,
 stroke/matte/taper). Absolute counts differ from the live 124,527 because
 the model's notification multiplicity per keyframe is an estimate. These are
-model counts, not host measurements. After the fix, the workload needs 3
+model counts, not host measurements. After the live corrections, the workload needs 4
 capability enumerations, 139 UUID reads (one per created layer plus the
 composition), and 15,659 notifications pass with no reads at all.
 
-### Live before/after: not yet measured
+### Live before/after on Cavalry 2.7.2 (28 September 2026)
 
-The live comparison (host error count, invalid reads, compile, verify and QC
-time, responsiveness, JavaScript dialog frequency, render behaviour) must be
-run on the macOS Cavalry host:
+Both runs used the external stdio MCP client and the same 55-scene workload
+(138 layers, 2,095 keyframes, 3,120 frames, 12 QC images and one applied
+correction). The baseline was commit `bbd2ae0`; the after run used the fixed
+branch from a fresh Cavalry launch.
 
-```bash
-npm run build
-# install the updated bridge
-cp cavalry/bridge.js ~/Library/Application\ Support/Cavalry/Scripts/CavalryBridge.js
-# relaunch Cavalry so the new bridge is active, then:
-npm run hygiene:live -- --cavalry-log "<path to Cavalry's log file>"
-npm run benchmark:motion:live -- --cavalry-log "<path to Cavalry's log file>"
-```
+| Measurement | Baseline | Fixed branch |
+|---|---:|---:|
+| Appended host-log lines | 55,403 | 55 in the flushed clean run |
+| Host error lines | 55,366 | **0** |
+| Complete `Attribute not found:` lines | 55,365, plus one truncated trailing record | **0** |
+| Bridge invalid reads | not instrumented | **0** |
+| Bridge operations / batches | 421 / 12 | 421 / 12 |
+| Compile | 53,279.33 ms | 49,910.08 ms |
+| Verify | 439.27 ms | 286.26 ms |
+| QC (12 images) | 10,189.40 ms | 7,628.29 ms |
+| Correction | 80.57 ms | 126.64 ms |
+| Total | 64,392.16 ms | 58,425.45 ms |
+| Peak sampled Cavalry RSS | 502,640 KiB | 564,000 KiB |
+| JavaScript Error dialogs | 0 observed | 0 observed; 0 journal occurrences |
 
-The live benchmark now snapshots the bridge's attribute counters and
-(optionally) the Cavalry log window from before the first project call to
-after the last. It **fails** if `invalidAttributeReads > 0` or the log gained
-any `Attribute not found` line. To record a baseline with an older bridge,
-pass `--allow-invalid-probing`. Genuine errors in the log window are listed
-separately (`firstNonAttributeErrors`), so they stay visible.
+The baseline's largest complete families were `animationCurve.uuid` (37,430),
+`textShape.out` (2,158), `textShape.time` (1,577), `basicShape.out` (1,485),
+`basicShape.time` (1,045), `timeMarker.uuid` (990), and 55 unqualified
+`color` errors. The log summarizer was corrected to count unqualified
+`Attribute not found: color` lines as well as `type#N.path` lines.
 
-No causal claim is made yet about compile time, host responsiveness, render
-startup or the zero-byte H.264 issue. Those comparisons wait for the live
-run, and render debugging resumes only after the benchmark logs zero expected
-`Attribute not found` errors.
+The after timing row is the fresh, RSS-sampled clean run. A preceding clean
+run independently flushed 4,096 bytes / 55 lines from Cavalry's buffered log
+and contained zero errors; it measured 50,051.11 ms compile and 58,502.32 ms
+total. `cavalry_health` subsequently measured an idle host with 55 ms
+`host.probeMs`, 22 ms `bridge_status` latency and 71 ms whole-tool latency.
+Those fields did not exist in the baseline, so there is no baseline health
+probe comparison.
+
+The lower after timings are measured, but a single baseline run is not enough
+to attribute them to removal of invalid calls. Correction latency and sampled
+RSS were higher, and the sampling points were not synchronized. Treat these
+differences as host/run variance, not a demonstrated performance effect. One
+additional benchmark on the same long-lived process timed out a 15-second QC
+preview after compilation; health immediately returned to confirmed idle
+(57 ms probe, 26 ms status), and a fresh restart completed cleanly. Attribute
+hygiene did not regress, but this shows responsiveness is not proven improved.

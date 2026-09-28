@@ -27,7 +27,7 @@ describe('attribute hygiene: the bridge never asks Cavalry invalid questions', (
     assert.equal(model.log.attributeNotFound, 0, JSON.stringify([...model.log.byFamily]));
     const counters = metrics();
     assert.equal(counters.invalidAttributeReads, 0);
-    assert.ok(counters.attributeEnumerations <= 3, `one enumeration per node type, got ${counters.attributeEnumerations}`);
+    assert.ok(counters.attributeEnumerations <= 4, `one enumeration per node type, got ${counters.attributeEnumerations}`);
     assert.ok(counters.uuidLookups <= 139, 'at most one uuid read per object');
     assert.ok(counters.eventNotificationsWithoutReads > 10_000, 'notifications still flow without reads');
     assert.equal(counters.eventEnrichmentReads, 0);
@@ -54,10 +54,12 @@ describe('attribute hygiene: the bridge never asks Cavalry invalid questions', (
   it('resolves identity without reading uuid from objects that have none', () => {
     const box = start();
     box.send('scene_new', {});
-    const marker = box.send('marker_create', { frame: 10, label: 'beat' });
+    const marker = box.send('marker_create', { frame: 10, label: 'beat', color: '#7c3aed' });
     assert.equal(marker.ok, true);
+    assert.deepEqual(marker.result.unsupported, ['color']);
     const listed = box.send('marker_list', {});
     assert.equal(listed.ok, true);
+    assert.equal(listed.result.markers[0].time, 10, 'marker time comes from dedicated marker state, not api.get');
     const curveLayer = model.api.create('textShape', 'curve owner');
     model.api.keyframe(curveLayer, 0, { opacity: 0 });
     const status = box.send('bridge_status').result;
@@ -95,6 +97,18 @@ describe('attribute hygiene: the bridge never asks Cavalry invalid questions', (
     const counters = metrics();
     assert.equal(counters.detailedInspections, 1);
     assert.equal(counters.targetedInspections, 1);
+  });
+
+  it('confirms targeted attributes per instance when one node type has multiple generators', () => {
+    const box = start();
+    box.send('scene_new', {});
+    box.send('composition_create', { name: 'Comp', width: 1280, height: 720, fps: 30, startFrame: 0, endFrame: 30, makeActive: true });
+    const rectangle = box.send('layer_create_primitive', { primitiveType: 'rectangle', name: 'Rectangle' }).result.layerId;
+    const ellipse = box.send('layer_create_primitive', { primitiveType: 'ellipse', name: 'Ellipse' }).result.layerId;
+    const inspected = box.send('scene_inspect', { mode: 'targeted', attributes: ['generator.dimensions'] }).result;
+    assert.ok('generator.dimensions' in inspected.layers.find((layer: any) => layer.layerId === rectangle).values);
+    assert.deepEqual(inspected.layers.find((layer: any) => layer.layerId === ellipse).unsupported, ['generator.dimensions']);
+    assert.equal(model.log.attributeNotFound, 0, JSON.stringify([...model.log.byFamily]));
   });
 
   it('still catches a mutation Cavalry did not apply as requested', () => {
@@ -163,6 +177,7 @@ describe('attribute hygiene: offline contract on bridge.js', () => {
     assert.match(identity, /layerUuid\(actualId\)/);
     assert.doesNotMatch(identity, /"uuid"/);
     assert.match(source, /LAYER_ID_IDENTITY_TYPES = \{ animationCurve: true, timeMarker: true/);
+    assert.match(source, /api\.getAllSceneLayers\(\)/);
   });
 
   it('keys the capability cache by Cavalry version and node type', () => {

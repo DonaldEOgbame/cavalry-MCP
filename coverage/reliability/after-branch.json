@@ -1,0 +1,107 @@
+{
+  "measuredAt": "2026-09-28T12:19:10+01:00",
+  "host": {
+    "application": "Cavalry",
+    "version": "2.7.2",
+    "platform": "macOS",
+    "freshRunPid": 1679,
+    "javascriptErrorDialogsObserved": 0,
+    "dialogClassIncidentOccurrences": 0
+  },
+  "branch": {
+    "name": "claude/ecstatic-ride-euzn89",
+    "baseCommit": "bbd2ae0ad7a477865ca7e227f1291e9a5b1b5fc1"
+  },
+  "project": {
+    "scenes": 55,
+    "layers": 138,
+    "keyframes": 2095,
+    "durationFrames": 3120,
+    "qcImages": 12,
+    "correctionApplied": true
+  },
+  "timingsMs": {
+    "compile": 49910.08,
+    "verify": 286.26,
+    "qc": 7628.29,
+    "correction": 126.64,
+    "total": 58425.45
+  },
+  "bridge": {
+    "operations": 421,
+    "batches": 12,
+    "averageBatchSize": 35.083333333333336,
+    "invalidAttributeReads": 0,
+    "attributeEnumerations": 4,
+    "instanceAttributeChecks": 110,
+    "rawScriptCalls": 0,
+    "directBridgeCalls": 0
+  },
+  "cavalryLog": {
+    "cleanFlushedRun": {
+      "appendedBytes": 4096,
+      "totalLines": 55,
+      "errorLines": 0,
+      "attributeNotFound": 0
+    },
+    "freshRssRun": {
+      "appendedBytesVisibleBeforeBufferFlush": 0,
+      "errorLines": 0,
+      "attributeNotFound": 0
+    }
+  },
+  "rssKiB": {
+    "samples": [513056, 564000, 426352],
+    "minimum": 426352,
+    "maximum": 564000
+  },
+  "health": {
+    "state": "idle",
+    "toolDurationMs": 71,
+    "transportLatencyMs": 8,
+    "hostProbeMs": 55,
+    "bridgeStatusLatencyMs": 22,
+    "incidentOccurrences": 0,
+    "dialogClassOccurrences": 0
+  },
+  "liveAcceptance": {
+    "passed": 22,
+    "failed": 0,
+    "durationMs": 8485.633625
+  },
+  "liveDiscrepancies": [
+    {
+      "area": "uuid",
+      "observed": "Ordinary scene-layer uuid is readable, but is absent from getAttributes and hasAttribute returns false.",
+      "fix": "Classify uuid support positively by active-composition/getAllSceneLayers membership."
+    },
+    {
+      "area": "time markers",
+      "observed": "timeMarker.time is not readable.",
+      "fix": "Use create/remove marker APIs and bridge-owned marker state instead of attribute reads."
+    },
+    {
+      "area": "marker color",
+      "observed": "Setting timeMarker color logs unqualified 'Attribute not found: color'.",
+      "fix": "Confirm optional marker fields with hasAttribute and omit unsupported writes."
+    },
+    {
+      "area": "generator attributes",
+      "observed": "basicShape capability enumeration differs by generator instance; ellipse does not support rectangle generator.dimensions.",
+      "fix": "Confirm every client-targeted path on the concrete instance even when its node type cached the path."
+    },
+    {
+      "area": "log measurement",
+      "observed": "Cavalry also emits unqualified Attribute not found lines and buffers its log in 4096-byte blocks.",
+      "fix": "Count both qualified and unqualified records; corroborate the fresh run with a separate flushed clean run."
+    }
+  ],
+  "responsivenessObservation": {
+    "normalBenchmark": "passed twice",
+    "additionalLongLivedAttempt": "QC preview timed out after 15000 ms following compilation",
+    "postFailureHostProbeMs": 57,
+    "postFailureBridgeStatusLatencyMs": 26,
+    "postFailureState": "idle",
+    "conclusion": "No causal responsiveness improvement is claimed; fresh restart completed cleanly."
+  }
+}

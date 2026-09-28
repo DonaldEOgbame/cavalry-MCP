@@ -5,7 +5,7 @@ Current as of 28 September 2026.
 ## Automated validation
 
 - TypeScript build: PASS.
-- Unit and bridge suite: 150 PASS, 0 FAIL, 2 platform skips (Node 22, Linux). It includes the real `bridge.js` executed in a VM (re-entrancy, deadlines, incident capture, session audit, attribute hygiene), the render pipeline against a simulated host on a virtual clock (13 failure/recovery scenarios), and artifact validation against real ffmpeg-encoded H.264.
+- Unit and bridge suite: 154 PASS, 0 FAIL on this macOS/Node 26 host. It includes the real `bridge.js` executed in a VM (re-entrancy, deadlines, incident capture, session audit, attribute hygiene), the render pipeline against a simulated host on a virtual clock (13 failure/recovery scenarios), and artifact validation against real ffmpeg-encoded H.264.
 - Complete tool-registration contract: 404 unique runtime definitions with schemas and handlers; 60 are exposed by the default production profile. The only addition is `render_scene_verified`.
 - Full-profile stress: 50 alternating `core`/`full` initializations PASS; 6.06 MiB heap delta on Node 22. The script previously asserted a stale 385-tool count and failed at the prior revision; it now reads the generated inventory.
 - Startup benchmark: core 14.00 ms / 272 tools; full 3.48 ms / 385 tools; 1,701-record Knowledge Engine 84.97 ms (Node 26).
@@ -31,7 +31,7 @@ Current as of 28 September 2026.
 ## Production motion-compiler benchmark
 
 - External stdio dry run: PASS with 55 scenes, 3,120 frames, 138 layers, 2,095 keyframes, 2,864 compiler operations, four MCP calls, no raw script, and no direct bridge calls (358.77 ms total).
-- External live compile/verify/QC/correction: PASS through six typed MCP calls. Compile 51,724.57 ms; verify 459.36 ms; 12-image MCP-native QC 9,790.14 ms; correction 86.18 ms; 62,414.04 ms total excluding final MP4.
+- External live compile/verify/QC/correction after attribute cleanup: PASS through typed MCP calls. Fresh-run compile 49,910.08 ms; verify 286.26 ms; 12-image MCP-native QC 7,628.29 ms; correction 126.64 ms; 58,425.45 ms total excluding final MP4. A second clean run measured 50,051.11 ms compile / 58,502.32 ms total and flushed 55 host-log lines with zero errors.
 - Internal execution: 421 optimized bridge operations in 12 batches (35.08 average batch size), compared with an estimated 2,984 legacy MCP calls. Grouped five-scene batches and one event flush per batch reduced compile time by 86% from the earlier 371,744.16 ms run.
 - Full production H.264: OPEN. Validation caught and fixed a generator-order bug that silently reset the requested range to 0–250; the rejected file was valid 1920×1080 H.264 but only 250 frames/8.3 seconds. With the exact 0–3,119 range restored, Cavalry 2.7.2 leaves a zero-byte container and becomes idle. The 5–12 minute first-draft and 8–18 minute corrected-draft targets therefore remain unproven only at the full-render boundary.
 - Segmented render fallback: now opt-in (`segmentFrames`), NOT YET CLEAN-HOST VALIDATED. The first replay followed a cancelled long render and inherited a wedged Render Manager.
@@ -40,10 +40,12 @@ Current as of 28 September 2026.
 
 ## Attribute hygiene (P0)
 
-- Baseline live log: about 124,527 error lines out of 124,592, dominated by `animationCurve#N.uuid` (about 92,529), `textShape#N.out`, `basicShape#N.out`, `textShape#N.time`, `basicShape#N.time`, and `timeMarker#N.uuid`.
+- Measured baseline at `bbd2ae0`: 55,403 appended lines, 55,366 error lines, and 55,365 complete `Attribute not found:` records plus one truncated trailing record. It was dominated by `animationCurve.uuid` (37,430), `textShape.out` (2,158), `textShape.time` (1,577), `basicShape.out` (1,485), `basicShape.time` (1,045), and `timeMarker.uuid` (990). The older 124,527/124,592 observation remains historical, not the controlled baseline window.
 - Traced to the bridge's change-notification callbacks and uuid-assuming identity lookups; see [attribute-hygiene.md](attribute-hygiene.md). Fixed with a positive capability registry: one `api.get` call site, enforced by an offline contract test.
 - Behavioural host model, same 55-scene compile/verify/correct workload: 14,612 model `Attribute not found` lines before, **0** after, and 0 with a `*` event subscription (`npm run hygiene:model`). These are model counts, not host counts.
-- Live: NOT YET MEASURED. `npm run hygiene:live` and `npm run benchmark:motion:live -- --cavalry-log <path>` now fail on any invalid attribute read and report the before/after deltas. Render debugging resumes after that run is clean.
+- Live hygiene: PASS with all ordinary-layer UUID checks, zero bridge invalid reads, zero failed steps, and zero `Attribute not found` lines. The live host differed from the offline model in four ways: ordinary-layer UUID is readable but not enumerated/confirmed by `hasAttribute`; marker `.time` is not readable; marker `color` is unsupported; and `basicShape` child attributes vary by generator instance. The bridge now uses positive scene membership for UUID, marker APIs/state, and per-instance confirmation for targeted reads; the model and regression suite match those observations.
+- Full production benchmark gate: PASS twice with 421 bridge operations / 12 batches, 12 QC images and an applied correction; `invalidAttributeReads` 0, host errors 0, `Attribute not found` 0, and dialog-class incidents 0. The fresh run peaked at 564,000 KiB RSS. Health was confirmed idle with 55 ms `host.probeMs`, 22 ms bridge-status latency and 71 ms whole-tool latency.
+- Live acceptance after the fixes: 22/22 PASS. One extra benchmark on a long-lived process timed out a QC preview at 15 seconds after compilation; health returned confirmed idle immediately and a clean restart passed. No responsiveness improvement is claimed from the timing difference.
 
 See [motion-compiler.md](motion-compiler.md) for the architecture, tool layers,
 DSL, exact benchmark boundary, and remaining work.

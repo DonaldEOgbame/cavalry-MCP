@@ -329,6 +329,7 @@
   const capabilityCache = {};
   const layerTypeCache = {};
   const uuidCache = {};
+  const markerState = {};
   let cavalryVersionKeyValue = null;
 
   // Object classes handled through dedicated APIs (keyframe, marker, render,
@@ -384,21 +385,27 @@
   function forgetLayer(layerId) {
     delete layerTypeCache[layerId];
     delete uuidCache[layerId];
+    delete markerState[layerId];
   }
 
   function forgetAllLayers() {
     for (let key of Object.keys(layerTypeCache)) delete layerTypeCache[key];
     for (let key of Object.keys(uuidCache)) delete uuidCache[key];
+    for (let key of Object.keys(markerState)) delete markerState[key];
   }
 
   // mode "known":    internal read; only attributes enumerated for the type.
   // mode "explicit": a caller named the path; confirm it on this instance.
   function attributeReadable(layerId, path, mode) {
     const capabilities = capabilitiesFor(layerId);
-    if (capabilities.attributes[path] === true) return mode === "explicit" || !NON_VALUE_PATH.test(path);
-    if (mode !== "explicit") return false;
-    attributeMetrics.instanceAttributeChecks++;
-    try { return api.hasAttribute(layerId, path) === true; } catch (e) { return false; }
+    if (mode === "explicit") {
+      // Enumeration is cached per node type, but generator/configuration
+      // children vary per instance (for example rectangle vs ellipse). A
+      // caller-targeted read is therefore always confirmed on that instance.
+      attributeMetrics.instanceAttributeChecks++;
+      try { return api.hasAttribute(layerId, path) === true; } catch (e) { return false; }
+    }
+    return capabilities.attributes[path] === true && !NON_VALUE_PATH.test(path);
   }
 
   function attributeNotFound(layerId, path) {
@@ -438,8 +445,13 @@
       if (LAYER_ID_IDENTITY_TYPES[capabilities.type]) capabilities.uuid = false;
       else if (capabilities.attributes.uuid === true) capabilities.uuid = true;
       else {
-        attributeMetrics.instanceAttributeChecks++;
-        try { capabilities.uuid = api.hasAttribute(layerId, "uuid") === true; } catch (e) { capabilities.uuid = false; }
+        // Cavalry 2.7.2 exposes uuid as a readable pseudo-property on scene
+        // layers, but does not enumerate it and hasAttribute(..., "uuid") is
+        // false. Scene membership is the positive authoritative distinction
+        // between those objects and internal curves/markers/render items.
+        let isSceneLayer = false;
+        try { isSceneLayer = api.getActiveComp() === layerId || (api.getAllSceneLayers() || []).indexOf(layerId) !== -1; } catch (e) {}
+        capabilities.uuid = isSceneLayer;
       }
     }
     return capabilities.uuid;
@@ -2059,11 +2071,12 @@
       return {
         count: markers.length,
         markers: markers.map(function (id) {
+          const known = markerState[id] || {};
           return {
             markerId: id,
-            time: readAttr(id, "time", "trusted"),
-            label: attributeReadable(id, "label", "explicit") ? readAttr(id, "label", "trusted") : null,
-            color: attributeReadable(id, "color", "explicit") ? readAttr(id, "color", "trusted") : null,
+            time: known.time !== undefined ? known.time : null,
+            label: known.label !== undefined ? known.label : readOptional(id, "label"),
+            color: known.color !== undefined ? known.color : readOptional(id, "color"),
           };
         }),
       };
@@ -2073,32 +2086,69 @@
       if (params.frame === undefined) throw new Error("Missing 'frame' parameter.");
       const markerId = api.createTimeMarker(params.frame);
       const updates = {};
-      if (params.label) updates.label = params.label;
-      if (params.color) updates.color = params.color;
+      const unsupported = [];
+      if (params.label) {
+        if (attributeReadable(markerId, "label", "explicit")) updates.label = params.label;
+        else unsupported.push("label");
+      }
+      if (params.color) {
+        if (attributeReadable(markerId, "color", "explicit")) updates.color = params.color;
+        else unsupported.push("color");
+      }
       if (Object.keys(updates).length) api.set(markerId, updates);
+      markerState[markerId] = { time: params.frame, label: updates.label !== undefined ? updates.label : null, color: updates.color !== undefined ? updates.color : null };
 
       return {
         markerId: markerId,
         frame: params.frame,
-        label: params.label || "",
-        color: params.color || "",
+        label: markerState[markerId].label,
+        color: markerState[markerId].color,
+        unsupported: unsupported,
       };
     },
 
     marker_update: function (params) {
-      const markerId = resolveLayerId(params.markerId);
+      const originalMarkerId = resolveLayerId(params.markerId);
+      let markerId = originalMarkerId;
+      const previous = markerState[originalMarkerId] || {};
+      if (params.frame !== undefined) {
+        // Cavalry exposes marker position through create/remove, not a
+        // readable/writable .time attribute. Recreate through those APIs.
+        markerId = api.createTimeMarker(params.frame);
+      }
       const updates = {};
-      if (params.frame !== undefined) updates.time = params.frame;
-      if (params.label !== undefined) updates.label = params.label;
-      if (params.color !== undefined) updates.color = params.color;
-      api.set(markerId, updates);
-      return { markerId: markerId, updated: updates };
+      const unsupported = [];
+      const desiredLabel = params.label !== undefined ? params.label : previous.label;
+      const desiredColor = params.color !== undefined ? params.color : previous.color;
+      if (desiredLabel !== undefined && desiredLabel !== null) {
+        if (attributeReadable(markerId, "label", "explicit")) updates.label = desiredLabel;
+        else unsupported.push("label");
+      }
+      if (desiredColor !== undefined && desiredColor !== null) {
+        if (attributeReadable(markerId, "color", "explicit")) updates.color = desiredColor;
+        else unsupported.push("color");
+      }
+      if (Object.keys(updates).length) api.set(markerId, updates);
+      if (markerId !== originalMarkerId) {
+        api.removeTimeMarker(originalMarkerId);
+        delete markerState[originalMarkerId];
+      }
+      markerState[markerId] = { time: params.frame !== undefined ? params.frame : previous.time, label: updates.label !== undefined ? updates.label : null, color: updates.color !== undefined ? updates.color : null };
+      return { markerId: markerId, previousMarkerId: markerId !== originalMarkerId ? originalMarkerId : null, updated: updates, unsupported: unsupported };
     },
 
     marker_move: function (params) {
-      const markerId = resolveLayerId(params.markerId);
-      api.set(markerId, { time: params.frame });
-      return { markerId: markerId, frame: params.frame };
+      const originalMarkerId = resolveLayerId(params.markerId);
+      const previous = markerState[originalMarkerId] || {};
+      const markerId = api.createTimeMarker(params.frame);
+      const updates = {};
+      if (previous.label !== undefined && previous.label !== null && attributeReadable(markerId, "label", "explicit")) updates.label = previous.label;
+      if (previous.color !== undefined && previous.color !== null && attributeReadable(markerId, "color", "explicit")) updates.color = previous.color;
+      if (Object.keys(updates).length) api.set(markerId, updates);
+      api.removeTimeMarker(originalMarkerId);
+      delete markerState[originalMarkerId];
+      markerState[markerId] = { time: params.frame, label: updates.label !== undefined ? updates.label : null, color: updates.color !== undefined ? updates.color : null };
+      return { markerId: markerId, previousMarkerId: originalMarkerId, frame: params.frame };
     },
 
     marker_delete: function (params) {

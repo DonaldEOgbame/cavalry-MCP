@@ -15,13 +15,13 @@ export interface HostLog {
   otherErrors: number;
 }
 
-const COMMON = ['uuid', 'position', 'scale', 'rotation', 'opacity', 'hidden', 'material', 'material.materialColor', 'stroke', 'pivot'];
+const COMMON = ['position', 'scale', 'rotation', 'opacity', 'hidden', 'material', 'material.materialColor', 'stroke', 'pivot'];
 const TYPES: Record<string, string[]> = {
   textShape: [...COMMON, 'text', 'font', 'fontSize', 'horizontalAlignment', 'verticalAlignment', 'letterSpacing', 'lineSpacing', 'autoWidth'],
   basicShape: [...COMMON, 'generator', 'generator.dimensions', 'generator.cornerRadius'],
-  group: ['uuid', 'position', 'scale', 'rotation', 'opacity', 'hidden'],
-  compNode: ['uuid', 'resolution', 'fps', 'startFrame', 'endFrame', 'defaultCompBackground', 'motionBlur'],
-  timeMarker: ['time', 'label', 'color'],
+  group: ['position', 'scale', 'rotation', 'opacity', 'hidden'],
+  compNode: ['resolution', 'fps', 'startFrame', 'endFrame', 'defaultCompBackground', 'motionBlur'],
+  timeMarker: ['label'],
   animationCurve: ['preInfinity', 'postInfinity'],
   renderQueueItem: ['filePath', 'fileName', 'frameRange', 'frameRangeMode', 'metadata'],
 };
@@ -47,6 +47,7 @@ export function createCavalryModel(): CavalryModel {
   const keyframes = new Map<string, number[]>();
   const curves = new Map<string, string>();
   const parents = new Map<string, string>();
+  const generatorKinds = new Map<string, string>();
   const markers: string[] = [];
   let counter = 0;
   let activeComp = '';
@@ -55,10 +56,14 @@ export function createCavalryModel(): CavalryModel {
 
   const known = (id: string, path: string) => {
     const attributes = TYPES[types.get(id) ?? ''] ?? [];
+    if (path === 'generator.dimensions' && generatorKinds.get(id) === 'ellipse') return false;
     if (attributes.includes(path)) return true;
     if (/^material\.materialColor\.[rgba]$/.test(path)) return attributes.includes('material.materialColor');
     return attributes.includes(rootOf(path)) && /^(position|scale|rotation|pivot|material|generator)\./.test(`${rootOf(path)}.`) && path.split('.').length === 2;
   };
+  const readable = (id: string, path: string) => path === 'uuid'
+    ? !['animationCurve', 'timeMarker', 'renderQueueItem'].includes(types.get(id) ?? '')
+    : known(id, path);
   const notFound = (id: string, path: string) => {
     log.attributeNotFound += 1;
     const family = `${(types.get(id) ?? 'unknown')}.${path.replace(/\.\d+/g, '.N')}`;
@@ -96,7 +101,7 @@ export function createCavalryModel(): CavalryModel {
     hasAttribute: (id: string, path: string) => known(id, path),
     getNiceName: (id: string) => String(values.get(id)?.get('__name') ?? id),
     get(id: string, path: string) {
-      if (!types.has(id) || !known(id, path)) return notFound(id, path);
+      if (!types.has(id) || !readable(id, path)) return notFound(id, path);
       return values.get(id)!.get(path) ?? 0;
     },
     set(id: string, updates: Record<string, unknown>) {
@@ -108,11 +113,11 @@ export function createCavalryModel(): CavalryModel {
       notify('onAttrChanged', id, 'out');
     },
     create(type: string, name: string) { const id = create(type); values.get(id)!.set('__name', name); initialise(id); return id; },
-    primitive(_kind: string, name: string) { const id = create('basicShape'); values.get(id)!.set('__name', name); initialise(id); return id; },
+    primitive(kind: string, name: string) { const id = create('basicShape'); generatorKinds.set(id, kind); values.get(id)!.set('__name', name); initialise(id); return id; },
     createComp(name: string) { const id = create('compNode'); values.get(id)!.set('__name', name); notify('onLayerAdded', id); return id; },
     setActiveComp(id: string) { activeComp = id; },
     getActiveComp: () => activeComp,
-    newScene() { types.clear(); values.clear(); keyframes.clear(); curves.clear(); parents.clear(); markers.length = 0; activeComp = ''; notify('onSceneChanged'); },
+    newScene() { types.clear(); values.clear(); keyframes.clear(); curves.clear(); parents.clear(); generatorKinds.clear(); markers.length = 0; activeComp = ''; notify('onSceneChanged'); },
     keyframe(id: string, frame: number, updates: Record<string, unknown>) {
       for (const [path, value] of Object.entries(updates)) {
         if (!known(id, path)) notFound(id, path);
