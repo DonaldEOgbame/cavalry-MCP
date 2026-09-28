@@ -7,11 +7,14 @@
 (function () {
   const BRIDGE_VERSION = "1.0.0";
   const PROTOCOL_VERSION = 2;
-  const BRIDGE_CAPABILITIES = ["authenticated-sessions", "callback-v1", "response-file-v1", "protocol-negotiation", "transactional-batch"];
+  const BRIDGE_CAPABILITIES = ["authenticated-sessions", "callback-v1", "response-file-v1", "protocol-negotiation", "transactional-batch", "incident-journal-v1", "reentrancy-guard-v1", "session-audit-v1"];
   const BRIDGE_INSTANCE_ID = "bridge_" + Date.now() + "_" + Math.random().toString(36).slice(2);
   const LISTEN_HOST = "127.0.0.1";
   const LISTEN_PORT = 8080;
   const MAX_EVENT_QUEUE = 1000;
+  const MAX_INCIDENTS = 200;
+  const MAX_INCIDENTS_PER_RESPONSE = 20;
+  const RECENT_REQUEST_CORRELATION_MS = 5000;
   const eventQueue = [];
   const recentEvents = [];
   let eventSubscriptions = {};
@@ -19,6 +22,237 @@
   let sceneRevision = 0;
   let batchExecution = false;
   const seenRequestIds = {};
+
+  // Runtime-reliability state. Everything here is plain JavaScript so the
+  // re-entrant status probe can report it without calling into Cavalry while
+  // a render or long native call is on the stack.
+  const incidents = [];
+  const incidentsByFingerprint = {};
+  let incidentSeq = 0;
+  let incidentCounter = 0;
+  let activeRequest = null;
+  const requestStack = [];
+  let lastCompletedRequest = null;
+  let dispatchDepth = 0;
+  const deferredPosts = [];
+  let deferredTotal = 0;
+  let activeRender = null;
+  let lastRender = null;
+  const sessionStats = {};
+  let rejectedUnauthenticated = 0;
+  let rejectedMalformed = 0;
+  // Ops answered even while another request is executing. They must not call
+  // the Cavalry API (except render_cancel, which mirrors the Render Manager's
+  // own cancel button and is meaningless once the render has returned).
+  const REENTRANT_OPS = { cavalry_ping: true, bridge_status: true, render_cancel: true };
+
+  function describeError(value) {
+    if (value === null || value === undefined) return { name: "Unknown", message: String(value), stack: "" };
+    if (typeof value === "string") return { name: "Error", message: value, stack: "" };
+    const described = {
+      name: String(value.name || (value.constructor && value.constructor.name) || "Error"),
+      message: String(value.message !== undefined ? value.message : value),
+      stack: value.stack ? String(value.stack) : "",
+    };
+    if (value.fileName !== undefined) described.fileName = String(value.fileName);
+    if (value.lineNumber !== undefined) described.lineNumber = Number(value.lineNumber);
+    if (value.line !== undefined && described.lineNumber === undefined) described.lineNumber = Number(value.line);
+    if (value.columnNumber !== undefined) described.columnNumber = Number(value.columnNumber);
+    return described;
+  }
+
+  function requestSnapshot(request) {
+    if (!request) return null;
+    const snapshot = {
+      requestId: request.requestId,
+      sessionId: request.sessionId,
+      op: request.op,
+      startedAt: request.startedAt,
+      ageMs: Date.now() - request.startedAt,
+    };
+    if (request.batchId) snapshot.batchId = request.batchId;
+    if (request.batchStep) snapshot.batchStep = request.batchStep;
+    if (request.endedAt) snapshot.endedAt = request.endedAt;
+    return snapshot;
+  }
+
+  function hostSnapshot() {
+    const snapshot = {
+      sceneRevision: sceneRevision,
+      appState: appState,
+      bridgeInstanceId: BRIDGE_INSTANCE_ID,
+      dispatchDepth: dispatchDepth,
+      deferredPosts: deferredPosts.length,
+      activeRender: activeRender,
+    };
+    // Avoid native getters while a render owns the host.
+    if (!activeRender) {
+      try { snapshot.activeComp = api.getActiveComp(); } catch (e) {}
+      try { snapshot.frame = api.getFrame(); } catch (e) {}
+      try { snapshot.scenePath = api.getSceneFilePath() || ""; } catch (e) {}
+    }
+    return snapshot;
+  }
+
+  function fingerprintFor(kind, source, described) {
+    const message = String(described.message || "")
+      .replace(/#\d+/g, "#N")
+      .replace(/\b\d{3,}\b/g, "N")
+      .replace(/req_[0-9a-f-]{36}/gi, "req_*")
+      .slice(0, 300);
+    const firstFrame = String(described.stack || "").split("\n").map(function (line) { return line.trim(); }).filter(Boolean)[1] || "";
+    return kind + "|" + source + "|" + described.name + "|" + message + "|" + firstFrame.replace(/:\d+:\d+/g, "");
+  }
+
+  // The outermost executing request owns the host; re-entrant probes nested
+  // inside it are never the cause of what the host is doing.
+  const PROBE_OPS = { cavalry_ping: true, bridge_status: true, diagnostics_incidents: true };
+  function owningRequest() {
+    for (let request of requestStack) if (!PROBE_OPS[request.op]) return request;
+    return null;
+  }
+
+  // Diagnostic categories. Capability discovery is not a category: it no
+  // longer relies on failures.
+  function categorizeIncident(kind, message) {
+    const text = String(message || "");
+    if (kind === "attribute.invalid_read" || /Attribute not found|attribute .* not available/i.test(text)) return "invalid_attribute";
+    if (/\bport\b|connect/i.test(text)) return "invalid_graph_port";
+    if (/keyframe/i.test(text)) return "invalid_keyframe_operation";
+    if (kind === "render.exception" || /render/i.test(text)) return "render_error";
+    if (kind === "javascript.error" || kind === "callback.exception") return "javascript_exception";
+    if (kind.indexOf("bridge.") === 0 || kind === "handler.exception") return "bridge_exception";
+    return "unknown";
+  }
+
+  function recordIncident(kind, error, extra) {
+    const details = extra || {};
+    const described = describeError(error);
+    const now = Date.now();
+    let correlation = "none";
+    let request = null;
+    if (owningRequest()) {
+      correlation = "active";
+      request = requestSnapshot(owningRequest());
+    } else if (lastCompletedRequest && now - lastCompletedRequest.endedAt <= RECENT_REQUEST_CORRELATION_MS) {
+      correlation = "recent";
+      request = requestSnapshot(lastCompletedRequest);
+    }
+    const source = details.callback || details.op || (request && request.op) || "host";
+    const fingerprint = fingerprintFor(kind, source, described);
+    const context = {
+      at: now,
+      correlation: correlation,
+      request: request,
+      host: hostSnapshot(),
+    };
+    for (let key in details) context[key] = details[key];
+    const category = categorizeIncident(kind, described.message);
+    incidentSeq++;
+    let incident = incidentsByFingerprint[fingerprint];
+    if (incident) {
+      incident.count++;
+      incident.lastSeen = now;
+      incident.lastContext = context;
+      incident.updatedSeq = incidentSeq;
+    } else {
+      incidentCounter++;
+      incident = {
+        incidentId: "inc_" + BRIDGE_INSTANCE_ID.slice(-8) + "_" + incidentCounter,
+        kind: kind,
+        category: category,
+        source: source,
+        fingerprint: fingerprint,
+        error: described,
+        firstSeen: now,
+        lastSeen: now,
+        count: 1,
+        firstContext: context,
+        lastContext: context,
+        updatedSeq: incidentSeq,
+      };
+      incidentsByFingerprint[fingerprint] = incident;
+      incidents.push(incident);
+      if (incidents.length > MAX_INCIDENTS) {
+        const dropped = incidents.shift();
+        delete incidentsByFingerprint[dropped.fingerprint];
+      }
+    }
+    try { emitEvent("bridge.incident", { incidentId: incident.incidentId, kind: kind, message: described.message, count: incident.count }); } catch (e) {}
+    try { if (statusLabel) statusLabel.setText("● Listening on " + LISTEN_HOST + ":" + LISTEN_PORT + " | incidents: " + incidents.length); } catch (e) {}
+    return incident;
+  }
+
+  function incidentUpdatesSince(ackSeq) {
+    if (typeof ackSeq !== "number") return [];
+    const updates = [];
+    for (let incident of incidents) if (incident.updatedSeq > ackSeq) updates.push(incident);
+    // Oldest first, so a client acknowledging the highest sequence it received
+    // catches up over successive responses without skipping any update.
+    updates.sort(function (a, b) { return a.updatedSeq - b.updatedSeq; });
+    return updates.slice(0, MAX_INCIDENTS_PER_RESPONSE);
+  }
+
+  // Exceptions escaping a native callback surface as Cavalry "JavaScript
+  // Error" dialogs and can block the host. Every bridge-owned callback is
+  // wrapped so failures become structured, correlated incidents instead.
+  function guarded(name, fn) {
+    return function () {
+      try {
+        return fn.apply(this, arguments);
+      } catch (e) {
+        try { recordIncident("callback.exception", e, { callback: name }); } catch (inner) {}
+        return undefined;
+      }
+    };
+  }
+
+  function auditSession(request, rejectedReason) {
+    const sessionId = request && typeof request.sessionId === "string" ? request.sessionId : "unknown";
+    let stats = sessionStats[sessionId];
+    if (!stats) {
+      stats = sessionStats[sessionId] = { sessionId: sessionId, requests: 0, rawScriptRequests: 0, rejected: 0, firstSeen: Date.now(), lastSeen: 0, ops: {} };
+    }
+    stats.lastSeen = Date.now();
+    if (rejectedReason === "expired") { stats.expired = (stats.expired || 0) + 1; return; }
+    if (rejectedReason) { stats.rejected++; return; }
+    stats.requests++;
+    const op = String(request.op || "unknown");
+    if (op === "cavalry_raw_script") stats.rawScriptRequests++;
+    if (op === "batch" && request.params && Array.isArray(request.params.operations)) {
+      for (let item of request.params.operations) if (item && item.op === "cavalry_raw_script") stats.rawScriptRequests++;
+    }
+    if (stats.ops[op] !== undefined || Object.keys(stats.ops).length < 200) stats.ops[op] = (stats.ops[op] || 0) + 1;
+  }
+
+  function bridgeStatus() {
+    const sessions = [];
+    for (let key in sessionStats) sessions.push(sessionStats[key]);
+    return {
+      bridgeVersion: BRIDGE_VERSION,
+      protocolVersion: PROTOCOL_VERSION,
+      bridgeCapabilities: BRIDGE_CAPABILITIES,
+      bridgeInstanceId: BRIDGE_INSTANCE_ID,
+      now: Date.now(),
+      busy: !!owningRequest(),
+      activeRequest: requestSnapshot(owningRequest()),
+      lastCompletedRequest: requestSnapshot(lastCompletedRequest),
+      activeRender: activeRender ? Object.assign({ ageMs: Date.now() - activeRender.startedAt }, activeRender) : null,
+      lastRender: lastRender,
+      deferredPosts: deferredPosts.length,
+      deferredTotal: deferredTotal,
+      appState: appState,
+      sceneRevision: sceneRevision,
+      incidentSeq: incidentSeq,
+      incidentCount: incidents.length,
+      lastIncidentAt: incidents.reduce(function (latest, item) { return Math.max(latest, item.lastSeen); }, 0) || null,
+      sessions: sessions,
+      rejectedUnauthenticated: rejectedUnauthenticated,
+      rejectedMalformed: rejectedMalformed,
+      attributes: Object.assign({}, attributeMetrics),
+      capabilities: capabilityReport(),
+    };
+  }
 
   function emitEvent(eventName, details) {
     if (eventName === "scene.changed" || eventName === "composition.changed" || eventName === "attribute.changed" || eventName === "attribute.connected" || eventName === "attribute.disconnected" || eventName.startsWith("layer.") || eventName.startsWith("asset.")) {
@@ -61,29 +295,202 @@
     return trimmed;
   }
 
+  // ----------------------------------------------------------------------------
+  // Capability registry
+  //
+  // Positive, cached knowledge of what each node type exposes. Cavalry's own
+  // attribute enumeration (api.getAttributes) is taken once per Cavalry
+  // version and node type; client-named paths that are not enumerated are
+  // confirmed on the instance with api.hasAttribute. Capabilities are never
+  // discovered by reading an attribute and waiting for "Attribute not found".
+  // ----------------------------------------------------------------------------
+  const attributeMetrics = {
+    attributeReadRequests: 0,
+    validAttributeReads: 0,
+    invalidAttributeReads: 0,
+    unsupportedReadsAvoided: 0,
+    trustedReads: 0,
+    capabilityCacheHits: 0,
+    capabilityCacheMisses: 0,
+    attributeEnumerations: 0,
+    instanceAttributeChecks: 0,
+    uuidLookups: 0,
+    uuidCacheHits: 0,
+    identitiesWithoutUuid: 0,
+    nodeInspections: 0,
+    summaryInspections: 0,
+    detailedInspections: 0,
+    targetedInspections: 0,
+    keyframeApiCalls: 0,
+    graphOperations: 0,
+    eventEnrichmentReads: 0,
+    eventNotificationsWithoutReads: 0,
+  };
+  const capabilityCache = {};
+  const layerTypeCache = {};
+  const uuidCache = {};
+  let cavalryVersionKeyValue = null;
+
+  // Object classes handled through dedicated APIs (keyframe, marker, render,
+  // palette). They are identified by their host object id, not a uuid.
+  const LAYER_ID_IDENTITY_TYPES = { animationCurve: true, timeMarker: true, renderQueue: true, renderQueueItem: true, paletteContainer: true };
+
+  // Safety net for internal reads only: notification paths that are graph
+  // ports, evaluation time, or keyframe/array helpers rather than values.
+  // Positive enumeration already excludes them; this guards regressions.
+  const NON_VALUE_PATH = /^(?:out|in|time|keyframes(?:\..*)?)$|\.(?:out|in)$/;
+
+  function cavalryVersionKey() {
+    if (cavalryVersionKeyValue === null) {
+      try { cavalryVersionKeyValue = String(api.getCavalryVersion()); } catch (e) { cavalryVersionKeyValue = "unknown"; }
+    }
+    return cavalryVersionKeyValue;
+  }
+
+  function nodeTypeOf(layerId) {
+    if (layerTypeCache[layerId] !== undefined) return layerTypeCache[layerId];
+    let type = "";
+    try { type = api.getLayerType(layerId) || ""; } catch (e) {}
+    layerTypeCache[layerId] = type;
+    return type;
+  }
+
+  function capabilitiesFor(layerId) {
+    const type = nodeTypeOf(layerId) || "unknown";
+    const key = cavalryVersionKey() + "|" + type;
+    let capabilities = capabilityCache[key];
+    if (capabilities) {
+      attributeMetrics.capabilityCacheHits++;
+      return capabilities;
+    }
+    attributeMetrics.capabilityCacheMisses++;
+    let list = [];
+    try {
+      list = api.getAttributes(layerId) || [];
+      attributeMetrics.attributeEnumerations++;
+    } catch (e) {}
+    capabilities = { key: key, cavalryVersion: cavalryVersionKey(), type: type, attributes: {}, count: list.length, uuid: null, enumeratedFrom: layerId };
+    for (let attr of list) capabilities.attributes[attr] = true;
+    capabilityCache[key] = capabilities;
+    return capabilities;
+  }
+
+  function countOperation(op) {
+    if (typeof op !== "string") return;
+    if (op.indexOf("graph_") === 0) attributeMetrics.graphOperations++;
+    else if (op.indexOf("keyframe_") === 0) attributeMetrics.keyframeApiCalls++;
+  }
+
+  function forgetLayer(layerId) {
+    delete layerTypeCache[layerId];
+    delete uuidCache[layerId];
+  }
+
+  function forgetAllLayers() {
+    for (let key of Object.keys(layerTypeCache)) delete layerTypeCache[key];
+    for (let key of Object.keys(uuidCache)) delete uuidCache[key];
+  }
+
+  // mode "known":    internal read; only attributes enumerated for the type.
+  // mode "explicit": a caller named the path; confirm it on this instance.
+  function attributeReadable(layerId, path, mode) {
+    const capabilities = capabilitiesFor(layerId);
+    if (capabilities.attributes[path] === true) return mode === "explicit" || !NON_VALUE_PATH.test(path);
+    if (mode !== "explicit") return false;
+    attributeMetrics.instanceAttributeChecks++;
+    try { return api.hasAttribute(layerId, path) === true; } catch (e) { return false; }
+  }
+
+  function attributeNotFound(layerId, path) {
+    const error = new Error("Attribute '" + path + "' is not available on " + layerId + " (" + (nodeTypeOf(layerId) || "unknown type") + ").");
+    error.code = "ATTRIBUTE_NOT_FOUND";
+    return error;
+  }
+
+  // Every attribute read in the bridge goes through here.
+  // mode "trusted": the path was just written successfully, or is a documented
+  //                 attribute read by a dedicated handler.
+  function readAttr(layerId, path, mode) {
+    attributeMetrics.attributeReadRequests++;
+    if (mode === "trusted") {
+      attributeMetrics.trustedReads++;
+    } else if (!attributeReadable(layerId, path, mode)) {
+      attributeMetrics.unsupportedReadsAvoided++;
+      if (mode === "explicit") throw attributeNotFound(layerId, path);
+      return undefined;
+    }
+    try {
+      const value = api.get(layerId, path);
+      attributeMetrics.validAttributeReads++;
+      return value;
+    } catch (e) {
+      // The registry said this read was valid; this is a real defect, so it
+      // is counted and surfaced rather than swallowed.
+      attributeMetrics.invalidAttributeReads++;
+      try { recordIncident("attribute.invalid_read", e, { layerId: layerId, attrPath: path, mode: mode, nodeType: nodeTypeOf(layerId) }); } catch (inner) {}
+      throw e;
+    }
+  }
+
+  function typeHasUuid(layerId) {
+    const capabilities = capabilitiesFor(layerId);
+    if (capabilities.uuid === null) {
+      if (LAYER_ID_IDENTITY_TYPES[capabilities.type]) capabilities.uuid = false;
+      else if (capabilities.attributes.uuid === true) capabilities.uuid = true;
+      else {
+        attributeMetrics.instanceAttributeChecks++;
+        try { capabilities.uuid = api.hasAttribute(layerId, "uuid") === true; } catch (e) { capabilities.uuid = false; }
+      }
+    }
+    return capabilities.uuid;
+  }
+
+  function layerUuid(layerId) {
+    if (uuidCache[layerId] !== undefined) {
+      attributeMetrics.uuidCacheHits++;
+      return uuidCache[layerId];
+    }
+    let uuid = "";
+    if (typeHasUuid(layerId)) {
+      attributeMetrics.uuidLookups++;
+      try { uuid = readAttr(layerId, "uuid", "trusted") || ""; } catch (e) {}
+    } else {
+      attributeMetrics.identitiesWithoutUuid++;
+    }
+    uuidCache[layerId] = uuid;
+    return uuid;
+  }
+
+  function capabilityReport() {
+    const types = [];
+    for (let key of Object.keys(capabilityCache)) {
+      const capabilities = capabilityCache[key];
+      types.push({ key: key, type: capabilities.type, attributeCount: capabilities.count, uuid: capabilities.uuid });
+    }
+    return { cavalryVersion: cavalryVersionKey(), cachedTypes: types.length, types: types };
+  }
+
+  // Explicit read that reports an unavailable attribute as null.
+  function readOptional(layerId, path) {
+    if (!attributeReadable(layerId, path, "explicit")) { attributeMetrics.unsupportedReadsAvoided++; return null; }
+    return readAttr(layerId, path, "trusted");
+  }
+
   function getLayerIdentity(layerId) {
     if (!layerId) return null;
     const actualId = resolveLayerId(layerId);
-    let uuid = "";
-    try {
-      uuid = api.get(actualId, "uuid") || "";
-    } catch (e) {}
+    const uuid = layerUuid(actualId);
 
     let name = actualId;
     try {
       name = api.getNiceName(actualId) || actualId;
     } catch (e) {}
 
-    let type = "";
-    try {
-      type = api.getLayerType(actualId) || "";
-    } catch (e) {}
-
     return {
       layerId: actualId,
       uuid: uuid,
       name: name,
-      type: type,
+      type: nodeTypeOf(actualId),
     };
   }
 
@@ -188,6 +595,33 @@
     } catch (e) { return false; }
   }
 
+  // Records how long api.render() actually owns the host and whether it
+  // threw. A foreground call that returns in milliseconds for a long range is
+  // diagnostic evidence that rendering continues asynchronously.
+  function runTrackedRender(itemId, jobId, background, invoke) {
+    const started = Date.now();
+    let settings = null;
+    if (itemId !== "*") {
+      settings = {};
+      for (let attr of ["filePath", "fileName", "frameRange", "frameRangeMode"]) {
+        try { const value = readAttr(itemId, attr, "known"); if (value !== undefined) settings[attr] = value; } catch (e) {}
+      }
+      try { settings.generator = api.getCurrentGeneratorType(itemId, "generator"); } catch (e) {}
+    }
+    activeRender = { itemId: itemId, jobId: jobId || null, background: background, startedAt: started, requestId: activeRequest ? activeRequest.requestId : null, settings: settings };
+    try {
+      invoke();
+      lastRender = Object.assign({}, activeRender, { returnedAt: Date.now(), nativeCallMs: Date.now() - started, ok: true });
+      return { itemId: itemId, status: "returned", nativeCallMs: lastRender.nativeCallMs, settings: settings };
+    } catch (e) {
+      const incident = recordIncident("render.exception", e, { op: "render_start", itemId: itemId });
+      lastRender = Object.assign({}, activeRender, { returnedAt: Date.now(), nativeCallMs: Date.now() - started, ok: false, error: describeError(e), incidentId: incident.incidentId });
+      throw e;
+    } finally {
+      activeRender = null;
+    }
+  }
+
   // ----------------------------------------------------------------------------
   // Modular Handlers
   // ----------------------------------------------------------------------------
@@ -229,6 +663,13 @@
         activeComp: activeComp,
         activeScenePath: api.getSceneFilePath() || "",
         unsavedChanges: api.sceneHasUnsavedChanges(),
+        appState: appState,
+        sceneRevision: sceneRevision,
+        incidentSeq: incidentSeq,
+        incidentCount: incidents.length,
+        lastRender: lastRender,
+        deferredTotal: deferredTotal,
+        attributes: Object.assign({}, attributeMetrics),
       };
     },
 
@@ -284,6 +725,34 @@
         cavalryVersion: api.getCavalryVersion(),
         systemInfo: api.getSystemInfo ? api.getSystemInfo() : null,
       };
+    },
+
+    // Pure-JavaScript status probe. Safe to answer re-entrantly while a render
+    // or other long native call is executing; never touches the Cavalry API.
+    bridge_status: function () {
+      return bridgeStatus();
+    },
+
+    diagnostics_incidents: function (params) {
+      const sinceSeq = typeof params.sinceSeq === "number" ? params.sinceSeq : -1;
+      const kinds = Array.isArray(params.kinds) ? params.kinds : null;
+      const items = incidents.filter(function (item) {
+        return item.updatedSeq > sinceSeq && (!kinds || kinds.indexOf(item.kind) !== -1);
+      });
+      return { incidentSeq: incidentSeq, count: items.length, incidents: items.slice(-(params.limit || MAX_INCIDENTS)) };
+    },
+
+    // Proves the capture path end to end: a one-shot timer throws inside a
+    // guarded callback, which must become a structured incident, not a dialog.
+    diagnostics_selftest_incident: function (params) {
+      const marker = "cavalry-mcp-selftest-" + Date.now();
+      const selfTest = { onTimeout: guarded("selftest.timer", function () { throw new Error("Intentional self-test exception " + marker); }) };
+      const timer = new api.Timer(selfTest);
+      timer.setInterval(Math.max(1, Number(params.delayMs) || 10));
+      timer.setRepeating(false);
+      timer.start();
+      if (typeof globalThis !== "undefined") globalThis.__cavalryMcpSelfTest = { timer: timer, callbacks: selfTest };
+      return { scheduled: true, marker: marker };
     },
 
     font_list: function () {
@@ -377,12 +846,14 @@
     // --------------------------------------------------------------------------
     scene_new: function (params) {
       api.newScene();
+      forgetAllLayers();
       return { success: true };
     },
 
     scene_open: function (params) {
       if (!params.path) throw new Error("Missing 'path' parameter.");
       api.openScene(params.path, params.force === true);
+      forgetAllLayers();
       return {
         path: params.path,
         activeComp: api.getActiveComp(),
@@ -418,30 +889,58 @@
       return { imported: true, path: params.path };
     },
 
+    // Inspection modes:
+    //   summary  (default): identity of every layer; no attribute reads.
+    //   detailed: identity, hierarchy, connections, and the core transform
+    //             attributes the node type enumerates.
+    //   targeted: identity plus exactly the named attributes, each confirmed
+    //             on the instance; unavailable ones are listed, never read.
     scene_inspect: function (params) {
       const allLayers = api.getAllSceneLayers() || [];
       const activeComp = api.getActiveComp();
-      const detailed = params.detailed === true;
+      const mode = params.mode || (params.detailed === true ? "detailed" : Array.isArray(params.attributes) ? "targeted" : "summary");
+      attributeMetrics.nodeInspections += allLayers.length;
+      if (mode === "detailed") attributeMetrics.detailedInspections++;
+      else if (mode === "targeted") attributeMetrics.targetedInspections++;
+      else attributeMetrics.summaryInspections++;
+      const coreTransforms = ["position", "scale", "rotation", "opacity"];
 
       const layerSummaries = allLayers.map(function (id) {
         const ident = getLayerIdentity(id);
-        if (!detailed) return ident;
+        if (mode === "targeted") {
+          const values = {};
+          const unsupported = [];
+          for (let path of params.attributes || []) {
+            if (attributeReadable(id, path, "explicit")) values[path] = readAttr(id, path, "trusted");
+            else { attributeMetrics.unsupportedReadsAvoided++; unsupported.push(path); }
+          }
+          return Object.assign({}, ident, { values: values, unsupported: unsupported });
+        }
+        if (mode !== "detailed") return ident;
 
         let inConn = [];
         let outConn = [];
         try { inConn = api.getInConnectedAttributes(id); } catch (e) {}
         try { outConn = api.getOutConnectedAttributes(id); } catch (e) {}
+        attributeMetrics.graphOperations += 2;
+        const transforms = {};
+        for (let path of coreTransforms) {
+          const value = readAttr(id, path, "known");
+          if (value !== undefined) transforms[path] = value;
+        }
 
         return {
           ...ident,
           parent: api.getParent(id),
           inConnected: inConn,
           outConnected: outConn,
+          transforms: transforms,
         };
       });
 
       return {
         activeComp: activeComp,
+        mode: mode,
         layerCount: allLayers.length,
         layers: layerSummaries,
         markers: api.getTimeMarkers() || [],
@@ -470,9 +969,9 @@
         try {
           compInfo = {
             id: activeComp,
-            resolution: api.get(activeComp, "resolution"),
-            frameRange: { x: api.get(activeComp, "startFrame"), y: api.get(activeComp, "endFrame") },
-            fps: api.get(activeComp, "fps"),
+            resolution: readAttr(activeComp, "resolution", "trusted"),
+            frameRange: { x: readAttr(activeComp, "startFrame", "trusted"), y: readAttr(activeComp, "endFrame", "trusted") },
+            fps: readAttr(activeComp, "fps", "trusted"),
           };
         } catch (e) {}
       }
@@ -500,6 +999,7 @@
       if (!params.data) throw new Error("Missing checkpoint 'data' string.");
       api.newScene();
       api.deserialise(params.data);
+      forgetAllLayers();
       return { restored: true };
     },
 
@@ -550,7 +1050,7 @@
       return {
         compId: compId,
         name: params.name,
-        uuid: api.get(compId, "uuid") || "",
+        uuid: layerUuid(compId),
       };
     },
 
@@ -560,12 +1060,12 @@
 
       return {
         compId: compId,
-        uuid: api.get(compId, "uuid") || "",
+        uuid: layerUuid(compId),
         name: api.getNiceName(compId),
-        resolution: api.get(compId, "resolution"),
-        frameRange: { x: api.get(compId, "startFrame"), y: api.get(compId, "endFrame") },
-        fps: api.get(compId, "fps"),
-        backgroundColor: api.get(compId, "defaultCompBackground"),
+        resolution: readAttr(compId, "resolution", "trusted"),
+        frameRange: { x: readAttr(compId, "startFrame", "trusted"), y: readAttr(compId, "endFrame", "trusted") },
+        fps: readAttr(compId, "fps", "trusted"),
+        backgroundColor: readAttr(compId, "defaultCompBackground", "trusted"),
       };
     },
 
@@ -580,13 +1080,13 @@
       const compId = resolveLayerId(params.compId || api.getActiveComp());
       return {
         compId: compId,
-        uuid: api.get(compId, "uuid") || "",
+        uuid: layerUuid(compId),
         name: api.getNiceName(compId),
-        resolution: api.get(compId, "resolution"),
-        frameRange: { x: api.get(compId, "startFrame"), y: api.get(compId, "endFrame") },
-        fps: api.get(compId, "fps"),
-        backgroundColor: api.get(compId, "defaultCompBackground"),
-        motionBlur: api.hasAttribute(compId, "motionBlur") ? api.get(compId, "motionBlur") : null,
+        resolution: readAttr(compId, "resolution", "trusted"),
+        frameRange: { x: readAttr(compId, "startFrame", "trusted"), y: readAttr(compId, "endFrame", "trusted") },
+        fps: readAttr(compId, "fps", "trusted"),
+        backgroundColor: readAttr(compId, "defaultCompBackground", "trusted"),
+        motionBlur: attributeReadable(compId, "motionBlur", "explicit") ? readAttr(compId, "motionBlur", "trusted") : null,
       };
     },
 
@@ -594,7 +1094,7 @@
       const compId = resolveLayerId(params.compId || api.getActiveComp());
       const updates = {};
       if (params.width !== undefined || params.height !== undefined) {
-        const currentResolution = api.get(compId, "resolution");
+        const currentResolution = readAttr(compId, "resolution", "trusted");
         updates.resolution = {
           x: params.width !== undefined ? params.width : currentResolution.x,
           y: params.height !== undefined ? params.height : currentResolution.y,
@@ -602,8 +1102,8 @@
       }
       if (params.fps !== undefined) updates.fps = params.fps;
       if (params.startFrame !== undefined || params.endFrame !== undefined) {
-        updates.startFrame = params.startFrame !== undefined ? params.startFrame : api.get(compId, "startFrame");
-        updates.endFrame = params.endFrame !== undefined ? params.endFrame : api.get(compId, "endFrame");
+        updates.startFrame = params.startFrame !== undefined ? params.startFrame : readAttr(compId, "startFrame", "trusted");
+        updates.endFrame = params.endFrame !== undefined ? params.endFrame : readAttr(compId, "endFrame", "trusted");
       }
       if (params.backgroundColor) updates.defaultCompBackground = params.backgroundColor;
 
@@ -625,7 +1125,7 @@
 
       return {
         referenceLayerId: preCompRefId,
-        referenceUuid: api.get(preCompRefId, "uuid") || "",
+        referenceUuid: layerUuid(preCompRefId),
         referencedCompId: compId,
       };
     },
@@ -636,7 +1136,7 @@
       const refId = api.createCompReference(compId);
       return {
         referenceLayerId: refId,
-        referenceUuid: api.get(refId, "uuid") || "",
+        referenceUuid: layerUuid(refId),
       };
     },
 
@@ -751,8 +1251,9 @@
         } else if (pattern) {
           // Text layers are commonly addressed by their visible content even
           // when their layer name remains the generic "Text".
+          // Only node types that enumerate a "text" attribute are read.
           try {
-            const textValue = api.get(id, "text");
+            const textValue = readAttr(id, "text", "known");
             if (typeof textValue === "string" && pattern.test(textValue)) match = true;
           } catch (e) {}
         }
@@ -912,7 +1413,7 @@
       const children = api.getAttrChildren(layerId, params.attrPath) || [];
       let currentVal = null;
       try {
-        currentVal = api.get(layerId, params.attrPath);
+        currentVal = readAttr(layerId, params.attrPath, "explicit");
       } catch (e) {}
 
       return {
@@ -926,7 +1427,7 @@
 
     attribute_get: function (params) {
       const layerId = resolveLayerId(params.layerId);
-      let val = api.get(layerId, params.attrPath);
+      let val = readAttr(layerId, params.attrPath, "explicit");
       // 2D transform attributes are represented by Cavalry as Vector3 values
       // with a zero z component. Keep the bridge's documented 2D shape stable.
       if (params.attrPath === "position" && val && typeof val === "object" && val.z === 0) {
@@ -942,16 +1443,20 @@
     attribute_get_many: function (params) {
       const layerId = resolveLayerId(params.layerId);
       const result = {};
+      const unsupported = [];
       for (let p of params.attrPaths || []) {
-        try {
-          result[p] = api.get(layerId, p);
-        } catch (e) {
+        if (!attributeReadable(layerId, p, "explicit")) {
+          attributeMetrics.unsupportedReadsAvoided++;
+          unsupported.push(p);
           result[p] = null;
+          continue;
         }
+        result[p] = readAttr(layerId, p, "trusted");
       }
       return {
         layerId: layerId,
         values: result,
+        unsupported: unsupported,
       };
     },
 
@@ -968,7 +1473,7 @@
 
       const after = {};
       for (let k of Object.keys(updates)) {
-        try { after[k] = api.get(layerId, k); } catch (e) {}
+        try { after[k] = readAttr(layerId, k, "trusted"); } catch (e) {}
         if (!valuesEquivalent(after[k], updates[k])) throw new Error("POSTCONDITION_FAILED: attribute readback mismatch for " + k);
       }
 
@@ -985,7 +1490,7 @@
       if (!batchExecution) api.processEvents();
       const current = {};
       for (let key in (params.attributes || {})) {
-        current[key] = api.get(layerId, key);
+        current[key] = readAttr(layerId, key, "trusted");
         if (!valuesEquivalent(current[key], params.attributes[key])) throw new Error("POSTCONDITION_FAILED: attribute readback mismatch for " + key);
       }
       return {
@@ -1001,7 +1506,7 @@
       return {
         layerId: layerId,
         attrPath: params.attrPath,
-        value: api.get(layerId, params.attrPath),
+        value: readAttr(layerId, params.attrPath, "trusted"),
       };
     },
 
@@ -1288,14 +1793,17 @@
       for (let groupKey of Object.keys(grouped)) {
         const group = grouped[groupKey];
         api.keyframe(group.layerId, group.frame, group.values);
+        attributeMetrics.keyframeApiCalls++;
       }
       for (let key of Object.keys(expected)) {
         const separator = key.indexOf("\u0000");
         const layerId = key.slice(0, separator);
         const attrPath = key.slice(separator + 1);
         const actual = api.getKeyframeTimes(layerId, attrPath) || [];
+        attributeMetrics.keyframeApiCalls++;
         for (let frame of expected[key]) if (!frameExists(actual, frame)) throw new Error("POSTCONDITION_FAILED: bulk keyframe missing for " + layerId + "." + attrPath + " at " + frame);
       }
+      attributeMetrics.keyframeApiCalls += easings.length + interpolations.length;
       for (let item of easings) api.magicEasing(resolveLayerId(item.layerId), animationAttrPath(resolveLayerId(item.layerId), item.attrPath), item.frame, item.easingType);
       for (let item of interpolations) {
         const layerId = resolveLayerId(item.layerId);
@@ -1553,9 +2061,9 @@
         markers: markers.map(function (id) {
           return {
             markerId: id,
-            time: api.get(id, "time"),
-            label: api.hasAttribute(id, "label") ? api.get(id, "label") : null,
-            color: api.hasAttribute(id, "color") ? api.get(id, "color") : null,
+            time: readAttr(id, "time", "trusted"),
+            label: attributeReadable(id, "label", "explicit") ? readAttr(id, "label", "trusted") : null,
+            color: attributeReadable(id, "color", "explicit") ? readAttr(id, "color", "trusted") : null,
           };
         }),
       };
@@ -1644,26 +2152,34 @@
 
     render_start: function (params) {
       if (!params.itemId) throw new Error("Missing 'itemId' parameter.");
-      api.render(params.itemId);
-      return { itemId: params.itemId, status: "started" };
+      return runTrackedRender(params.itemId, params.jobId, false, function () { api.render(params.itemId); });
     },
 
     render_start_all: function (params) {
-      api.renderAll();
+      runTrackedRender("*", params.jobId, false, function () { api.renderAll(); });
       return { status: "all_started" };
     },
 
     render_cancel: function (params) {
+      const target = activeRender;
       api.cancelRender();
-      return { cancelled: true };
+      if (target) target.cancelRequestedAt = Date.now();
+      return { cancelled: true, activeRenderAtCancel: target, reentrant: dispatchDepth > 1 };
     },
 
+    // Targeted when `attributes` is given; otherwise reads only the value
+    // attributes Cavalry enumerates for render items.
     render_item_inspect: function (params) {
       const id = resolveLayerId(params.itemId);
-      const attributes = api.getAttributes(id) || [];
+      const attributes = Array.isArray(params.attributes) ? params.attributes : Object.keys(capabilitiesFor(id).attributes);
       const values = {};
-      for (let attr of attributes) { try { values[attr] = api.get(id, attr); } catch (e) {} }
-      return { identity: getLayerIdentity(id), attributes: attributes, values: values };
+      const unsupported = [];
+      for (let attr of attributes) {
+        const mode = Array.isArray(params.attributes) ? "explicit" : "known";
+        if (!attributeReadable(id, attr, mode)) { unsupported.push(attr); continue; }
+        try { values[attr] = readAttr(id, attr, "trusted"); } catch (e) {}
+      }
+      return { identity: getLayerIdentity(id), attributes: attributes, values: values, unsupported: unsupported };
     },
     render_item_attributes: function (params) { const id = resolveLayerId(params.itemId); return { itemId: id, attributes: api.getAttributes(id) || [] }; },
     render_item_set: function (params) { const id = resolveLayerId(params.itemId); api.set(id, params.settings || {}); api.processEvents(); return handlers.render_item_inspect({ itemId: id }); },
@@ -1684,15 +2200,15 @@
       api.set(id, applied);
       api.processEvents();
       const values = {};
-      for (let path in applied) { try { values[path] = api.get(id, path); } catch (e) {} }
+      for (let path in applied) { try { values[path] = readAttr(id, path, "trusted"); } catch (e) {} }
       return { itemId: id, applied: applied, values: values };
     },
     render_item_set_output: function (params) { const id = resolveLayerId(params.itemId); const settings = { filePath: params.filePath }; if (params.fileName !== undefined) settings.fileName = params.fileName; api.set(id, settings); if (params.formatType) api.setGenerator(id, "generator", params.formatType); api.processEvents(); return handlers.render_item_inspect({ itemId: id }); },
     render_item_delete: function (params) { const id = resolveLayerId(params.itemId); api.deleteLayer(id); api.processEvents(); return { itemId: id, deleted: true }; },
     render_item_duplicate: function (params) { const id = resolveLayerId(params.itemId); const duplicateId = api.duplicate(id, false); api.processEvents(); return { sourceItemId: id, item: getLayerIdentity(duplicateId) }; },
     render_item_set_format: function (params) { const id = resolveLayerId(params.itemId); api.setGenerator(id, "generator", params.formatType); api.processEvents(); return handlers.render_item_inspect({ itemId: id }); },
-    render_metadata_add: function (params) { const id = resolveLayerId(params.itemId); const metadata = api.get(id, "metadata") || []; metadata.push({ name: params.name, value: params.value }); api.set(id, { metadata: metadata }); api.processEvents(); return { itemId: id, metadata: api.get(id, "metadata") || [] }; },
-    render_metadata_remove: function (params) { const id = resolveLayerId(params.itemId); const metadata = (api.get(id, "metadata") || []).filter(function (item) { return item.name !== params.name; }); api.set(id, { metadata: metadata }); api.processEvents(); return { itemId: id, metadata: api.get(id, "metadata") || [] }; },
+    render_metadata_add: function (params) { const id = resolveLayerId(params.itemId); const metadata = readAttr(id, "metadata", "trusted") || []; metadata.push({ name: params.name, value: params.value }); api.set(id, { metadata: metadata }); api.processEvents(); return { itemId: id, metadata: readAttr(id, "metadata", "trusted") || [] }; },
+    render_metadata_remove: function (params) { const id = resolveLayerId(params.itemId); const metadata = (readAttr(id, "metadata", "trusted") || []).filter(function (item) { return item.name !== params.name; }); api.set(id, { metadata: metadata }); api.processEvents(); return { itemId: id, metadata: readAttr(id, "metadata", "trusted") || [] }; },
     render_status_unavailable: function () { throw new Error("Cavalry 2.7.2 exposes render/cancel/backgroundRender, but no supported active-render status API required for render_is_active or render_wait"); },
 
     // --------------------------------------------------------------------------
@@ -1846,7 +2362,7 @@
       api.processEvents();
       return { layerId: id, worldSpace: params.worldSpace === true, path: api.getEditablePath(id, params.worldSpace === true) };
     },
-    path_keyframe_get: function (params) { const id = resolveLayerId(params.layerId); const previousFrame = api.getFrame(); api.setFrame(params.frame); api.processEvents(); const value = api.get(id, params.attrPath); api.setFrame(previousFrame); api.processEvents(); return { layerId: id, attrPath: params.attrPath, frame: params.frame, value: value }; },
+    path_keyframe_get: function (params) { const id = resolveLayerId(params.layerId); const previousFrame = api.getFrame(); api.setFrame(params.frame); api.processEvents(); const value = readAttr(id, params.attrPath, "explicit"); api.setFrame(previousFrame); api.processEvents(); return { layerId: id, attrPath: params.attrPath, frame: params.frame, value: value }; },
     path_keyframe_set: function () { throw new Error("HOST_UNSTABLE: Native Editable Path keyframes/resync can terminate Cavalry 2.7.2. Use path_animation_safe."); },
     path_keyframe_resync: function () { throw new Error("HOST_UNSTABLE: Native Editable Path resync can terminate Cavalry 2.7.2. Use path_animation_safe."); },
     path_morph: function () { throw new Error("HOST_UNSTABLE: Native Editable Path morphing can terminate Cavalry 2.7.2. Use path_morph_safe."); },
@@ -1867,13 +2383,13 @@
     camera_list: function () { const ids = api.getCompLayersOfType(false, "planarCamera") || []; return { cameras: ids.map(getLayerIdentity) }; },
     camera_get_active: function () { const id = api.getActiveCamera(); return { hasActive: api.hasActiveCamera(), camera: id ? getLayerIdentity(id) : null }; },
     camera_has_active: function () { return { hasActive: api.hasActiveCamera() }; },
-    camera_inspect: function (params) { const id = resolveLayerId(params.layerId); return { identity: getLayerIdentity(id), cameraType: api.get(id, "cameraType"), position: api.get(id, "position"), rotation: api.get(id, "rotation"), lookAt: api.get(id, "lookAt"), zoom: api.get(id, "zoom"), guides: api.get(id, "inputGuides") }; },
+    camera_inspect: function (params) { const id = resolveLayerId(params.layerId); return { identity: getLayerIdentity(id), cameraType: readOptional(id, "cameraType"), position: readOptional(id, "position"), rotation: readOptional(id, "rotation"), lookAt: readOptional(id, "lookAt"), zoom: readOptional(id, "zoom"), guides: readOptional(id, "inputGuides") }; },
     camera_set_type: function () { throw new Error("HOST_UNSTABLE: Direct cameraType mutation can terminate Cavalry 2.7.2. Use camera_look_at, camera_cut, camera_transition, or camera_sequence_create."); },
     camera_create_guide: function () { throw new Error("HOST_UNSTABLE: Camera Guide creation can terminate Cavalry 2.7.2. Use camera_sequence_create."); },
     camera_set_guides: function () { throw new Error("HOST_UNSTABLE: Camera Guide sequencing is disabled on Cavalry 2.7.2. Use camera_sequence_create."); },
     camera_add_guide: function () { throw new Error("HOST_UNSTABLE: Camera Guides are disabled on Cavalry 2.7.2. Use camera_cut or camera_sequence_create."); },
     camera_remove_guide: function () { throw new Error("HOST_UNSTABLE: Camera Guides are disabled on Cavalry 2.7.2. Use camera_cut or camera_sequence_create."); },
-    camera_look_at: function (params) { const id = resolveLayerId(params.layerId); api.set(id, { lookAt: params.position, cameraType: 1 }); api.processEvents(); return { layerId: id, lookAt: api.get(id, "lookAt") }; },
+    camera_look_at: function (params) { const id = resolveLayerId(params.layerId); api.set(id, { lookAt: params.position, cameraType: 1 }); api.processEvents(); return { layerId: id, lookAt: readAttr(id, "lookAt", "trusted") }; },
     camera_layer_2_5d: function () { throw new Error("Cavalry 2.7.2 exposes has3dTransforms(), but no supported scripting API for enabling or disabling a layer's 2.5D transform state"); },
 
     guide_list: function (params) { const id = resolveLayerId(params.compId || api.getActiveComp()); return { compId: id, guides: api.getGuideInfo(id) || [] }; },
@@ -1891,8 +2407,8 @@
     attribute_limits_clear: function (params) { const id = resolveLayerId(params.layerId); api.clearAttributeDefinitionOverrides(id, params.attrPath); return { layerId: id, attrPath: params.attrPath, cleared: true }; },
     attribute_definition_get_effective: function (params) { const id = resolveLayerId(params.layerId); return { layerId: id, attrPath: params.attrPath, definition: api.getEffectiveAttributeDefinition(id, params.attrPath) }; },
 
-    graph_attribute_get: function (params) { const id = resolveLayerId(params.layerId); return { layerId: id, attrPath: params.attrPath, value: api.get(id, params.attrPath) }; },
-    graph_attribute_set: function (params) { const id = resolveLayerId(params.layerId); const values = {}; values[params.attrPath] = params.value; api.set(id, values); api.processEvents(); return { layerId: id, attrPath: params.attrPath, value: api.get(id, params.attrPath) }; },
+    graph_attribute_get: function (params) { const id = resolveLayerId(params.layerId); return { layerId: id, attrPath: params.attrPath, value: readAttr(id, params.attrPath, "explicit") }; },
+    graph_attribute_set: function (params) { const id = resolveLayerId(params.layerId); const values = {}; values[params.attrPath] = params.value; api.set(id, values); api.processEvents(); return { layerId: id, attrPath: params.attrPath, value: readAttr(id, params.attrPath, "trusted") }; },
     graph_attribute_apply_preset: function (params) { const id = resolveLayerId(params.layerId); const presets = { "s-curve": 0, ramp: 1, linear: 2, flat: 3 }; api.graphPreset(id, params.attrPath, presets[params.preset]); return { layerId: id, attrPath: params.attrPath, preset: params.preset }; },
     graph_attribute_flip: function (params) { const id = resolveLayerId(params.layerId); api.flipGraph(id, params.attrPath, params.direction); return { layerId: id, attrPath: params.attrPath, direction: params.direction }; },
 
@@ -1932,7 +2448,12 @@
     render_dynamic_offset: function (params) { api.setDynamicIndexOffset(params.offset); return { offset: params.offset }; },
     render_dynamic_range: function (params) { const id = resolveLayerId(params.itemId); api.set(id, { dynamicRender: true, dynamicRenderRange: { x: params.start, y: params.end } }); api.processEvents(); return handlers.render_item_inspect({ itemId: id }); },
     render_dynamic_preview: function () { throw new Error("Cavalry 2.7.2 has no documented Dynamic Rendering preview API; configure an index/offset and use preview_frame instead"); },
-    render_background_start: function (params) { api.backgroundRender(params.itemId); return { itemId: params.itemId, status: "started" }; },
+    render_background_start: function (params) {
+      const started = Date.now();
+      api.backgroundRender(params.itemId);
+      lastRender = { itemId: params.itemId, jobId: params.jobId || null, background: true, startedAt: started, returnedAt: Date.now(), nativeCallMs: Date.now() - started, ok: true };
+      return { itemId: params.itemId, status: "started", nativeCallMs: lastRender.nativeCallMs };
+    },
 
     layer_get_supertypes: function (params) { const id = resolveLayerId(params.layerId); return { layerId: id, supertypes: api.getSuperTypes(id) || [] }; },
     shape_has_fill: function (params) { const id = resolveLayerId(params.layerId); return { layerId: id, hasFill: api.hasFill(id) }; },
@@ -1971,11 +2492,15 @@
         }
         if (operation === "attribute_set") {
           const expected = resolvedParams.attrPath ? (function () { const value = {}; value[resolvedParams.attrPath] = resolvedParams.value; return value; })() : resolvedParams.attributes || {};
-          for (let key in expected) if (!valuesEquivalent(api.get(resolveLayerId(resolvedParams.layerId), key), expected[key])) return { verified: false, details: "attribute_readback_mismatch:" + key };
+          // The handler already read back exactly the written paths; verify
+          // that readback instead of issuing a second read per attribute.
+          const current = (result && result.current) || {};
+          for (let key in expected) if (!valuesEquivalent(current[key], expected[key])) return { verified: false, details: "attribute_readback_mismatch:" + key };
           return { verified: true, details: "attribute_readback" };
         }
         if (operation === "attribute_set_many") {
-          for (let key in (resolvedParams.attributes || {})) if (!valuesEquivalent(api.get(resolveLayerId(resolvedParams.layerId), key), resolvedParams.attributes[key])) return { verified: false, details: "attribute_readback_mismatch:" + key };
+          const current = (result && result.current) || {};
+          for (let key in (resolvedParams.attributes || {})) if (!valuesEquivalent(current[key], resolvedParams.attributes[key])) return { verified: false, details: "attribute_readback_mismatch:" + key };
           return { verified: true, details: "attribute_readback" };
         }
         if (operation === "keyframe_create") {
@@ -2046,8 +2571,12 @@
       }
 
       batchExecution = true;
+      if (activeRequest && params.batchId) activeRequest.batchId = String(params.batchId);
+      let stepIndex = -1;
       try { for (let opObj of operations) {
         const opStart = Date.now();
+        stepIndex++;
+        if (activeRequest) activeRequest.batchStep = { index: stepIndex, id: opObj.id, op: opObj.op };
         const handler = handlers[opObj.op];
         if (!handler) {
           allOk = false;
@@ -2066,6 +2595,7 @@
           continue;
         }
 
+        countOperation(opObj.op);
         try {
           const resolvedParams = substitute(opObj.params || {});
           // Batch execution is non-interactive. Force graph connections so an
@@ -2126,19 +2656,27 @@
           });
         } catch (stepErr) {
           allOk = false;
+          const described = describeError(stepErr);
+          const stepCode = typeof stepErr.code === "string" && /^[A-Z_]+$/.test(stepErr.code) ? stepErr.code : null;
+          const stepIncident = stepCode || /^POSTCONDITION_FAILED|^OPERATION_TIMEOUT/.test(described.message) ? null : recordIncident("handler.exception", stepErr, { op: opObj.op, batchStepId: opObj.id });
           stepResults.push({
             id: opObj.id,
             op: opObj.op,
             ok: false,
             error: {
-              code: "CAVALRY_ERROR",
-              message: stepErr.message || String(stepErr),
+              code: stepCode || "CAVALRY_ERROR",
+              message: described.message,
+              stack: described.stack || undefined,
+              incidentId: stepIncident ? stepIncident.incidentId : undefined,
             },
             durationMs: Date.now() - opStart,
           });
           if (stopOnError) break;
         }
-      } } finally { batchExecution = false; }
+      } } finally {
+        batchExecution = false;
+        if (activeRequest) delete activeRequest.batchStep;
+      }
 
       // Flush once for the complete batch. Individual setters still perform
       // immediate readback against Cavalry's in-memory graph, but avoiding a
@@ -2210,11 +2748,11 @@
       };
     }
 
-    if (!["cavalry_ping", "cavalry_health", "cavalry_capabilities", "cavalry_bridge_info"].includes(op) && !isSupportedCavalryVersion()) {
+    if (!["cavalry_ping", "cavalry_health", "cavalry_capabilities", "cavalry_bridge_info", "bridge_status", "diagnostics_incidents"].includes(op) && !isSupportedCavalryVersion()) {
       return {
         id: reqId, token: session.token, protocolVersion: PROTOCOL_VERSION, bridgeCapabilities: BRIDGE_CAPABILITIES,
         ok: false, operation: op, durationMs: Date.now() - startTime,
-        error: { code: "UNSUPPORTED_CAVALRY_VERSION", message: "This bridge requires Cavalry 2.7.2 or newer; detected " + api.getCavalryVersion() + ".", operation: op, suggestion: "Upgrade Cavalry or install a cavalry-mcp release compatible with this host version." },
+        error: { code: "UNSUPPORTED_CAVALRY_VERSION", message: "This bridge requires Cavalry 2.7.2 or newer; detected " + (function () { try { return api.getCavalryVersion(); } catch (e) { return "unknown"; } })() + ".", operation: op, suggestion: "Upgrade Cavalry or install a cavalry-mcp release compatible with this host version." },
       };
     }
 
@@ -2267,6 +2805,11 @@
       };
     }
 
+    countOperation(op);
+    activeRequest = { requestId: reqId, sessionId: request.sessionId, op: op, startedAt: startTime };
+    if (op === "batch" && params.batchId) activeRequest.batchId = String(params.batchId);
+    const ownRequest = activeRequest;
+    requestStack.push(ownRequest);
     try {
       const resData = handler(params);
       requestCounter++;
@@ -2294,6 +2837,11 @@
         durationMs: Date.now() - startTime,
       };
     } catch (err) {
+      const described = describeError(err);
+      // Handlers may raise a structured code (e.g. ATTRIBUTE_NOT_FOUND from the
+      // capability registry, which never reached Cavalry).
+      const structuredCode = typeof err.code === "string" && /^[A-Z_]+$/.test(err.code) ? err.code : null;
+      const incident = structuredCode ? null : recordIncident("handler.exception", err, { op: op });
       return {
         id: reqId,
         token: session.token,
@@ -2301,19 +2849,112 @@
         bridgeCapabilities: BRIDGE_CAPABILITIES,
         ok: false,
         operation: op,
+        sceneRevision: sceneRevision,
         durationMs: Date.now() - startTime,
         error: {
-          code: "CAVALRY_ERROR",
-          message: err.message || String(err),
+          code: structuredCode || "CAVALRY_ERROR",
+          message: described.message,
           operation: op,
+          stack: structuredCode ? undefined : described.stack || undefined,
+          incidentId: incident ? incident.incidentId : undefined,
         },
       };
+    } finally {
+      ownRequest.endedAt = Date.now();
+      const index = requestStack.indexOf(ownRequest);
+      if (index !== -1) requestStack.splice(index, 1);
+      // A re-entrant status probe must not replace the context of the
+      // operation that is still executing underneath it.
+      if (!requestStack.length && !PROBE_OPS[op]) lastCompletedRequest = ownRequest;
+      activeRequest = requestStack.length ? requestStack[requestStack.length - 1] : null;
     }
   }
 
   // ----------------------------------------------------------------------------
   // Bridge Server Loop
   // ----------------------------------------------------------------------------
+  function sendResponse(webServer, request, session, response) {
+    if (typeof request.ackIncidentSeq === "number") {
+      response.bridgeInstanceId = BRIDGE_INSTANCE_ID;
+      response.incidentSeq = incidentSeq;
+      const updates = incidentUpdatesSince(request.ackIncidentSeq);
+      if (updates.length) response.incidents = updates;
+    }
+    let responseJson;
+    try {
+      responseJson = JSON.stringify(response);
+    } catch (e) {
+      const incident = recordIncident("bridge.serialization", e, { op: request.op });
+      responseJson = JSON.stringify({
+        id: request.id, token: session.token, protocolVersion: PROTOCOL_VERSION, bridgeCapabilities: BRIDGE_CAPABILITIES,
+        ok: false, operation: request.op, durationMs: response.durationMs || 0, incidentSeq: incidentSeq,
+        error: { code: "CAVALRY_ERROR", message: "Bridge could not serialise the result: " + describeError(e).message, operation: request.op, incidentId: incident.incidentId },
+      });
+    }
+
+    // 1. Primary: Direct WebClient callback to MCP server receiver
+    if (request.callbackUrl) {
+      try {
+        const target = getCallbackTarget(request.callbackUrl, session);
+        if (target) {
+          const client = new api.WebClient(target.baseUrl);
+          client.post(target.path, responseJson, "application/json");
+        }
+      } catch (e) {}
+    }
+
+    // 2. Secondary: Store on WebServer for /get polling
+    try { webServer.setResultForGet(responseJson); } catch (e) {}
+
+    // 3. Tertiary: Write to responseFile IPC if provided
+    if (validResponseFile(request, session)) {
+      try { api.writeToFile(request.responseFile, responseJson, true); } catch (e) {}
+    }
+  }
+
+  function handleRequest(webServer, request, session) {
+    const replayKey = request.sessionId + ":" + request.id;
+    let response;
+    if (seenRequestIds[replayKey]) {
+      response = {
+        id: request.id, token: session.token, protocolVersion: PROTOCOL_VERSION, bridgeCapabilities: BRIDGE_CAPABILITIES,
+        ok: false, operation: request.op, durationMs: 0,
+        error: { code: "REPLAYED_REQUEST", message: "This authenticated request id has already been processed.", operation: request.op, suggestion: "Generate a new UUID request id before retrying." },
+      };
+    } else if (typeof request.deadlineAt === "number" && Date.now() > request.deadlineAt) {
+      // The client has already reported a timeout for this request. Running
+      // it now would apply a mutation nobody is waiting for.
+      seenRequestIds[replayKey] = Date.now();
+      auditSession(request, "expired");
+      response = {
+        id: request.id, token: session.token, protocolVersion: PROTOCOL_VERSION, bridgeCapabilities: BRIDGE_CAPABILITIES,
+        ok: false, operation: request.op, durationMs: 0,
+        error: { code: "REQUEST_EXPIRED", message: "Request expired " + (Date.now() - request.deadlineAt) + "ms before the host was free; it was not executed.", operation: request.op, suggestion: "Check host state; the host was busy or blocked when this request arrived." },
+      };
+    } else {
+      seenRequestIds[replayKey] = Date.now();
+      auditSession(request);
+      dispatchDepth++;
+      try {
+        response = dispatch(request, session);
+      } catch (e) {
+        const incident = recordIncident("bridge.dispatch", e, { op: request.op });
+        response = {
+          id: request.id, token: session.token, protocolVersion: PROTOCOL_VERSION, bridgeCapabilities: BRIDGE_CAPABILITIES,
+          ok: false, operation: request.op, durationMs: 0,
+          error: { code: "CAVALRY_ERROR", message: describeError(e).message, operation: request.op, incidentId: incident.incidentId },
+        };
+      } finally {
+        dispatchDepth--;
+      }
+    }
+    if (Object.keys(seenRequestIds).length > 10000) {
+      const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+      for (let key of Object.keys(seenRequestIds)) if (seenRequestIds[key] < cutoff) delete seenRequestIds[key];
+    }
+    sendResponse(webServer, request, session, response);
+  }
+
   function processPosts(webServer) {
     try {
       if (!webServer || typeof webServer.postCount !== "function" || typeof webServer.getNextPost !== "function") return;
@@ -2327,56 +2968,39 @@
         request = JSON.parse(post.result);
       } catch (e) {
         // Never reinterpret malformed protocol data as executable code.
+        rejectedMalformed++;
         console.log("Cavalry MCP Bridge rejected a malformed JSON request.");
         continue;
       }
 
       const session = loadSession(request);
       if (!session) {
+        rejectedUnauthenticated++;
+        auditSession(request, "unauthenticated");
         console.log("Cavalry MCP Bridge rejected an unauthenticated request.");
         continue;
       }
-      const replayKey = request.sessionId + ":" + request.id;
-      let response;
-      if (seenRequestIds[replayKey]) {
-        response = {
-          id: request.id, token: session.token, protocolVersion: PROTOCOL_VERSION, bridgeCapabilities: BRIDGE_CAPABILITIES,
-          ok: false, operation: request.op, durationMs: 0,
-          error: { code: "REPLAYED_REQUEST", message: "This authenticated request id has already been processed.", operation: request.op, suggestion: "Generate a new UUID request id before retrying." },
-        };
-      } else {
-        seenRequestIds[replayKey] = Date.now();
-        response = dispatch(request, session);
-      }
-      if (Object.keys(seenRequestIds).length > 10000) {
-        const cutoff = Date.now() - 24 * 60 * 60 * 1000;
-        for (let key of Object.keys(seenRequestIds)) if (seenRequestIds[key] < cutoff) delete seenRequestIds[key];
-      }
-      const responseJson = JSON.stringify(response);
 
-      // 1. Primary: Direct WebClient callback to MCP server receiver
-      if (request.callbackUrl) {
-        try {
-          const target = getCallbackTarget(request.callbackUrl, session);
-          if (target) {
-            const client = new api.WebClient(target.baseUrl);
-            client.post(target.path, responseJson, "application/json");
-          }
-        } catch (e) {}
+      // Native calls such as api.render() and api.processEvents() can pump
+      // Cavalry's event loop, which re-enters this function from the timer or
+      // WebServer callback. Never start a second scene operation inside the
+      // first one: answer pure status probes (and cancellation) immediately,
+      // defer everything else until the outer operation has returned.
+      if (dispatchDepth > 0 && !REENTRANT_OPS[request.op]) {
+        deferredPosts.push({ request: request, session: session });
+        deferredTotal++;
+        continue;
       }
-
-      // 2. Secondary: Store on WebServer for /get polling
-      try { webServer.setResultForGet(responseJson); } catch (e) {}
-
-      // 3. Tertiary: Write to responseFile IPC if provided
-      if (validResponseFile(request, session)) {
-        try { api.writeToFile(request.responseFile, responseJson, true); } catch (e) {}
-      }
+      handleRequest(webServer, request, session);
+    }
+    while (dispatchDepth === 0 && deferredPosts.length > 0) {
+      const deferred = deferredPosts.shift();
+      handleRequest(webServer, deferred.request, deferred.session);
     }
   }
 
   function BridgeCallback(webServer) {
-    this.onPost = function () { processPosts(webServer); };
+    this.onPost = guarded("webserver.onPost", function () { processPosts(webServer); });
   }
 
   // Start Server
@@ -2389,10 +3013,10 @@
   // Some Cavalry/Qt builds accept POSTs but fail to deliver WebServer callbacks.
   // A documented UI Timer provides a transport-only fallback; scene changes
   // continue to use native application callbacks and are never timer-polled.
-  const timerCallbacks = { onTimeout: function () {
+  const timerCallbacks = { onTimeout: guarded("timer.onTimeout", function () {
     // Timer callbacks must never escape an exception into Cavalry's script host.
-    try { processPosts(server); } catch (e) {}
-  } };
+    processPosts(server);
+  }) };
   const postPollTimer = new api.Timer(timerCallbacks);
   postPollTimer.setInterval(25);
   postPollTimer.setRepeating(true);
@@ -2402,28 +3026,55 @@
     this.onCompChanged = function () {
       emitEvent("composition.changed", { compId: api.getActiveComp() });
     };
-    this.onSceneChanged = function () { emitEvent("scene.changed"); };
+    // Layer ids are reused after a scene is replaced; drop per-object caches.
+    this.onSceneChanged = function () { forgetAllLayers(); emitEvent("scene.changed"); };
     this.onSelectionChanged = function () {
       emitEvent("selection.layers.changed", { layerIds: api.getSelection() || [] });
     };
+    // Cavalry notifies changes on every object (including animation curves,
+    // time markers and render items) and on graph ports, evaluation time and
+    // keyframe helpers (out, time, keyframes.N) that are not readable values.
+    // A notification therefore carries no reads by default. Only an explicit
+    // subscription enriches it, and only with attributes the node type
+    // enumerates; nothing is read during batches or renders.
     this.onAttrChanged = function (layerId, attrId) {
-      const ident = getLayerIdentity(layerId);
-      let value = null;
-      try { value = api.get(layerId, attrId); } catch (e) {}
-      emitEvent("attribute.changed", {
-        layerId: layerId,
-        uuid: ident ? ident.uuid : "",
-        attribute: attrId,
-        value: value,
-      });
+      const detail = { layerId: layerId, attribute: attrId };
+      const subscribed = eventSubscriptions["*"] || eventSubscriptions["attribute.changed"];
+      if (subscribed && !activeRender && !batchExecution) {
+        const uuid = layerUuid(layerId);
+        if (uuid) detail.uuid = uuid;
+        if (attributeReadable(layerId, attrId, "known")) {
+          attributeMetrics.eventEnrichmentReads++;
+          try { detail.value = readAttr(layerId, attrId, "trusted"); } catch (e) {}
+        }
+      } else {
+        attributeMetrics.eventNotificationsWithoutReads++;
+      }
+      emitEvent("attribute.changed", detail);
     };
     this.onAssetAdded = function (layerId) { emitEvent("asset.added", { assetId: layerId }); };
     this.onAssetUpdated = function (layerId) { emitEvent("asset.updated", { assetId: layerId }); };
     this.onAssetAsyncLoadFinished = function (layerId) { emitEvent("asset.ready", { assetId: layerId }); };
     this.onAssetRemoved = function (layerId) { emitEvent("asset.removed", { assetId: layerId }); };
-    this.onLayerAdded = function (layerId) { emitEvent("layer.added", getLayerIdentity(layerId)); };
-    this.onLayerRemoved = function (layerId) { emitEvent("layer.removed", { layerId: layerId }); };
-    this.onJSError = function (error) { emitEvent("javascript.error", { message: String(error) }); };
+    this.onLayerAdded = function (layerId) {
+      forgetLayer(layerId);
+      const detail = { layerId: layerId, type: nodeTypeOf(layerId) };
+      if ((eventSubscriptions["*"] || eventSubscriptions["layer.added"]) && !batchExecution && !activeRender) {
+        const uuid = layerUuid(layerId);
+        if (uuid) detail.uuid = uuid;
+      } else {
+        attributeMetrics.eventNotificationsWithoutReads++;
+      }
+      emitEvent("layer.added", detail);
+    };
+    this.onLayerRemoved = function (layerId) { forgetLayer(layerId); emitEvent("layer.removed", { layerId: layerId }); };
+    // Cavalry reports script errors here, including ones raised outside the
+    // bridge. Capture the full error with the request, batch step, render item
+    // and host state that were current when it fired.
+    this.onJSError = function (error) {
+      const incident = recordIncident("javascript.error", error, { callback: "onJSError", rawArguments: Array.prototype.slice.call(arguments, 1).map(function (item) { return String(item); }) });
+      emitEvent("javascript.error", { message: incident.error.message, incidentId: incident.incidentId });
+    };
     this.onAttributeSelectionChanged = function () {
       emitEvent("selection.attributes.changed", { attributes: api.getSelectedAttributes() || [] });
     };
@@ -2446,6 +3097,10 @@
     this.onToolChanged = function (toolName) {
       emitEvent("tool.changed", { tool: toolName });
     };
+    // No application callback may throw into Cavalry's script host.
+    for (let name of Object.keys(this)) {
+      if (typeof this[name] === "function") this[name] = guarded("app." + name, this[name]);
+    }
   }
   const applicationCallbacks = new ApplicationCallbacks();
   ui.addCallbackObject(applicationCallbacks);

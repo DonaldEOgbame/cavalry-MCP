@@ -86,16 +86,31 @@ describe('declarative motion compiler', () => {
     assert.equal(runtime.dirtyScenes.size, 55);
   });
 
-  it('tracks removed scene layers for deletion on the next live compile', () => {
+  it('tracks removed scene layers for deletion on the next live compile, by stable handle', () => {
     const spec = benchmarkProject();
     const runtime = createRuntime(spec, compileMotionProject(spec));
     runtime.dirtyScenes.clear();
-    runtime.sceneLayerIds.set('scene-2', ['textShape#2', 'basicShape#2']);
+    runtime.layers.set('scene-2', new Map([
+      ['headline', { layerId: 'textShape#2', uuid: '11111111-1111-4111-8111-111111111111' }],
+      ['__background', { layerId: 'basicShape#2' }],
+    ]));
     const updated = structuredClone(spec);
     updated.scenes.splice(1, 1);
     updateRuntime(runtime, updated, compileMotionProject(updated));
-    assert.deepEqual([...runtime.pendingLayerDeletes].sort(), ['basicShape#2', 'textShape#2']);
-    assert.equal(runtime.sceneLayerIds.has('scene-2'), false);
+    assert.deepEqual([...runtime.pendingLayerDeletes].sort(), ['11111111-1111-4111-8111-111111111111', 'basicShape#2']);
+    assert.equal(runtime.layers.has('scene-2'), false);
+  });
+
+  it('marks only the retimed scene and later scenes dirty', () => {
+    const spec = benchmarkProject();
+    const runtime = createRuntime(spec, compileMotionProject(spec));
+    runtime.dirtyScenes.clear();
+    const updated = structuredClone(spec);
+    updated.scenes[40].durationFrames += 6;
+    updateRuntime(runtime, updated, compileMotionProject(updated));
+    assert.equal(runtime.dirtyScenes.size, 15);
+    assert.equal(runtime.dirtyScenes.has('scene-40'), false);
+    assert.equal(runtime.dirtyScenes.has('scene-41'), true);
   });
 
   it('compiles hierarchy even when a child precedes its parent in the manifest', () => {

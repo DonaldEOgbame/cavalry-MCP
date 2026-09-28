@@ -12,7 +12,7 @@ The following results were refreshed on **27 September 2026**:
 |---|---:|
 | Cavalry | 2.7.2 |
 | Host operating system | macOS |
-| Registered MCP tools | 403 total / 59 default production profile |
+| Registered MCP tools | 404 total / 60 default production profile |
 | Callable Cavalry API names | 358 unique / 359 qualified |
 | Concrete Cavalry node types | 436 |
 | Node attributes | 3,168 |
@@ -29,8 +29,8 @@ The following results were refreshed on **27 September 2026**:
 
 The original 385 low-level and operational tools are accounted for in the final
 ledger: 320 `PASS`, 38 `KNOWN_HOST_LIMITATION`, and 27 `PLATFORM_LIMITATION`.
-The runtime now adds 18 declarative motion-compiler tools, bringing the complete
-registry to 403. Their schemas, registration, deterministic compilation, and
+The runtime now adds 18 declarative motion-compiler tools and one supervised
+render tool (`render_scene_verified`), bringing the complete registry to 404. Their schemas, registration, deterministic compilation, and
 external stdio dry-run contract pass; live compile, structural verification,
 MCP-native image QC, and correction pass on the benchmark workload. The
 production-sized final H.264 render remains an open validation boundary. A conservative 376 tools

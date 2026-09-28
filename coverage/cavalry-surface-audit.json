@@ -14,7 +14,7 @@
     "mcpServer": "/Users/macbook/Documents/GitHub/calvary-MCP/src/mcp/server.ts"
   },
   "counts": {
-    "mcpTools": 403,
+    "mcpTools": 404,
     "callableApiMethodsUniqueByName": 358,
     "callableApiMethodsQualified": 359,
     "apiProperties": 9,

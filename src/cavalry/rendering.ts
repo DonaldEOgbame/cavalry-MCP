@@ -77,7 +77,10 @@ export async function validateRenderedFile(filePath: string, settings: Record<st
   } catch (error) {
     if (/\.(?:json|svg)$/i.test(filePath)) {
       media = { kind: path.extname(filePath).slice(1), structurallyVerified: info.size > 0 };
-    } else if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+    } else if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      // Without ffprobe nothing about the media has been verified.
+      throw new Error('ffprobe/ffmpeg are not installed, so the rendered media cannot be validated.');
+    } else {
       throw error;
     }
   }
@@ -158,14 +161,16 @@ export async function renderStart(itemId: string): Promise<Record<string, unknow
   const startedAt = Date.now();
   if (!renderSettings.has(resolved)) {
     try {
-      const inspection = await bridgeClient.send<any>('render_item_inspect', { itemId: resolved });
+      const inspection = await bridgeClient.send<any>('render_item_inspect', { itemId: resolved, attributes: ['filePath', 'fileName', 'frameRange', 'frameRangeMode'] });
       const values = inspection.result?.values ?? {};
       renderSettings.set(resolved, { filePath: values.filePath, fileName: values.fileName, frameRange: values.frameRange, frameRangeMode: values.frameRangeMode });
     } catch {}
   }
   track(resolved, 'RUNNING', true, undefined, jobId);
   try {
-    const res = await bridgeClient.send<Record<string, unknown>>('render_start', { itemId: resolved });
+    // api.render() can own the host for the whole render; the default 15s
+    // bridge timeout would report failure while Cavalry is still rendering.
+    const res = await bridgeClient.send<Record<string, unknown>>('render_start', { itemId: resolved, jobId }, Number(process.env.CAVALRY_RENDER_TIMEOUT_MS || 30 * 60 * 1000));
     // Cavalry 2.7.2 can return from api.render() after creating the output
     // container but before the encoder has flushed any media bytes.
     const outputVerification = await waitForRenderOutput(resolved, startedAt);

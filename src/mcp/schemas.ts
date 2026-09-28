@@ -121,7 +121,9 @@ export const SceneSchemas = {
     path: CommonSchemas.filePath.describe('Path to the .cv or .cvc file to import'),
   }),
   inspect: z.object({
-    detailed: z.boolean().optional().describe('If true, includes full connection wires and parent hierarchy'),
+    detailed: z.boolean().optional().describe('If true, includes full connection wires and parent hierarchy (same as mode "detailed")'),
+    mode: z.enum(['summary', 'detailed', 'targeted']).optional().describe('summary: identity only, no attribute reads; detailed: hierarchy, connections, and core transforms the node type supports; targeted: only the named attributes'),
+    attributes: z.array(z.string().min(1)).max(64).optional().describe('Attributes for targeted inspection; ones a node does not have are listed as unsupported and never read'),
   }),
   describe: z.object({
     compact: z.boolean().optional().default(true).describe('If true, returns a concise summary for low token usage'),
@@ -707,6 +709,20 @@ export const RenderQueueSchemas = {
     itemId: z.string(),
   }),
   status: z.object({ itemId: z.string().optional() }),
+  verified: z.object({
+    scenePath: z.string().optional().describe('Scene file to open (discarding unsaved changes) before rendering; defaults to the current scene'),
+    compId: z.string().optional().describe('Composition to render; defaults to the active composition'),
+    startFrame: z.number().int().nonnegative().optional().describe('First frame (inclusive); defaults to the composition start'),
+    endFrame: z.number().int().nonnegative().optional().describe('Last frame (inclusive); defaults to the composition end'),
+    outputDirectory: z.string(),
+    fileName: z.string().describe('Output name; ".mp4" is appended when absent'),
+    sampleFrames: z.array(z.number().int().nonnegative()).max(24).optional().describe('Composition frames that must decode as non-blank'),
+    strictVisualValidation: z.boolean().optional().default(true),
+    allowUniformFrames: z.boolean().optional().default(false),
+    maxAttempts: z.number().int().min(1).max(2).optional().default(2).describe('2 retries exactly once after clean-host recovery'),
+    inspectionFrames: z.number().int().min(0).max(12).optional().default(0).describe('Frames from the validated file returned as images'),
+    segmentFrames: z.number().int().min(30).optional().describe('Opt-in fallback: render in supervised segments and concatenate'),
+  }),
 };
 
 export const DesignSchemas = {
@@ -789,6 +805,7 @@ export const ParitySchemas = {
   dynamicOffset: z.object({ offset: z.number().int() }),
   dynamicRange: z.object({ itemId: z.string().min(1), start: z.number().int().nonnegative(), end: z.number().int().nonnegative() }),
   renderItem: z.object({ itemId: z.string().min(1) }),
+  renderItemInspect: z.object({ itemId: z.string().min(1), attributes: z.array(z.string().min(1)).max(64).optional().describe('Read only these attributes; otherwise every value attribute the item enumerates') }),
   renderItemSettings: z.object({ itemId: z.string().min(1), settings: z.record(z.string(), z.unknown()) }),
   renderItemRange: z.object({ itemId: z.string().min(1), startFrame: CommonSchemas.frame, endFrame: CommonSchemas.frame }),
   renderItemScale: z.object({ itemId: z.string().min(1), scale: z.number().positive() }),

@@ -1,3 +1,5 @@
+import crypto from 'node:crypto';
+import { readFile } from 'node:fs/promises';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import * as Schemas from './schemas.js';
 import { CavalryError } from './errors.js';
@@ -38,6 +40,38 @@ import { renderMuxAudio } from '../cavalry/render-mux.js';
 import * as UI from '../ui/driver.js';
 import { MotionCompilerSchemas } from '../motion/schemas.js';
 import * as MotionCompiler from '../motion/service.js';
+import { bridgeClient } from '../bridge/client.js';
+import { currentToolContext, runInToolContext } from '../runtime/context.js';
+import { incidentJournal } from '../runtime/incidents.js';
+import { probeHost } from '../runtime/host-probe.js';
+import { summarizeToolResult, TranscriptRecorder } from '../runtime/transcript.js';
+import * as RenderService from '../render/service.js';
+
+/** Failure codes that implicate the host rather than the caller's input. */
+const HOST_DIAGNOSED_CODES = new Set(['BRIDGE_OFFLINE', 'BRIDGE_TIMEOUT', 'REQUEST_EXPIRED', 'CAVALRY_ERROR', 'INTERNAL_ERROR', 'RENDER_FAILED', 'RENDER_STALLED', 'RENDER_OUTPUT_INVALID', 'HOST_BUSY', 'HOST_WEDGED', 'HOST_ERROR_DIALOG', 'HOST_RECOVERY_FAILED']);
+
+async function diagnoseFailure(error: CavalryError, callId: string | undefined): Promise<void> {
+  try {
+    const incidents = callId ? incidentJournal.list({ callId }) : [];
+    if (HOST_DIAGNOSED_CODES.has(error.code) && !error.hostState) {
+      const host = await probeHost({ statusTimeoutMs: 2_000 });
+      error.hostState = host.state;
+      error.diagnostics = { ...(error.diagnostics ?? {}), host: { state: host.state, confidence: host.confidence, reasons: host.reasons, recoveryRecommended: host.recoveryRecommended, attention: host.attention } };
+    }
+    if (incidents.length) {
+      error.diagnostics = { ...(error.diagnostics ?? {}), incidents: incidents.map((item) => ({ incidentId: item.incidentId, kind: item.kind, message: item.message, count: item.count })) };
+    }
+    if (HOST_DIAGNOSED_CODES.has(error.code)) {
+      incidentJournal.record('mcp.tool_failure', error.message, { code: error.code, operation: error.operation, hostState: error.hostState, bridgeIncidentId: error.incidentId });
+    } else if (error.code === 'ATTRIBUTE_NOT_FOUND') {
+      // A caller asked for an attribute the node does not have. The bridge
+      // answered from its capability registry without querying Cavalry.
+      incidentJournal.record('mcp.info.unsupported_attribute_request', error.message, { code: error.code, operation: error.operation });
+    }
+  } catch (diagnosisError) {
+    logger.warn('Failure diagnosis failed', { data: diagnosisError });
+  }
+}
 
 export function createMcpServer(): McpServer {
   runtimeToolRegistry.clear();
@@ -46,20 +80,56 @@ export function createMcpServer(): McpServer {
     version: '1.0.0',
   });
 
+  // MCP clients commonly request every schema in one tools/list exchange. The
+  // compact profile keeps stdio startup bounded; set CAVALRY_TOOL_PROFILE=full
+  // when the complete specialist surface is needed.
+  const requestedProfile = process.env.CAVALRY_TOOL_PROFILE?.toLowerCase();
+  const profile = requestedProfile === 'full' ? 'full' : requestedProfile === 'standard' ? 'standard' : 'core';
+
+  // Every call is recorded server-side, so the transcript is authoritative
+  // whichever client drove the session.
+  const transcript = new TranscriptRecorder(incidentJournal.mcpSessionId);
+  const instrument = (name: string, handler: (...handlerArgs: any[]) => unknown) => async (...handlerArgs: any[]) => {
+    const context = { callId: crypto.randomUUID(), tool: name, startedAt: Date.now() };
+    transcript.start({ bridgeSessionId: bridgeClient.sessionIdentifier, toolProfile: profile });
+    const result: any = await runInToolContext(context, async () => handler(...handlerArgs));
+    try {
+      const text = result?.content?.find((item: any) => item.type === 'text')?.text;
+      let payload: any = null;
+      try { payload = text ? JSON.parse(text) : null; } catch {}
+      transcript.record({
+        callId: context.callId,
+        tool: name,
+        startedAt: new Date(context.startedAt).toISOString(),
+        durationMs: Date.now() - context.startedAt,
+        ok: !result?.isError && payload?.ok !== false,
+        errorCode: payload?.error?.code,
+        hostState: payload?.error?.hostState,
+        args: handlerArgs[0],
+        result: summarizeToolResult(payload?.result),
+        imageCount: result?.content?.filter((item: any) => item.type === 'image').length ?? 0,
+        incidentCount: incidentJournal.list({ callId: context.callId }).length,
+      });
+    } catch (recordError) {
+      logger.warn('Could not record transcript entry', { data: recordError });
+    }
+    return result;
+  };
+
   // Capture the exact runtime registrations in one canonical registry. Tool
   // inventory, motion planning, and contract tests consume this same data.
   const registerSdkTool = server.tool.bind(server) as any;
-  (server as any).tool = (name: string, description: string, schema: Record<string, unknown>, handler: unknown) => {
+  (server as any).tool = (name: string, description: string, schema: Record<string, unknown>, handler: (...handlerArgs: any[]) => unknown) => {
     runtimeToolRegistry.register(name, description, schema);
-    return registerSdkTool(name, description, schema, handler);
+    return registerSdkTool(name, description, schema, instrument(name, handler));
   };
 
   // Helper to wrap tool execution with structured JSON response & error safety
-  function handleTool(operation: string, fn: (args: any) => Promise<unknown>) {
-    return async (args: any) => {
+  function handleTool(operation: string, fn: (args: any, extra?: { signal?: AbortSignal }) => Promise<unknown>) {
+    return async (args: any, extra?: { signal?: AbortSignal }) => {
       const startTime = Date.now();
       try {
-        const result = await fn(args);
+        const result = await fn(args, extra);
         const durationMs = Date.now() - startTime;
         return {
           content: [
@@ -75,8 +145,9 @@ export function createMcpServer(): McpServer {
           ],
         };
       } catch (err: unknown) {
-        const durationMs = Date.now() - startTime;
         const cavalryErr = CavalryError.fromUnknown(err, operation);
+        await diagnoseFailure(cavalryErr, currentToolContext()?.callId);
+        const durationMs = Date.now() - startTime;
         logger.error(`Tool error: ${operation}`, cavalryErr);
         return {
           isError: true,
@@ -96,6 +167,23 @@ export function createMcpServer(): McpServer {
     };
   }
 
+  // Appends frames decoded from a validated render as MCP images, so visual
+  // inspection looks at the delivered file rather than an editor preview.
+  function handleRenderTool(operation: string, fn: (args: any, extra?: { signal?: AbortSignal }) => Promise<unknown>) {
+    const inner = handleTool(operation, fn);
+    return async (args: any, extra?: { signal?: AbortSignal }) => {
+      const response: any = await inner(args, extra);
+      if (response.isError) return response;
+      try {
+        const frames = JSON.parse(response.content[0].text)?.result?.inspectionFrames ?? [];
+        for (const frame of frames) response.content.push({ type: 'image' as const, data: await readFile(frame.path, 'base64'), mimeType: 'image/png' });
+      } catch (error) {
+        logger.warn('Could not attach render inspection frames', { data: error });
+      }
+      return response;
+    };
+  }
+
   // ============================================================================
   // SYSTEM TOOLS
   // ============================================================================
@@ -104,8 +192,32 @@ export function createMcpServer(): McpServer {
     return { reachable: health.online, latencyMs: health.latencyMs };
   }));
 
-  server.tool('cavalry_health', 'Inspect complete health, latency, active composition, and scene status', {}, handleTool('cavalry_health', async () => {
-    return checkBridgeHealth();
+  server.tool('cavalry_health', 'Classify the Cavalry host (idle, busy, rendering, wedged, bridge_disconnected, error_dialog_active, cavalry_not_running) with latency, captured JavaScript-error incidents, and bridge session audit', {}, handleTool('cavalry_health', async () => {
+    const host = await probeHost();
+    // Only issue a scene-level health request when it cannot queue behind work.
+    const details = host.state === 'idle' ? await checkBridgeHealth() : null;
+    const { bridgeStatus, ...assessment } = host;
+    const sessions = bridgeStatus?.sessions ?? [];
+    return {
+      ...(details ?? { online: host.state !== 'bridge_disconnected' && host.state !== 'cavalry_not_running' }),
+      host: assessment,
+      incidents: incidentJournal.summary(),
+      transport: bridgeClient.transportStats(),
+      bridgeAudit: bridgeStatus ? {
+        bridgeInstanceId: bridgeStatus.bridgeInstanceId,
+        mcpBridgeSessionId: bridgeClient.sessionIdentifier,
+        sessions: sessions.map(({ sessionId, requests, rawScriptRequests, rejected, expired }) => ({ sessionId, requests, rawScriptRequests, rejected, expired: expired ?? 0, thisServer: sessionId === bridgeClient.sessionIdentifier })),
+        foreignSessionRequests: sessions.filter((session) => session.sessionId !== bridgeClient.sessionIdentifier).reduce((sum, session) => sum + session.requests, 0),
+        rawScriptRequests: sessions.reduce((sum, session) => sum + session.rawScriptRequests, 0),
+        rejectedUnauthenticated: bridgeStatus.rejectedUnauthenticated,
+        deferredTotal: bridgeStatus.deferredTotal,
+        lastRender: bridgeStatus.lastRender,
+      } : null,
+      // invalidAttributeReads must stay 0: capability checks happen before reads.
+      attributeHygiene: bridgeStatus?.attributes ?? null,
+      capabilityCache: bridgeStatus?.capabilities ? { cavalryVersion: bridgeStatus.capabilities.cavalryVersion, cachedTypes: bridgeStatus.capabilities.cachedTypes } : null,
+      mcpSessionId: incidentJournal.mcpSessionId,
+    };
   }));
 
   server.tool('cavalry_capabilities', 'Dynamically discover installed Cavalry version, supported layer types, generators, and features', {}, handleTool('cavalry_capabilities', async () => {
@@ -149,7 +261,8 @@ export function createMcpServer(): McpServer {
   server.tool('transition_sequence_apply', 'Apply one verified transition primitive to a sequence of scenes and compile incrementally', MotionCompilerSchemas.transitionSequence.shape, handleTool('transition_sequence_apply', async (args) => MotionCompiler.applyTransitionSequence(args.projectId, args.sceneIds, args.primitive, args.edge, args.compile, args.dryRun)));
   server.tool('scene_timeline_compile', 'Compile the complete scene timeline and all dirty scene manifests', MotionCompilerSchemas.projectCompile.shape, handleTool('scene_timeline_compile', async (args) => MotionCompiler.compileProject(args.projectId, args.force, args.dryRun)));
   server.tool('motion_project_apply_corrections', 'Apply a structured visual-QC correction manifest as one verified batch and selectively rebuild timing changes', MotionCompilerSchemas.corrections.shape, handleTool('motion_project_apply_corrections', async (args) => MotionCompiler.applyCorrections(args.projectId, args.corrections, args.dryRun)));
-  server.tool('motion_project_render', 'Configure, supervise, and validate an H.264 project or partial-scene render without exposing bridge polling details', MotionCompilerSchemas.render.shape, handleTool('motion_project_render', async (args) => MotionCompiler.renderProject(args)));
+  server.tool('motion_project_render', 'Render the project (or selected scenes) to H.264 through the supervised pipeline: checkpoint, fresh disposable Render Manager item, artifact validation (codec, resolution, fps, exact frame count, non-blank frames), clean-host recovery, and exactly one retry; optionally returns frames from the validated file', MotionCompilerSchemas.render.shape, handleRenderTool('motion_project_render', async (args, extra) => MotionCompiler.renderProject({ ...args, signal: extra?.signal })));
+  server.tool('render_scene_verified', 'Render any scene or composition through the same supervised, validated, recoverable H.264 pipeline, independent of the motion compiler (render isolation and torture testing)', Schemas.RenderQueueSchemas.verified.shape, handleRenderTool('render_scene_verified', async (args, extra) => RenderService.renderSceneVerified({ ...args, signal: extra?.signal })));
   server.tool('motion_project_metrics', 'Report compiler call counts, bridge operations, batches, timing categories, hashes, and dirty state', MotionCompilerSchemas.metrics.shape, handleTool('motion_project_metrics', async (args) => MotionCompiler.projectMetrics(args.projectId)));
   server.tool('motion_project_render_review', 'Render representative frames and return actual MCP image content for one-pass visual review', MotionCompilerSchemas.review.shape, async (args: any) => {
     const started = Date.now();
@@ -328,7 +441,7 @@ export function createMcpServer(): McpServer {
   parityTool('render_dynamic_offset', 'Set the Dynamic Rendering index offset', P.dynamicOffset);
   parityTool('render_dynamic_preview', 'Report the missing native Dynamic preview API and direct callers to preview_frame', P.renderItem);
   parityTool('render_item_create', 'Create a first-class Render Queue Item for a composition', Schemas.RenderQueueSchemas.add, 'render_queue_add');
-  parityTool('render_item_inspect', 'Inspect every exposed Render Queue Item attribute and value', P.renderItem);
+  parityTool('render_item_inspect', 'Inspect Render Queue Item values: every attribute the item enumerates, or only the named ones', P.renderItemInspect);
   parityTool('render_item_attributes', 'List Render Queue Item attributes', P.renderItem);
   parityTool('render_item_set', 'Set arbitrary validated Render Queue Item attributes', P.renderItemSettings);
   parityTool('render_item_enable', 'Enable a Render Queue Item', P.renderItem, 'render_item_set', (args) => ({ ...args, settings: { selected: true } }));
@@ -414,11 +527,18 @@ export function createMcpServer(): McpServer {
   // ============================================================================
   server.tool('scene_new', 'Create a new blank Cavalry scene', Schemas.SceneSchemas.new.shape, handleTool('scene_new', async (args) => Scene.sceneNew(args.force)));
   server.tool('scene_open', 'Open an existing Cavalry .cv scene file', Schemas.SceneSchemas.open.shape, handleTool('scene_open', async (args) => Scene.sceneOpen(args.path, args.force)));
-  server.tool('scene_save', 'Save the current scene file in place', {}, handleTool('scene_save', async () => Scene.sceneSave()));
-  server.tool('scene_save_as', 'Save the current scene to a specific .cv file path', Schemas.SceneSchemas.saveAs.shape, handleTool('scene_save_as', async (args) => Scene.sceneSaveAs(args.filePath)));
+  // A saved scene carries its motion-compiler state in a `<scene>.cv.motion.json` sidecar.
+  server.tool('scene_save', 'Save the current scene file in place (and its motion-compiler state sidecar)', {}, handleTool('scene_save', async () => {
+    const saved = await Scene.sceneSave();
+    return { ...saved, motionStateSidecars: saved.saved ? await MotionCompiler.writeSceneSidecars(saved.path) : [] };
+  }));
+  server.tool('scene_save_as', 'Save the current scene to a specific .cv file path (and its motion-compiler state sidecar)', Schemas.SceneSchemas.saveAs.shape, handleTool('scene_save_as', async (args) => {
+    const saved = await Scene.sceneSaveAs(args.filePath);
+    return { ...saved, motionStateSidecars: saved.saved ? await MotionCompiler.writeSceneSidecars(saved.filePath) : [] };
+  }));
   server.tool('scene_has_unsaved_changes', 'Check if the active scene has unsaved changes', {}, handleTool('scene_has_unsaved_changes', async () => Scene.sceneHasUnsavedChanges()));
   server.tool('scene_import', 'Import a Cavalry scene (.cv) or component (.cvc) into the project', Schemas.SceneSchemas.import.shape, handleTool('scene_import', async (args) => Scene.sceneImport(args.path)));
-  server.tool('scene_inspect', 'Inspect scene structure, active composition, layer counts, markers, and assets', Schemas.SceneSchemas.inspect.shape, handleTool('scene_inspect', async (args) => Scene.sceneInspect(args.detailed)));
+  server.tool('scene_inspect', 'Inspect scene structure, active composition, layer counts, markers, and assets', Schemas.SceneSchemas.inspect.shape, handleTool('scene_inspect', async (args) => Scene.sceneInspect(args.detailed, { mode: args.mode, attributes: args.attributes })));
   server.tool('scene_describe', 'Get an AI-friendly, token-efficient summary of the scene hierarchy', Schemas.SceneSchemas.describe.shape, handleTool('scene_describe', async (args) => Scene.sceneDescribe(args.compact)));
   server.tool('scene_checkpoint', 'Create a quick in-memory recovery checkpoint of the current scene state', {}, handleTool('scene_checkpoint', async () => Scene.sceneCheckpoint()));
   server.tool('scene_restore_checkpoint', 'Restore scene state from a checkpoint data string', Schemas.SceneSchemas.restoreCheckpoint.shape, handleTool('scene_restore_checkpoint', async (args) => Scene.sceneRestoreCheckpoint(args.data)));
@@ -628,18 +748,13 @@ export function createMcpServer(): McpServer {
   server.tool('design_distribute', 'Distribute layers evenly along X or Y axis with specified spacing', Schemas.DesignSchemas.distribute.shape, handleTool('design_distribute', async (args) => Layout.designDistribute(args.layerIds, args.axis, args.spacing)));
   server.tool('design_create_background', 'Create a background solid shape matching composition resolution', Schemas.DesignSchemas.background.shape, handleTool('design_create_background', async (args) => Layout.designCreateBackground(args.color, args.name)));
 
-  // MCP clients commonly request every schema in one tools/list exchange. The
-  // compact profile keeps stdio startup bounded; set CAVALRY_TOOL_PROFILE=full
-  // when the complete specialist surface is needed.
-  const requestedProfile = process.env.CAVALRY_TOOL_PROFILE?.toLowerCase();
-  const profile = requestedProfile === 'full' ? 'full' : requestedProfile === 'standard' ? 'standard' : 'core';
   if (profile !== 'full') {
     const productionPrefixes = ['motion_', 'knowledge_'];
     const productionNames = new Set([
       'cavalry_ping', 'cavalry_health', 'cavalry_capabilities', 'cavalry_parity_audit', 'cavalry_bridge_info',
       'operation_risk_classify', 'safe_host_operation', 'events_status',
       'scene_describe', 'scene_inspect', 'scene_save', 'scene_save_as', 'scene_open',
-      'render_status', 'render_is_active', 'render_wait', 'render_cancel',
+      'render_status', 'render_is_active', 'render_wait', 'render_cancel', 'render_scene_verified',
     ]);
     const standardPrefixes = [
       ...productionPrefixes, 'cavalry_', 'operation_', 'safe_host_',

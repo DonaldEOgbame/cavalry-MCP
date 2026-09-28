@@ -6,55 +6,17 @@ import os from 'node:os';
 import path from 'node:path';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
+import { productionProject } from './fixtures/production-project.js';
+import { closeHostLogWindow, counterDelta, openHostLogWindow } from './lib/host-log.js';
 
 const live = process.argv.includes('--live');
 const render = process.argv.includes('--render');
 const resumeRender = process.argv.includes('--resume-render');
-const primitives = [
-  'enterUp', 'enterDown', 'enterLeft', 'enterRight', 'wordSwap', 'verticalRoll',
-  'progressiveBuild', 'textReflow', 'pushTransition', 'scaleTakeover', 'scaleTransfer',
-  'zoomThrough', 'maskedReveal', 'trackingExpansion', 'colorSnap', 'hardCut',
-];
-
-const project = {
-  id: 'external-production-benchmark',
-  name: 'External MCP Production Benchmark',
-  resolution: { width: 1920, height: 1080 },
-  fps: 30,
-  designTokens: { colors: { light: '#f5f1e8', dark: '#111827', red: '#ef4444', blue: '#2563eb' } },
-  typographyStyles: {
-    headline: { fontFamily: 'Helvetica', fontStyle: 'Bold', fontSize: 112, color: '#ffffff', alignment: 'center' },
-    expressive: { fontFamily: 'Georgia', fontStyle: 'Regular', fontSize: 128, color: '#ffffff', alignment: 'center', tracking: 2 },
-  },
-  globalTiming: { defaultTransitionFrames: 16, sceneGapFrames: 0 },
-  scenes: Array.from({ length: 55 }, (_, index) => ({
-    id: `scene-${String(index + 1).padStart(2, '0')}`,
-    name: `Typography Beat ${index + 1}`,
-    durationFrames: index === 54 ? 42 : 57,
-    background: ['light', 'dark', 'red', 'blue'][index % 4],
-    elements: [
-      {
-        id: 'headline', kind: 'text', text: `MOTION BEAT ${index + 1}`, style: 'headline', position: { x: 0, y: index % 2 ? -40 : 0 },
-        motions: [
-          { type: primitives[index % primitives.length], durationFrames: 15 },
-          { type: primitives[(index + 5) % primitives.length], startFrame: 16, durationFrames: 13 },
-          { type: primitives[(index + 7) % primitives.length], startFrame: 29, durationFrames: 11 },
-          { type: primitives[(index + 11) % primitives.length], startFrame: 40, durationFrames: 9 },
-          { type: primitives[(index + 14) % primitives.length], startFrame: 48, durationFrames: 8 },
-        ],
-      },
-      ...(index % 2 === 0 ? [{
-        id: 'accent', kind: 'text', text: `Expressive ${index + 1}`, style: 'expressive', position: { x: 0, y: 95 },
-        motions: [
-          { type: primitives[(index + 2) % primitives.length], durationFrames: 14 },
-          { type: primitives[(index + 9) % primitives.length], startFrame: 20, durationFrames: 12 },
-          { type: primitives[(index + 4) % primitives.length], startFrame: 34, durationFrames: 10 },
-          { type: primitives[(index + 13) % primitives.length], startFrame: 44, durationFrames: 8 },
-        ],
-      }] : []),
-    ],
-  })),
-};
+// Invalid attribute probing fails a live run unless explicitly recording a baseline.
+const allowInvalidProbing = process.argv.includes('--allow-invalid-probing');
+const logFlag = process.argv.indexOf('--cavalry-log');
+const cavalryLogPath = logFlag !== -1 ? process.argv[logFlag + 1] : process.env.CAVALRY_LOG_PATH;
+const project = productionProject;
 
 const client = new Client({ name: 'cavalry-motion-black-box-benchmark', version: '1.0.0' });
 const transport = new StdioClientTransport({
@@ -103,6 +65,11 @@ try {
   const names = new Set(listed.tools.map((tool) => tool.name));
   for (const required of ['motion_project_create', 'motion_project_compile', 'motion_project_verify', 'motion_project_render_review', 'motion_project_apply_corrections']) assert.ok(names.has(required), `Missing production tool ${required}`);
   assert.equal(names.has('cavalry_raw_script'), false, 'Production profile must not expose raw scripting.');
+
+  // Host-hygiene window: bridge attribute counters and (optionally) the
+  // Cavalry log, from before the first project call to after the last.
+  const hostLog = live ? openHostLogWindow(cavalryLogPath) : null;
+  const healthBefore = live ? await call('cavalry_health', {}) : null;
 
   const create = await call('motion_project_create', { project });
   assert.equal(create.payload.sceneCount, 55);
@@ -160,6 +127,19 @@ try {
     timings.renderMs = performance.now() - renderStarted;
   }
 
+  const healthAfter = live ? await call('cavalry_health', {}) : null;
+  const hostLogSummary = closeHostLogWindow(hostLog);
+  const attributeDelta = counterDelta(healthBefore?.payload?.attributeHygiene, healthAfter?.payload?.attributeHygiene);
+  const hostHygiene = live ? {
+    bridgeReportsAttributeMetrics: Boolean(healthAfter?.payload?.attributeHygiene),
+    attributeMetricsDelta: attributeDelta,
+    invalidAttributeReads: attributeDelta?.invalidAttributeReads ?? null,
+    capabilityCache: healthAfter?.payload?.capabilityCache ?? null,
+    incidentsByCategory: healthAfter?.payload?.incidents?.byCategory ?? null,
+    dialogClassOccurrences: healthAfter?.payload?.incidents?.dialogClassOccurrences ?? null,
+    cavalryLog: hostLogSummary ?? { captured: false, reason: 'Pass --cavalry-log <path> or set CAVALRY_LOG_PATH to capture the host log window.' },
+  } : null;
+
   const metrics = await call('motion_project_metrics', { projectId: project.id });
   const totalMs = performance.now() - totalStarted;
   const report = {
@@ -174,11 +154,17 @@ try {
     timings: Object.fromEntries(Object.entries(timings).map(([key, value]) => [key, Number(value.toFixed(2))])),
     totalMs: Number(totalMs.toFixed(2)),
     serverTelemetry: metrics.payload,
+    hostHygiene,
     transcript,
   };
   await fs.mkdir(path.resolve('coverage'), { recursive: true });
   await fs.writeFile(path.resolve('coverage', `motion-compiler-benchmark-${report.mode}.json`), `${JSON.stringify(report, null, 2)}\n`);
   process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
+  if (hostHygiene && !allowInvalidProbing) {
+    assert.ok(hostHygiene.bridgeReportsAttributeMetrics, 'The installed bridge does not report attribute metrics; reinstall cavalry/bridge.js from this checkout.');
+    assert.equal(hostHygiene.invalidAttributeReads, 0, 'The bridge issued attribute reads that Cavalry rejected.');
+    if (hostLogSummary) assert.equal(hostLogSummary.attributeNotFound, 0, `Cavalry logged ${hostLogSummary.attributeNotFound} "Attribute not found" errors during the run.`);
+  }
 } finally {
   await transport.close();
 }

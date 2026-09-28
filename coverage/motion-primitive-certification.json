@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-28T07:30:25.193Z",
+  "compilerFingerprints": {
+    "enterUp": "ca6d64cc0623d1927c1032fcf3fa6161ad83fc015a6eade5b489f0744a7b8fa7",
+    "enterDown": "0cce3eaf4bf00099f50cdef038bc455652d0e1c9a871aa1740b471e9e69a8d51",
+    "enterLeft": "ae05832d54dc65709ca01670d8b887f10a7b6866e8f254112027fa1c066fe2d4",
+    "enterRight": "25544fb901d2e97fd1b7b8c058aa51cd49ef77dd27fc9b0acaa01949034849b1",
+    "wordSwap": "c5e8ae9def28243f8bd5a48c0a40158667a30e3d4b50988883a3ab9b749dcfd3",
+    "verticalRoll": "ee01b6d0207350cdd809453e5a894d25503b7d91801be5cf48e21d3f1e220264",
+    "progressiveBuild": "e7882bbddeb6e3449dd4b542d5a96eee009e3b7477088aaf6c6290d91b1bb03b",
+    "textReflow": "638f9b67564c597b8157748bc8dd04002a1234afb1688cc46104e7ac2ed77547",
+    "pushTransition": "dda778ea0897e7e24c5b992bc7fb9d6f00a522a269fd4bed783c1b52ed8e7702",
+    "scaleTakeover": "07a38b68d9359a316b3340b9ac1bcd86195b331d97dd16a35a03863d21ccf337",
+    "scaleTransfer": "dfde6a12145dd4a8ade328a8554c92f3bd1c3c72c008efbd04442ae91bcb51b9",
+    "zoomThrough": "2ed3739583565fc8c6464fdda46a71f74b6fb4ad4ea05734e6eafe755c157cb5",
+    "maskedReveal": "d8c72791f1f442617a294fdec5730c15fe691a802af5239a40ee0aa8134403fc",
+    "trackingExpansion": "8ca21e26abd02b5580dd1c0e1db92e6cbdd507dd9cfb4b7e68bac20e2b4bc5f2",
+    "colorSnap": "3df1b021045b1c2406295cd30e168462ac69f38ff2ea2d392927d9b3ab0b5aa1",
+    "hardCut": "1cd0bbfdddd1d26a4671e3f1861bedc46a36e3961f54a75f093e0c122144ad46"
+  },
+  "approvals": {
+    "enterUp": {
+      "approved": false,
+      "fingerprint": "ca6d64cc0623d1927c1032fcf3fa6161ad83fc015a6eade5b489f0744a7b8fa7"
+    },
+    "enterDown": {
+      "approved": false,
+      "fingerprint": "0cce3eaf4bf00099f50cdef038bc455652d0e1c9a871aa1740b471e9e69a8d51"
+    },
+    "enterLeft": {
+      "approved": false,
+      "fingerprint": "ae05832d54dc65709ca01670d8b887f10a7b6866e8f254112027fa1c066fe2d4"
+    },
+    "enterRight": {
+      "approved": false,
+      "fingerprint": "25544fb901d2e97fd1b7b8c058aa51cd49ef77dd27fc9b0acaa01949034849b1"
+    },
+    "wordSwap": {
+      "approved": false,
+      "fingerprint": "c5e8ae9def28243f8bd5a48c0a40158667a30e3d4b50988883a3ab9b749dcfd3"
+    },
+    "verticalRoll": {
+      "approved": false,
+      "fingerprint": "ee01b6d0207350cdd809453e5a894d25503b7d91801be5cf48e21d3f1e220264"
+    },
+    "progressiveBuild": {
+      "approved": false,
+      "fingerprint": "e7882bbddeb6e3449dd4b542d5a96eee009e3b7477088aaf6c6290d91b1bb03b"
+    },
+    "textReflow": {
+      "approved": false,
+      "fingerprint": "638f9b67564c597b8157748bc8dd04002a1234afb1688cc46104e7ac2ed77547"
+    },
+    "pushTransition": {
+      "approved": false,
+      "fingerprint": "dda778ea0897e7e24c5b992bc7fb9d6f00a522a269fd4bed783c1b52ed8e7702"
+    },
+    "scaleTakeover": {
+      "approved": false,
+      "fingerprint": "07a38b68d9359a316b3340b9ac1bcd86195b331d97dd16a35a03863d21ccf337"
+    },
+    "scaleTransfer": {
+      "approved": false,
+      "fingerprint": "dfde6a12145dd4a8ade328a8554c92f3bd1c3c72c008efbd04442ae91bcb51b9"
+    },
+    "zoomThrough": {
+      "approved": false,
+      "fingerprint": "2ed3739583565fc8c6464fdda46a71f74b6fb4ad4ea05734e6eafe755c157cb5"
+    },
+    "maskedReveal": {
+      "approved": false,
+      "fingerprint": "d8c72791f1f442617a294fdec5730c15fe691a802af5239a40ee0aa8134403fc"
+    },
+    "trackingExpansion": {
+      "approved": false,
+      "fingerprint": "8ca21e26abd02b5580dd1c0e1db92e6cbdd507dd9cfb4b7e68bac20e2b4bc5f2"
+    },
+    "colorSnap": {
+      "approved": false,
+      "fingerprint": "3df1b021045b1c2406295cd30e168462ac69f38ff2ea2d392927d9b3ab0b5aa1"
+    },
+    "hardCut": {
+      "approved": false,
+      "fingerprint": "1cd0bbfdddd1d26a4671e3f1861bedc46a36e3961f54a75f093e0c122144ad46"
+    }
+  }
+}
