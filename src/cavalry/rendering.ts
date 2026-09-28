@@ -140,7 +140,10 @@ export async function renderQueueConfigure(itemId: string, settings: Record<stri
   for (const key of Object.keys(validationSettings)) delete normalized[key];
   if (typeof settings.startFrame === 'number' || typeof settings.endFrame === 'number') {
     const previous = renderSettings.get(resolved) ?? {};
-    normalized.frameRangeMode = 1;
+    // Cavalry 2.7.2 enum value 2 selects the explicit custom range. Value 1
+    // keeps the Render Manager's default range even when frameRange reads back
+    // with the supplied coordinates.
+    normalized.frameRangeMode = 2;
     normalized.frameRange = {
       x: settings.startFrame ?? (previous.frameRange as any)?.x ?? 0,
       y: settings.endFrame ?? (previous.frameRange as any)?.y ?? settings.startFrame ?? 0,

@@ -83,6 +83,20 @@ describe('clean-host recovery', () => {
     assert.equal(report.attempted, false);
     assert.equal(report.unavailableReason, 'disabled');
   });
+
+  it('allows the reopened host a bounded grace period to become idle', async () => {
+    let probes = 0;
+    const report = await recoverCleanHost(input, deps({
+      probe: async () => {
+        probes += 1;
+        const idle = probes === 3;
+        return { state: idle ? 'idle' : 'wedged', confidence: 'confirmed', reasons: [idle ? 'ok' : 'bridge warming'], ready: idle, recoveryRecommended: !idle, attention: [], evidence: {}, probedAt: '', probeMs: 1 } as HostProbeResult;
+      },
+    }));
+    assert.equal(report.ok, true);
+    assert.equal(probes, 3);
+    assert.equal(report.steps.at(-1)?.durationMs, 1_000);
+  });
 });
 
 describe('fault injection plan', () => {

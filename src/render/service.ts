@@ -11,6 +11,10 @@ export interface VisualPolicy {
   allowUniformFrames?: boolean;
 }
 
+// Opening a large scene can return before Cavalry has finished activating its
+// composition. The follow-up request must tolerate that bounded host work.
+export const RENDER_SCENE_ACTIVATION_TIMEOUT_MS = 60_000;
+
 /** Strict by default: blank or frozen samples fail the render unless explicitly allowed. */
 export function visualTolerance(policy: VisualPolicy, sampleCount: number): Pick<RenderJobSpec, 'allowBlankFrames' | 'allowStaticContent'> {
   const strict = policy.strictVisualValidation !== false;
@@ -55,8 +59,8 @@ function dimension(value: unknown, axis: 'x' | 'y'): number | undefined {
 export async function renderSceneVerified(input: RenderSceneInput): Promise<RenderJobResult & { scenePath: string | null; compId: string }> {
   const outputDirectory = filesystem.assertAllowedPath(path.resolve(input.outputDirectory), 'render_scene_verified');
   if (input.scenePath) await Scene.sceneOpen(input.scenePath, true);
-  if (input.compId) await bridgeClient.send('composition_set_active', { compId: identityResolver.resolveToLayerId(input.compId) }, 15_000);
-  const composition = (await bridgeClient.send<any>('composition_get_active', {}, 15_000)).result;
+  if (input.compId) await bridgeClient.send('composition_set_active', { compId: identityResolver.resolveToLayerId(input.compId) }, RENDER_SCENE_ACTIVATION_TIMEOUT_MS);
+  const composition = (await bridgeClient.send<any>('composition_get_active', {}, RENDER_SCENE_ACTIVATION_TIMEOUT_MS)).result;
   if (!composition?.compId) throw new CavalryError({ code: 'NO_ACTIVE_COMPOSITION', message: 'No active composition to render.', operation: 'render_scene_verified' });
   const width = dimension(composition.resolution, 'x');
   const height = dimension(composition.resolution, 'y');

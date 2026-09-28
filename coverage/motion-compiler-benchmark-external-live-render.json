@@ -1,0 +1,147 @@
+{
+  "mode": "external-live-render",
+  "transport": "stdio-json-rpc",
+  "toolProfile": "core",
+  "discoveredTools": 60,
+  "mcpCalls": 10,
+  "rawScriptCalls": 0,
+  "directBridgeCalls": 0,
+  "project": {
+    "scenes": 55,
+    "durationFrames": 3120,
+    "expectedLayers": 138,
+    "expectedKeyframes": 2095,
+    "compiledOperations": 2864
+  },
+  "timings": {
+    "connectMs": 326.67,
+    "toolsListMs": 17.39,
+    "compileMs": 169989.63,
+    "verifyMs": 937.71,
+    "qcMs": 23210.75,
+    "correctionMs": 120.97,
+    "renderMs": 222691.88
+  },
+  "totalMs": 417812.72,
+  "serverTelemetry": {
+    "projectId": "external-production-benchmark",
+    "highLevelCallCount": 6,
+    "bridgeOperationCount": 421,
+    "batchCount": 12,
+    "averageBatchSize": 35.083333333333336,
+    "planningMs": 0,
+    "compilationMs": 29,
+    "cavalryExecutionMs": 169300,
+    "validationMs": 933,
+    "renderMs": 222678,
+    "qcMs": 23200,
+    "correctionMs": 114,
+    "totalServerMs": 416935,
+    "modelReasoningMs": null,
+    "notes": [
+      "Model reasoning time is client-side and cannot be measured by the MCP server."
+    ],
+    "manifestHash": "41140dee36d50ee03f35d7c2c31c8fa1d68153e223e2a472d17feff99870dd1f",
+    "compiledHash": "41140dee36d50ee03f35d7c2c31c8fa1d68153e223e2a472d17feff99870dd1f",
+    "dirtyScenes": [],
+    "sceneCount": 55,
+    "expectedLayers": 138,
+    "expectedKeyframes": 2095,
+    "compiledOperationCount": 2864,
+    "estimatedLegacyMcpCalls": 2984,
+    "highLevelTargetCalls": 5
+  },
+  "hostHygiene": {
+    "bridgeReportsAttributeMetrics": true,
+    "attributeMetricsDelta": {
+      "attributeReadRequests": 1344,
+      "validAttributeReads": 1344,
+      "invalidAttributeReads": 0,
+      "unsupportedReadsAvoided": 0,
+      "trustedReads": 1340,
+      "capabilityCacheHits": 465,
+      "capabilityCacheMisses": 1,
+      "attributeEnumerations": 1,
+      "instanceAttributeChecks": 110,
+      "uuidLookups": 279,
+      "uuidCacheHits": 1,
+      "identitiesWithoutUuid": 1,
+      "nodeInspections": 140,
+      "summaryInspections": 1,
+      "detailedInspections": 0,
+      "targetedInspections": 0,
+      "keyframeApiCalls": 1915,
+      "graphOperations": 0,
+      "eventEnrichmentReads": 0,
+      "eventNotificationsWithoutReads": 161517
+    },
+    "invalidAttributeReads": 0,
+    "capabilityCache": {
+      "cavalryVersion": "2.7.2",
+      "cachedTypes": 5
+    },
+    "incidentsByCategory": {},
+    "dialogClassOccurrences": 0,
+    "cavalryLog": {
+      "path": "/Users/macbook/Library/Application Support/Cavalry/logs/2026-09-28_18.54.11.log",
+      "bytes": 0,
+      "lines": 0,
+      "errorLines": 0,
+      "attributeNotFound": 0,
+      "families": [],
+      "firstNonAttributeErrors": []
+    }
+  },
+  "transcript": [
+    {
+      "tool": "cavalry_health",
+      "durationMs": 88.3,
+      "imageCount": 0
+    },
+    {
+      "tool": "motion_project_create",
+      "durationMs": 37.75,
+      "imageCount": 0
+    },
+    {
+      "tool": "motion_project_compile",
+      "durationMs": 169987.81,
+      "imageCount": 0
+    },
+    {
+      "tool": "motion_project_verify",
+      "durationMs": 937.64,
+      "imageCount": 0
+    },
+    {
+      "tool": "motion_project_render_review",
+      "durationMs": 23210.54,
+      "imageCount": 12
+    },
+    {
+      "tool": "motion_project_apply_corrections",
+      "durationMs": 120.75,
+      "imageCount": 0
+    },
+    {
+      "tool": "scene_save_as",
+      "durationMs": 151.9,
+      "imageCount": 0
+    },
+    {
+      "tool": "motion_project_render",
+      "durationMs": 222691.27,
+      "imageCount": 0
+    },
+    {
+      "tool": "cavalry_health",
+      "durationMs": 232.85,
+      "imageCount": 0
+    },
+    {
+      "tool": "motion_project_metrics",
+      "durationMs": 2.27,
+      "imageCount": 0
+    }
+  ]
+}

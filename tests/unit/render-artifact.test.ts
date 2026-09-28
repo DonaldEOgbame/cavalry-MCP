@@ -4,7 +4,7 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { defaultSampleFrames, evaluateArtifact, lumaStatistics, MediaFacts, parseFrameRate, validateArtifact } from '../../src/render/artifact.js';
+import { defaultSampleFrames, evaluateArtifact, lumaStatistics, MediaFacts, parseFrameRate, selectNominalFrameRate, validateArtifact } from '../../src/render/artifact.js';
 
 const hasFfmpeg = spawnSync('ffmpeg', ['-version']).status === 0 && spawnSync('ffprobe', ['-version']).status === 0;
 const expectation = { codec: 'h264', width: 320, height: 180, fps: 30, frameCount: 60 };
@@ -49,10 +49,12 @@ describe('render artifact evaluation (pure)', () => {
   it('parses frame rates and spaces samples away from the first and last frame', () => {
     assert.equal(parseFrameRate('30000/1001')?.toFixed(3), '29.970');
     assert.equal(parseFrameRate('0/0'), undefined);
+    assert.equal(selectNominalFrameRate('30/1', '900/29'), 30, 'nominal cadence wins over Cavalry short-clip average');
     const samples = defaultSampleFrames(3120);
     assert.equal(samples.length, 8);
     assert.ok(samples[0] > 0 && samples[7] < 3119);
     assert.deepEqual(defaultSampleFrames(3), [0, 1, 2]);
+    assert.deepEqual(defaultSampleFrames(10), [2, 3, 4, 5, 6, 7], 'short clips avoid edge-seek ambiguity');
   });
 
   it('computes luma contrast and a stable signature', () => {

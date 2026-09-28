@@ -8,6 +8,11 @@ export interface PreviewFrameResult {
   scalePercentage: number;
 }
 
+// A production-sized scene can legitimately take longer than the bridge's
+// generic 15-second request window to evaluate and rasterize. Keep previews
+// bounded, but give Cavalry enough time for a cold, complex frame.
+export const PREVIEW_FRAME_TIMEOUT_MS = 60_000;
+
 export async function previewFrame(frame?: number, scalePercentage: number = 100, customOutputPath?: string): Promise<PreviewFrameResult> {
   const previewDir = filesystem.getPreviewDir();
   const targetFrame = frame !== undefined ? frame : 0;
@@ -19,7 +24,7 @@ export async function previewFrame(frame?: number, scalePercentage: number = 100
     filePath: targetPath,
     frame: targetFrame,
     scalePercentage,
-  });
+  }, PREVIEW_FRAME_TIMEOUT_MS);
 
   return {
     filePath: res.result!.filePath,
@@ -38,7 +43,7 @@ export async function previewFrames(frames: number[], scalePercentage: number = 
       filePath: targetPath,
       frame: f,
       scalePercentage,
-    });
+    }, PREVIEW_FRAME_TIMEOUT_MS);
     results.push({
       filePath: res.result!.filePath,
       frame: res.result!.frame,

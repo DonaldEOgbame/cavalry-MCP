@@ -139,7 +139,12 @@ export async function recoverCleanHost(input: RecoveryInput, deps: RecoveryDeps 
   if (!verified.ok) return report(false);
 
   const health = await run<HostProbeResult>('health', async () => {
-    const host = await deps.probe();
+    let host = await deps.probe();
+    const deadline = deps.now() + deps.activationWaitMs;
+    while (host.state !== 'idle' && deps.now() < deadline) {
+      await deps.sleep(500);
+      host = await deps.probe();
+    }
     return { ok: host.state === 'idle', value: host, detail: { state: host.state, reasons: host.reasons } };
   });
   const hostAfter = health.value ? { state: health.value.state, confidence: health.value.confidence, reasons: health.value.reasons } : undefined;

@@ -67,6 +67,7 @@ export interface RenderAttempt {
   outcome: 'validated' | 'failed';
   failure?: RenderFailure;
   nativeCallMs?: number;
+  settingsReadback?: Record<string, unknown>;
   output: { finalSize: number; firstByteAfterMs: number | null; growthEvents: number };
   validation?: ArtifactReport;
   itemDestroyed: boolean | 'not_created';
@@ -270,14 +271,17 @@ async function runAttempt(spec: RenderJobSpec, deps: RenderPipelineDeps, context
     stage = 'configure';
     // Selecting the generator resets the frame range in Cavalry 2.7.2, so the
     // generator goes first and the range is set and read back afterwards.
-    // Render Manager's upper bound is exclusive.
+    // Custom-range mode uses an inclusive upper bound in Cavalry 2.7.2.
     await deps.send('render_item_set_output', { itemId, filePath: spec.outputDirectory, fileName: stagingStem, formatType: 'renderMP4' }, 120_000);
-    const upper = spec.endFrame + 1;
-    const inspected = await deps.send<{ values?: Record<string, unknown> }>('render_item_set', { itemId, settings: { frameRangeMode: 1, frameRange: { x: spec.startFrame, y: upper } } }, 120_000);
+    const upper = spec.endFrame;
+    // Cavalry 2.7.2 uses mode 2 for an explicit custom range. Mode 1 is the
+    // Render Manager default and silently renders its default 0-250 range even
+    // when frameRange itself reads back as the requested value.
+    const inspected = await deps.send<{ values?: Record<string, unknown> }>('render_item_set', { itemId, settings: { frameRangeMode: 2, frameRange: { x: spec.startFrame, y: upper } } }, 120_000);
     const values = inspected?.values ?? {};
     const mismatches: string[] = [];
     if (!sameRange(values.frameRange, spec.startFrame, upper)) mismatches.push(`frameRange=${JSON.stringify(values.frameRange)}`);
-    if (values.frameRangeMode !== undefined && Number(values.frameRangeMode) !== 1) mismatches.push(`frameRangeMode=${String(values.frameRangeMode)}`);
+    if (values.frameRangeMode !== undefined && Number(values.frameRangeMode) !== 2) mismatches.push(`frameRangeMode=${String(values.frameRangeMode)}`);
     if (values.fileName !== undefined && values.fileName !== stagingStem) mismatches.push(`fileName=${String(values.fileName)}`);
     if (injected('render.fail_configure')) mismatches.push('fault:render.fail_configure');
     if (mismatches.length) fail('configure', 'RENDER_FAILED', `Render item readback does not match the requested settings: ${mismatches.join(', ')}`, { values });
@@ -354,6 +358,9 @@ async function runAttempt(spec: RenderJobSpec, deps: RenderPipelineDeps, context
         continue;
       }
       record.nativeCallMs = Number(outcome.value?.nativeCallMs ?? (outcome.at - renderStarted));
+      if (outcome.value?.settings && typeof outcome.value.settings === 'object') {
+        record.settingsReadback = outcome.value.settings as Record<string, unknown>;
+      }
       if (stallInjected) fail('render', 'RENDER_STALLED', 'Injected stall: render treated as making no progress.', { outputSize: size, injected: true });
       const idleFor = now - (supervision.lastProgressAt ?? outcome.at);
       if (size <= 0) {
@@ -507,9 +514,12 @@ async function superviseRender(spec: RenderJobSpec, deps: RenderPipelineDeps): P
   const last = attempts[attempts.length - 1];
   if (last.outcome !== 'validated') {
     const host = await deps.probe().catch(() => undefined);
-    // A cancelled render must not leave a wedged Render Manager for the next job.
-    if (last.failure?.code === 'OPERATION_CANCELLED' && host?.recoveryRecommended && checkpointPath) {
-      last.recovery = await deps.recover({ checkpointPath, reason: 'host unhealthy after cancellation', expectedMinimumLayers: spec.expectedMinimumLayers, compId });
+    // Cavalry 2.7.2 can answer idle after a cancelled foreground render while
+    // leaving Render Manager unable to complete the next job. When clean-host
+    // recovery is enabled, cancellation therefore always resets from the
+    // pre-render checkpoint instead of trusting the first idle probe.
+    if (last.failure?.code === 'OPERATION_CANCELLED' && checkpointPath) {
+      last.recovery = await deps.recover({ checkpointPath, reason: 'clean-host reset after cancellation', expectedMinimumLayers: spec.expectedMinimumLayers, compId });
     }
     await abort(last.failure ?? { stage: 'render', code: 'RENDER_FAILED', message: 'Render failed without a recorded cause.' }, host);
   }

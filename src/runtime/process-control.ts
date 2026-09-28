@@ -51,7 +51,22 @@ export function macProcessControl(appName = process.env.CAVALRY_PROCESS_NAME || 
       return { wasRunning, exited, forced: true, durationMs: Date.now() - started };
     },
     async launch() {
-      await execFileAsync('/usr/bin/open', ['-a', process.env.CAVALRY_APP_PATH || appName]);
+      const target = process.env.CAVALRY_APP_PATH || appName;
+      let lastError: unknown;
+      // LaunchServices can briefly retain the just-terminated application
+      // descriptor and return -600 (procNotFound) even though the process has
+      // exited. Retry the launch itself; later recovery steps still verify the
+      // bridge, scene, and host before accepting success.
+      for (let attempt = 0; attempt < 6; attempt += 1) {
+        try {
+          await execFileAsync('/usr/bin/open', ['-a', target]);
+          return;
+        } catch (error) {
+          lastError = error;
+          if (attempt < 5) await sleep(500);
+        }
+      }
+      throw lastError;
     },
     async activateBridge() {
       try {

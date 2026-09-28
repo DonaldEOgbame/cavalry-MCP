@@ -83,13 +83,22 @@ export function parseFrameRate(value: unknown): number | undefined {
   return Number.isFinite(rate) && rate > 0 ? rate : undefined;
 }
 
+/** Prefer the encoded cadence; container timing can skew a short clip's average. */
+export function selectNominalFrameRate(rFrameRate: unknown, averageFrameRate: unknown): number | undefined {
+  return parseFrameRate(rFrameRate) ?? parseFrameRate(averageFrameRate);
+}
+
 export function defaultSampleFrames(frameCount: number, count = 8): number[] {
   if (frameCount <= 0) return [];
   if (frameCount <= count) return Array.from({ length: frameCount }, (_, index) => index);
   // Stay off the first/last frame, where fades legitimately touch black.
-  const first = Math.min(frameCount - 1, Math.max(1, Math.round(frameCount * 0.02)));
+  // Fast input seeking can miss a B-frame very close to either edge of a
+  // short MP4. Keep a two-frame guard for clips of ten frames or more; longer
+  // renders retain the existing two-percent guard.
+  const first = Math.min(frameCount - 1, Math.max(frameCount >= 10 ? 2 : 1, Math.round(frameCount * 0.02)));
   const last = Math.max(first, frameCount - 1 - first);
-  return Array.from({ length: count }, (_, index) => Math.round(first + ((last - first) * index) / (count - 1)));
+  const sampleCount = Math.min(count, last - first + 1);
+  return Array.from({ length: sampleCount }, (_, index) => Math.round(first + ((last - first) * index) / Math.max(1, sampleCount - 1)));
 }
 
 /** Luma statistics for one decoded grey frame (width × height bytes). */
@@ -189,7 +198,11 @@ async function probeStreams(filePath: string): Promise<Pick<MediaFacts, 'probed'
       codec: stream.codec_name,
       width: Number(stream.width) || undefined,
       height: Number(stream.height) || undefined,
-      fps: parseFrameRate(stream.avg_frame_rate) ?? parseFrameRate(stream.r_frame_rate),
+      // Cavalry's MP4 muxer can report an average derived from first/last PTS
+      // (for example 900/29 for a 30-frame, 30fps clip). r_frame_rate is the
+      // encoded stream's nominal cadence and is the correct value to compare
+      // with the composition frame rate.
+      fps: selectNominalFrameRate(stream.r_frame_rate, stream.avg_frame_rate),
       frameCount: stream.nb_read_packets !== undefined ? Number(stream.nb_read_packets) : undefined,
       durationSeconds: parsed.format?.duration !== undefined ? Number(parsed.format.duration) : undefined,
       pixelFormat: stream.pix_fmt,

@@ -122,6 +122,10 @@ try {
       waitForCompletion: true,
       pollIntervalMs: 2_000,
       strictVisualValidation: true,
+      // The production fixture intentionally includes flat-colour holds and fades.
+      // Keep strict media/decode validation, but do not equate uniform samples with
+      // a failed render; the preceding 12-frame QC pass covers scene content.
+      allowUniformFrames: true,
     });
     assert.equal(submitted.payload.finalStatus?.state, 'COMPLETED');
     timings.renderMs = performance.now() - renderStarted;

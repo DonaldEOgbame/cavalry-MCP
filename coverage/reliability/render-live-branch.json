@@ -1,0 +1,120 @@
+{
+  "kind": "live-render-reliability-summary",
+  "generatedAt": "2026-09-28T18:16:00.000Z",
+  "environment": {
+    "platform": "macOS",
+    "cavalryVersion": "2.7.2",
+    "transport": "external MCP over stdio",
+    "tool": "render_scene_verified"
+  },
+  "rootCauses": [
+    {
+      "issue": "Cavalry ignored a requested range and rendered 0-250",
+      "cause": "frameRangeMode 1 is not custom range in Cavalry 2.7.2",
+      "fix": "Use frameRangeMode 2 and the inclusive requested end frame"
+    },
+    {
+      "issue": "Valid short/full H.264 files failed fps validation",
+      "cause": "Container average frame rate is duration-derived and can be fractional",
+      "fix": "Prefer the encoded r_frame_rate and fall back to avg_frame_rate"
+    },
+    {
+      "issue": "Ten-frame validation intermittently failed to decode an edge sample",
+      "cause": "Fast seeking too close to a short H.264 clip boundary",
+      "fix": "Use a two-frame sample guard for clips of at least ten frames"
+    },
+    {
+      "issue": "A cancelled native render left the next render stale or wedged",
+      "cause": "Host-idle status alone did not prove the native Render Manager was reusable",
+      "fix": "Perform clean-host recovery after cancellation when a checkpoint exists"
+    },
+    {
+      "issue": "Cold QC and post-reopen probes timed out on the 140-layer scene",
+      "cause": "The generic 15-second bridge deadline was shorter than valid host evaluation",
+      "fix": "Use bounded 60-second deadlines for frame preview and reopened-scene activation"
+    }
+  ],
+  "fullRange": {
+    "status": "PASS",
+    "attempts": 1,
+    "requestedRange": [0, 3119],
+    "settingsReadback": {
+      "frameRange": [0, 3119],
+      "frameRangeMode": 2,
+      "generator": "renderMP4"
+    },
+    "nativeCallMs": 207159,
+    "toolDurationMs": 232294,
+    "firstByteAfterMs": 1000,
+    "growthEvents": 47,
+    "artifact": {
+      "bytes": 11962006,
+      "codec": "h264",
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "frameCount": 3120,
+      "durationSeconds": 103.966667
+    },
+    "hostAfter": "idle",
+    "incidents": 0,
+    "invalidAttributeReads": 0
+  },
+  "productionBenchmark": {
+    "status": "PASS",
+    "totalMs": 417812.72,
+    "compileMs": 169989.63,
+    "verifyMs": 937.71,
+    "qcMs": 23210.75,
+    "correctionMs": 120.97,
+    "renderMs": 222691.88,
+    "mcpCalls": 10,
+    "rawScriptCalls": 0,
+    "directBridgeCalls": 0,
+    "invalidAttributeReads": 0,
+    "dialogClassOccurrences": 0
+  },
+  "isolatedCases": {
+    "short0To29": {
+      "status": "PASS",
+      "nativeCallMs": 2640,
+      "frameCount": 30,
+      "hostAfter": "idle"
+    },
+    "middle1500To1529": {
+      "status": "PASS",
+      "nativeCallMs": 2158,
+      "frameCount": 30,
+      "hostAfter": "idle"
+    },
+    "cancelThenRender": {
+      "status": "PASS",
+      "abortAfterMs": 45000,
+      "cancelCallMs": 11682,
+      "recoveryFinalState": "idle",
+      "nextRenderFrames": 10,
+      "nextRenderNativeCallMs": 514
+    },
+    "reopenAndRender": {
+      "status": "PASS",
+      "evidence": "Every scenePath probe reopened the saved .cv before rendering"
+    },
+    "staleItemPurge": {
+      "status": "PASS",
+      "ownedItemRemoved": true,
+      "unrelatedItemRetained": true
+    },
+    "segmented0To59": {
+      "status": "PASS",
+      "segmentFrames": 30,
+      "segments": 2,
+      "ranges": [[0, 29], [30, 59]],
+      "joinedFrameCount": 60,
+      "hostAfter": "idle"
+    }
+  },
+  "intentionalUniformContent": {
+    "policy": "explicit opt-in",
+    "reason": "The production fixture intentionally contains flat-colour holds and fades; decode, codec, size, rate, exact count and duration remain mandatory, while the preceding 12-image QC verifies content."
+  }
+}

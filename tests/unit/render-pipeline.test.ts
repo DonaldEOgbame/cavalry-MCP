@@ -35,6 +35,8 @@ function createWorld(options: WorldOptions = {}) {
   const calls: string[] = [];
   const recoveries: string[] = [];
   const journal: Array<{ kind: string; context: Record<string, unknown> }> = [];
+  const configuredRangeModes: number[] = [];
+  const configuredRanges: unknown[] = [];
   let itemCounter = 0;
   let attempt = 0;
   let hostState: HostState = options.preflight ?? 'idle';
@@ -71,6 +73,8 @@ function createWorld(options: WorldOptions = {}) {
           attempt += 1;
           const values = items.get(String(params.itemId))!;
           const settings = params.settings as Record<string, unknown>;
+          configuredRangeModes.push(Number(settings.frameRangeMode));
+          configuredRanges.push(settings.frameRange);
           Object.assign(values, settings);
           if (options.rangeReset?.[attempt - 1]) values.frameRange = { x: 0, y: 250 };
           return { values };
@@ -136,7 +140,7 @@ function createWorld(options: WorldOptions = {}) {
     timings: { pollMs: 1_000, stallAfterMs: 120_000, blockedStallAfterMs: 600_000, zeroByteGraceMs: 90_000, jobTimeoutMs: 1_800_000, preflightWaitMs: 60_000, killAfterStartMs: 3_000, hostProbeIntervalMs: 15_000 },
   };
   return {
-    deps, files, items, deleted, calls, recoveries, journal,
+    deps, files, items, deleted, calls, recoveries, journal, configuredRangeModes, configuredRanges,
     get killed() { return killed; },
     set hostState(value: HostState) { hostState = value; },
   };
@@ -156,6 +160,8 @@ describe('supervised disposable render pipeline', () => {
     assert.deepEqual([...world.items.keys()], [], 'no render item survives the job');
     assert.ok(result.checkpointPath?.endsWith('.cv'));
     assert.equal(result.frameCount, 3120);
+    assert.deepEqual(world.configuredRangeModes, [2], 'explicit ranges use Cavalry custom-range mode');
+    assert.deepEqual(world.configuredRanges, [{ x: 0, y: 3119 }], 'custom range upper bound is inclusive');
     assert.deepEqual(result.inspectionFrames?.map((item) => item.frame), [28, 3000], 'inspection frames span the sampled range');
     assert.ok(world.calls.indexOf('scene_export_copy') < world.calls.indexOf('render_queue_add'), 'checkpoint precedes item creation');
     assert.ok([...world.files.keys()].some((file) => file.includes('.cavalry-mcp/reports/')), 'a render report is persisted');
@@ -285,7 +291,7 @@ describe('supervised disposable render pipeline', () => {
       return true;
     });
     assert.deepEqual([...world.items.keys()], [], 'the cancelled item is destroyed');
-    assert.equal(world.recoveries.length, 0);
+    assert.equal(world.recoveries.length, 1, 'cancellation resets Render Manager even when the first health probe looks idle');
     assert.equal(world.files.has('/renders/film.mp4'), false);
   });
 
