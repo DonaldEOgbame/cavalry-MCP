@@ -53,8 +53,8 @@ export async function sceneImport(filePath: string): Promise<{ imported: boolean
   return res.result!;
 }
 
-export async function sceneInspect(detailed?: boolean): Promise<Record<string, unknown>> {
-  const res = await bridgeClient.send<Record<string, unknown>>('scene_inspect', { detailed });
+export async function sceneInspect(detailed?: boolean, options: { mode?: 'summary' | 'detailed' | 'targeted'; attributes?: string[] } = {}): Promise<Record<string, unknown>> {
+  const res = await bridgeClient.send<Record<string, unknown>>('scene_inspect', { detailed, ...(options.mode ? { mode: options.mode } : {}), ...(options.attributes ? { attributes: options.attributes } : {}) });
   return res.result!;
 }
 

@@ -19,7 +19,7 @@ Measured on **Cavalry 2.7.2 for macOS** and refreshed on 27 September 2026:
 
 | Validation boundary | Result |
 |---|---:|
-| Registered MCP tools | 403 (59 in the default production profile) |
+| Registered MCP tools | 404 (60 in the default production profile) |
 | Concrete node types | 436 |
 | Node attributes | 3,168 |
 | Installed render generators | 14 |
@@ -187,7 +187,7 @@ Configuration can be set via environment variables or a `.env` file in the proje
 | `CAVALRY_CALLBACK_PORT` | `8082` | Port for ultra-low latency MCP receiver. |
 | `CAVALRY_BRIDGE_TIMEOUT_MS` | `15000` | Bridge request timeout (ms). |
 | `CAVALRY_RENDER_TIMEOUT_MS` | `1800000` | Deadline before an unverified background render becomes `FAILED`. |
-| `CAVALRY_TOOL_PROFILE` | `core` | Production compiler/knowledge/health surface (59 tools); use `standard` for broad typed editing or `full` for all 403 tools. |
+| `CAVALRY_TOOL_PROFILE` | `core` | Production compiler/knowledge/health surface (60 tools); use `standard` for broad typed editing or `full` for all 404 tools. |
 | `CAVALRY_SECURITY_TIER` | `SAFE` | `SAFE`, `EXTENDED`, `RAW`, or `SYSTEM_EXEC`. |
 | `CAVALRY_ALLOW_RAW_SCRIPT` | `false` | Enables `cavalry_raw_script` tool when `true`. |
 | `CAVALRY_DATA_DIR` | platform user-data directory | Writable knowledge and application data; package resources remain read-only. |
@@ -255,6 +255,8 @@ npm run test:integration
 * [Historical Release Reports](docs/history/)
 * [Architecture Specification](docs/architecture.md)
 * [Cavalry Scripting API Notes & Introspection Reference](docs/cavalry-api-notes.md)
+* [Runtime Reliability: host health, JS-error capture, supervised rendering, persisted state](docs/runtime-reliability.md)
+* [Attribute Hygiene: no invalid attribute reads](docs/attribute-hygiene.md)
 * [Security & Sandboxing Guide](docs/security.md)
 * [Tool Reference](docs/tool-reference.md)
 * [Testing & Acceptance Suite](docs/testing.md)

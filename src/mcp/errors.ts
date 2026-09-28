@@ -28,6 +28,13 @@ export type CavalryErrorCode =
   | 'RAW_SCRIPT_DISABLED'
   | 'SYSTEM_EXEC_DISABLED'
   | 'UI_FALLBACK_REQUIRED'
+  | 'REQUEST_EXPIRED'
+  | 'HOST_BUSY'
+  | 'HOST_WEDGED'
+  | 'HOST_ERROR_DIALOG'
+  | 'HOST_RECOVERY_FAILED'
+  | 'RENDER_STALLED'
+  | 'RENDER_OUTPUT_INVALID'
   | 'CAVALRY_ERROR'
   | 'INTERNAL_ERROR';
 
@@ -37,6 +44,14 @@ export interface CavalryErrorDetails {
   operation?: string;
   relevantIds?: string[];
   suggestion?: string;
+  /** Bridge-side stack trace when the failure came from a Cavalry handler. */
+  stack?: string;
+  /** Bridge incident that recorded this failure, for journal correlation. */
+  incidentId?: string;
+  /** Classified host state observed when the failure was diagnosed. */
+  hostState?: string;
+  /** Structured evidence gathered while diagnosing the failure. */
+  diagnostics?: Record<string, unknown>;
 }
 
 export class CavalryError extends Error {
@@ -44,6 +59,10 @@ export class CavalryError extends Error {
   public readonly operation?: string;
   public readonly relevantIds?: string[];
   public readonly suggestion?: string;
+  public readonly bridgeStack?: string;
+  public readonly incidentId?: string;
+  public hostState?: string;
+  public diagnostics?: Record<string, unknown>;
 
   constructor(details: CavalryErrorDetails) {
     super(details.message);
@@ -52,6 +71,10 @@ export class CavalryError extends Error {
     this.operation = details.operation;
     this.relevantIds = details.relevantIds;
     this.suggestion = details.suggestion;
+    this.bridgeStack = details.stack;
+    this.incidentId = details.incidentId;
+    this.hostState = details.hostState;
+    this.diagnostics = details.diagnostics;
     Object.setPrototypeOf(this, CavalryError.prototype);
   }
 
@@ -62,6 +85,10 @@ export class CavalryError extends Error {
       operation: this.operation,
       relevantIds: this.relevantIds,
       suggestion: this.suggestion,
+      ...(this.bridgeStack ? { stack: this.bridgeStack } : {}),
+      ...(this.incidentId ? { incidentId: this.incidentId } : {}),
+      ...(this.hostState ? { hostState: this.hostState } : {}),
+      ...(this.diagnostics ? { diagnostics: this.diagnostics } : {}),
     };
   }
 

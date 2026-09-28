@@ -1,30 +1,49 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { compileMotionProject, estimateLegacyCallCount, motionHash } from './compiler.js';
-import { createRuntime, runtimeFor, updateRuntime } from './store.js';
+import { allRuntimes, BACKGROUND_ELEMENT_ID, createRuntime, elementLayer, hasRuntime, layerHandle, LayerRef, MotionProjectRuntime, registerRuntime, runtimeFor, sceneLayerHandles, semanticId, updateRuntime } from './store.js';
+import { hydrateRuntime, LiveLayer, persistRuntime, projectStatePath, readPersistedState, resolveAgainstLiveScene, sceneSidecarPath, seedIndexFromNames } from './persistence.js';
 import { MotionCorrection, MotionElement, MotionPrimitive, MotionProjectSpec } from './types.js';
 import { addTiming, recordBatches, recordCall, resetTelemetry, telemetryFor } from './telemetry.js';
 import { executeBatch } from '../cavalry/capabilities.js';
 import * as Scene from '../cavalry/scene.js';
 import * as Comp from '../cavalry/compositions.js';
 import * as Layer from '../cavalry/layers.js';
-import * as Render from '../cavalry/rendering.js';
+import * as RenderService from '../render/service.js';
+import { CavalryError } from '../mcp/errors.js';
+import { filesystem } from '../utils/filesystem.js';
 import * as Preview from '../preview/frames.js';
 import { bridgeClient } from '../bridge/client.js';
-import { execFile } from 'node:child_process';
-import { promisify } from 'node:util';
-
-const execFileAsync = promisify(execFile);
+import { logger } from '../utils/logger.js';
+import { certificationStatus, primitivesUsed } from './certification.js';
 
 function now(): number { return Date.now(); }
+
+/** Persists compiler state after a mutation; never fails the mutation itself. */
+async function persist(runtime: MotionProjectRuntime, scenePaths: string[] = []): Promise<{ statePath: string | null; sidecars: string[] }> {
+  try {
+    const [statePath, ...sidecars] = await persistRuntime(runtime, scenePaths);
+    return { statePath, sidecars };
+  } catch (error) {
+    logger.warn('Could not persist motion compiler state', { data: error });
+    return { statePath: null, sidecars: [] };
+  }
+}
+
+/** Writes a state sidecar next to a saved scene for every project compiled into it. */
+export async function writeSceneSidecars(scenePath: string | undefined): Promise<string[]> {
+  if (!scenePath) return [];
+  const written: string[] = [];
+  for (const runtime of allRuntimes().filter((item) => item.compId)) {
+    runtime.scenePath = scenePath;
+    written.push(...(await persist(runtime, [scenePath])).sidecars);
+  }
+  return written;
+}
 
 function withCall<T>(projectId: string, operation: () => Promise<T>): Promise<T> {
   const started = now();
   return operation().finally(() => recordCall(projectId, now() - started));
-}
-
-function sceneLayerKey(sceneId: string, elementId: string): string {
-  return `${sceneId}/${elementId}`;
 }
 
 function layerIdsFromBatch(result: any): string[] {
@@ -34,7 +53,7 @@ function layerIdsFromBatch(result: any): string[] {
     .filter((value: unknown): value is string => typeof value === 'string');
 }
 
-function optimizeTimelineOperations(operations: any[], sceneId: string): any[] {
+export function optimizeTimelineOperations(operations: any[], sceneId: string): any[] {
   const keyframes: any[] = [];
   const easings: any[] = [];
   const interpolations: any[] = [];
@@ -53,24 +72,23 @@ function optimizeTimelineOperations(operations: any[], sceneId: string): any[] {
   return retained;
 }
 
-function indexLayerIds(runtime: ReturnType<typeof runtimeFor>, sceneId: string, result: any): void {
-  const ids: string[] = [];
+/** Indexes created layers by semantic element id (`sceneId.elementId`). */
+export function indexSceneLayers(runtime: MotionProjectRuntime, sceneId: string, result: any): void {
   const scene = runtime.spec.scenes.find((item) => item.id === sceneId);
   const sceneKey = sceneId.replace(/[^a-zA-Z0-9_-]/g, '_');
-  const elementByCreateId = new Map((scene?.elements ?? []).map((element) => [
-    `${sceneKey}-${element.id.replace(/[^a-zA-Z0-9_-]/g, '_')}-create`, element,
-  ]));
-  const createIds = new Set([`${sceneKey}-background-create`, ...elementByCreateId.keys()]);
+  const elementByCreateId = new Map<string, string>([
+    [`${sceneKey}-background-create`, BACKGROUND_ELEMENT_ID],
+    ...(scene?.elements ?? []).map((element) => [`${sceneKey}-${element.id.replace(/[^a-zA-Z0-9_-]/g, '_')}-create`, element.id] as [string, string]),
+  ]);
+  const layers = new Map<string, LayerRef>();
   for (const step of result.stepResults ?? []) {
     if (!step.ok || (step.op !== 'layer_create' && step.op !== 'layer_create_primitive')) continue;
-    if (typeof step.id !== 'string' || !createIds.has(step.id)) continue;
+    const elementId = typeof step.id === 'string' ? elementByCreateId.get(step.id) : undefined;
     const layerId = step.result?.layerId;
-    if (typeof layerId !== 'string') continue;
-    ids.push(layerId);
-    const element = elementByCreateId.get(step.id);
-    if (element) runtime.sceneLayerIds.set(sceneLayerKey(sceneId, element.id), [layerId]);
+    if (!elementId || typeof layerId !== 'string') continue;
+    layers.set(elementId, { layerId, ...(step.result?.uuid ? { uuid: String(step.result.uuid) } : {}), ...(step.result?.name ? { name: String(step.result.name) } : {}) });
   }
-  runtime.sceneLayerIds.set(sceneId, ids);
+  runtime.layers.set(sceneId, layers);
 }
 
 function primitiveForText(text: string, index: number): MotionPrimitive {
@@ -147,6 +165,7 @@ export async function createProject(spec: MotionProjectSpec): Promise<Record<str
     const runtime = createRuntime(spec, plan);
     addTiming(spec.id, 'compilationMs', now() - started);
     return {
+      primitiveCertification: certificationStatus(primitivesUsed(spec)),
       projectId: spec.id,
       revision: runtime.revision,
       manifestHash: plan.hash,
@@ -182,7 +201,7 @@ async function executeScenes(projectId: string, sceneIds: string[], dryRun: bool
   const sceneBatchSize = 5;
   for (let offset = 0; offset < scenes.length; offset += sceneBatchSize) {
     const sceneGroup = scenes.slice(offset, offset + sceneBatchSize);
-    const existing = sceneGroup.flatMap((scene) => runtime.sceneLayerIds.get(scene.sceneId) ?? []);
+    const existing = sceneGroup.flatMap((scene) => sceneLayerHandles(runtime, scene.sceneId));
     if (existing.length) await Layer.layerDelete(existing);
     const revision = await bridgeClient.send<any>('events_status').then((response) => response.result?.sceneRevision).catch(() => undefined);
     const logicalOperations = sceneGroup.flatMap((scene) => scene.operations);
@@ -190,6 +209,7 @@ async function executeScenes(projectId: string, sceneIds: string[], dryRun: bool
     const optimizedOperations = optimizeTimelineOperations(logicalOperations, groupId);
     const batchParams = {
       operations: optimizedOperations,
+      batchId: `${projectId}:r${runtime.revision}:${groupId}`,
       transactional: false,
       verify: true,
       stopOnError: true,
@@ -211,14 +231,14 @@ async function executeScenes(projectId: string, sceneIds: string[], dryRun: bool
     }
     if (result.stepResults.some((step: any) => step.result?.synthetic || step.result?.skipped)) throw new Error(`Scene group '${groupId}' produced a synthetic or skipped batch result.`);
     for (const scene of sceneGroup) {
-      indexLayerIds(runtime, scene.sceneId, result);
+      indexSceneLayers(runtime, scene.sceneId, result);
       runtime.compiledSceneHashes.set(scene.sceneId, scene.hash);
       runtime.dirtyScenes.delete(scene.sceneId);
       results.push({
         sceneId: scene.sceneId,
         logicalOperations: scene.operations.length,
-        batchId: groupId,
-        layerIds: runtime.sceneLayerIds.get(scene.sceneId) ?? [],
+        batchId: batchParams.batchId,
+        elements: Object.fromEntries([...(runtime.layers.get(scene.sceneId) ?? new Map())].map(([elementId, ref]) => [semanticId(scene.sceneId, elementId), ref.layerId])),
       });
     }
     batchSizes.push(optimizedOperations.length);
@@ -226,7 +246,8 @@ async function executeScenes(projectId: string, sceneIds: string[], dryRun: bool
   }
   recordBatches(projectId, batchSizes, now() - started);
   runtime.compiledHash = runtime.dirtyScenes.size ? undefined : runtime.plan.hash;
-  return { dryRun: false, scenes: results, groups, batchCount: batchSizes.length, operationCount: batchSizes.reduce((sum, size) => sum + size, 0), dirtyScenes: [...runtime.dirtyScenes] };
+  const persisted = await persist(runtime);
+  return { dryRun: false, scenes: results, groups, batchCount: batchSizes.length, operationCount: batchSizes.reduce((sum, size) => sum + size, 0), dirtyScenes: [...runtime.dirtyScenes], statePath: persisted.statePath };
 }
 
 export async function compileProject(projectId: string, force = false, dryRun = false): Promise<Record<string, unknown>> {
@@ -245,7 +266,7 @@ export async function compileProject(projectId: string, force = false, dryRun = 
         makeActive: true,
       });
       runtime.compId = String((composition as any).compId ?? (composition as any).layerId);
-      runtime.sceneLayerIds.clear();
+      runtime.layers.clear();
       runtime.pendingLayerDeletes.clear();
       runtime.compiledSceneHashes.clear();
       runtime.dirtyScenes = new Set(runtime.spec.scenes.map((scene) => scene.id));
@@ -269,6 +290,7 @@ export async function updateProject(projectId: string, spec: MotionProjectSpec, 
     updateRuntime(runtime, spec, plan);
     addTiming(projectId, 'compilationMs', now() - started);
     const result = compile ? await executeScenes(projectId, [...runtime.dirtyScenes], dryRun) : { dirtyScenes: [...runtime.dirtyScenes] };
+    if (!compile && !dryRun) await persist(runtime);
     return { projectId, revision: runtime.revision, manifestHash: plan.hash, ...result };
   });
 }
@@ -284,9 +306,9 @@ export async function retimeSequence(projectId: string, durations: Record<string
     }
   }
   if (!changed) return { projectId, changed: false, dirtyScenes: [] };
-  // Retime changes every downstream absolute frame, so rebuild the sequence.
+  // Only the retimed scenes and those whose absolute frames moved are dirty;
+  // updateRuntime compares each scene's hash and start/end frames.
   const result = await updateProject(projectId, spec, false, dryRun);
-  runtime.dirtyScenes = new Set(spec.scenes.map((scene) => scene.id));
   return compile ? compileProject(projectId, false, dryRun) : result;
 }
 
@@ -312,10 +334,13 @@ export async function applyCorrections(projectId: string, corrections: MotionCor
     const operations: any[] = [];
     const rebuild = new Set<string>();
     const directScenes = new Set<string>();
+    const targets: Array<{ semanticId: string; mode: 'direct' | 'rebuild'; handle?: string }> = [];
+    // Corrections are staged on a copy so a dry run never alters the manifest.
+    const spec = dryRun ? structuredClone(runtime.spec) : runtime.spec;
     for (const correction of corrections) {
-      const scene = runtime.spec.scenes.find((item) => item.id === correction.sceneId);
+      const scene = spec.scenes.find((item) => item.id === correction.sceneId);
       const element = scene?.elements.find((item) => item.id === correction.elementId);
-      if (!scene || !element) throw new Error(`Unknown correction target ${correction.sceneId}/${correction.elementId}.`);
+      if (!scene || !element) throw new Error(`Unknown correction target ${semanticId(correction.sceneId, correction.elementId)}.`);
       if (correction.properties) Object.assign(element, correction.properties);
       if (correction.timing) {
         for (const motion of element.motions ?? []) {
@@ -328,23 +353,29 @@ export async function applyCorrections(projectId: string, corrections: MotionCor
         element.parentId = correction.hierarchy.parentId ?? undefined;
         rebuild.add(scene.id);
       }
-      const ids = runtime.sceneLayerIds.get(sceneLayerKey(scene.id, element.id)) ?? [];
+      // The UUID handle survives save/reopen and recovery restarts.
+      const ref = elementLayer(runtime, scene.id, element.id);
       const attributes = attributesForCorrection(element, correction.properties);
-      if (ids[0] && Object.keys(attributes).length) {
-        operations.push({ id: `correction-${operations.length}`, op: 'attribute_set_many', params: { layerId: ids[0], attributes } });
+      if (ref && Object.keys(attributes).length) {
+        operations.push({ id: `correction-${operations.length}`, op: 'attribute_set_many', params: { layerId: layerHandle(ref), attributes } });
         directScenes.add(scene.id);
+        targets.push({ semanticId: semanticId(scene.id, element.id), mode: 'direct', handle: layerHandle(ref) });
       }
       else if (Object.keys(attributes).length) rebuild.add(scene.id);
       const directPropertyNames = new Set(['text', 'position', 'scale', 'opacity', 'rotation', 'color', 'tracking', 'lineHeight', 'width', 'height']);
       if (correction.properties && Object.keys(correction.properties).some((key) => !directPropertyNames.has(key))) rebuild.add(scene.id);
+      if (rebuild.has(scene.id) && !targets.some((target) => target.semanticId === semanticId(scene.id, element.id))) targets.push({ semanticId: semanticId(scene.id, element.id), mode: 'rebuild' });
     }
-    const plan = compileMotionProject(runtime.spec);
+    const plan = compileMotionProject(spec);
+    // Frames that must be re-reviewed or re-rendered after this correction.
+    const affectedScenes = new Set([...directScenes, ...rebuild]);
+    const affectedRanges = plan.scenes.filter((scene) => affectedScenes.has(scene.sceneId)).map((scene) => ({ sceneId: scene.sceneId, startFrame: scene.startFrame, endFrame: scene.endFrame }));
+    if (dryRun) return { dryRun: true, directOperations: operations.length, rebuildScenes: [...rebuild], targets, affectedRanges, manifestHash: plan.hash };
     updateRuntime(runtime, runtime.spec, plan);
-    if (dryRun) return { dryRun: true, directOperations: operations.length, rebuildScenes: [...rebuild], manifestHash: plan.hash };
     let directResult: any = null;
     if (operations.length) {
       const batchStarted = now();
-      directResult = await executeBatch({ operations, transactional: true, verify: true, operationTimeoutMs: 120_000 });
+      directResult = await executeBatch({ operations, transactional: true, verify: true, operationTimeoutMs: 120_000, batchId: `${projectId}:r${runtime.revision}:corrections` } as any);
       if (!directResult.allOk) throw new Error('Correction batch failed.');
       recordBatches(projectId, [operations.length], now() - batchStarted);
     }
@@ -357,8 +388,9 @@ export async function applyCorrections(projectId: string, corrections: MotionCor
     for (const sceneId of rebuild) runtime.dirtyScenes.add(sceneId);
     const rebuilt = rebuild.size ? await executeScenes(projectId, [...rebuild], false) : null;
     if (!runtime.dirtyScenes.size) runtime.compiledHash = runtime.plan.hash;
+    const persisted = await persist(runtime);
     addTiming(projectId, 'correctionMs', now() - started);
-    return { applied: corrections.length, directOperations: operations.length, rebuilt, manifestHash: plan.hash };
+    return { applied: corrections.length, directOperations: operations.length, targets, affectedRanges, untouchedScenes: plan.scenes.length - affectedScenes.size, rebuilt, manifestHash: plan.hash, revision: runtime.revision, statePath: persisted.statePath };
   });
 }
 
@@ -369,26 +401,48 @@ export async function verifyProject(projectId: string, detailed = false): Promis
     const scene = await Scene.sceneInspect(detailed);
     const layerCount = Number((scene as any).layerCount ?? 0);
     const expectedMinimum = runtime.plan.expectedLayers;
+    const identity = resolveAgainstLiveScene(runtime, ((scene as any).layers ?? []) as LiveLayer[]);
+    const indexedElements = [...runtime.layers.values()].reduce((sum, elements) => sum + elements.size, 0);
     const result = {
       projectId,
       manifestHash: runtime.plan.hash,
       compiledHash: runtime.compiledHash ?? null,
+      revision: runtime.revision,
       dirtyScenes: [...runtime.dirtyScenes],
       expectedMinimumLayers: expectedMinimum,
       actualSceneLayers: layerCount,
       expectedKeyframes: runtime.plan.expectedKeyframes,
       sceneCount: runtime.plan.scenes.length,
       durationFrames: runtime.plan.durationFrames,
-      valid: runtime.dirtyScenes.size === 0 && runtime.compiledHash === runtime.plan.hash && layerCount >= expectedMinimum,
-      inspection: scene,
+      semanticElements: { indexed: indexedElements, resolved: identity.resolved, missing: identity.missing.slice(0, 20), missingCount: identity.missing.length },
+      valid: runtime.dirtyScenes.size === 0 && runtime.compiledHash === runtime.plan.hash && layerCount >= expectedMinimum && identity.missing.length === 0,
+      inspection: detailed ? scene : { activeComp: (scene as any).activeComp, layerCount },
     };
     addTiming(projectId, 'validationMs', now() - started);
     return result;
   });
 }
 
+async function loadPersistedRuntime(projectId: string, activeScenePath: string | undefined): Promise<{ runtime: MotionProjectRuntime; source: string } | null> {
+  const candidates = [projectStatePath(projectId), ...(activeScenePath ? [sceneSidecarPath(activeScenePath)] : [])];
+  for (const candidate of candidates) {
+    const state = await readPersistedState(candidate);
+    if (state?.projectId === projectId) return { runtime: hydrateRuntime(state), source: candidate };
+  }
+  return null;
+}
+
 export async function attachCurrentProject(projectId: string): Promise<Record<string, unknown>> {
   return withCall(projectId, async () => {
+    const health = await bridgeClient.send<any>('cavalry_health', {}, 10_000).then((response) => response.result).catch(() => null);
+    const activeScenePath = health?.activeScenePath || undefined;
+    let source = 'memory';
+    if (!hasRuntime(projectId)) {
+      const loaded = await loadPersistedRuntime(projectId, activeScenePath);
+      if (!loaded) throw new Error(`No manifest for '${projectId}' in memory or persisted state. Call motion_project_create first.`);
+      registerRuntime(loaded.runtime);
+      source = loaded.source;
+    }
     const runtime = runtimeFor(projectId);
     const composition = await Comp.compositionGetActive() as any;
     const inspection = await Scene.sceneInspect(false) as any;
@@ -396,107 +450,84 @@ export async function attachCurrentProject(projectId: string): Promise<Record<st
       throw new Error(`The active Cavalry scene does not satisfy project '${projectId}' structural minimums.`);
     }
     runtime.compId = String(composition.compId ?? composition.layerId ?? composition.id);
-    runtime.compiledHash = runtime.plan.hash;
-    runtime.dirtyScenes.clear();
-    for (const scene of runtime.plan.scenes) runtime.compiledSceneHashes.set(scene.sceneId, scene.hash);
-    return { projectId, compId: runtime.compId, manifestHash: runtime.plan.hash, attached: true, layerCount: inspection.layerCount };
+    const hadIndex = runtime.layers.size > 0;
+    if (!hadIndex) seedIndexFromNames(runtime);
+    const identity = resolveAgainstLiveScene(runtime, (inspection.layers ?? []) as LiveLayer[]);
+    runtime.layers = identity.layers;
+    if (!hadIndex) {
+      // No persisted index: scenes whose generated layers all resolve by name
+      // are accepted as compiled; the rest must be rebuilt.
+      runtime.dirtyScenes = new Set(identity.missingScenes);
+      for (const scene of runtime.plan.scenes) if (!runtime.dirtyScenes.has(scene.sceneId)) runtime.compiledSceneHashes.set(scene.sceneId, scene.hash);
+    } else {
+      // Scenes whose elements can no longer be found must be rebuilt.
+      for (const sceneId of identity.missingScenes) runtime.dirtyScenes.add(sceneId);
+    }
+    runtime.compiledHash = runtime.dirtyScenes.size ? undefined : runtime.plan.hash;
+    runtime.scenePath = activeScenePath ?? runtime.scenePath;
+    const persisted = await persist(runtime);
+    return {
+      projectId, compId: runtime.compId, manifestHash: runtime.plan.hash, revision: runtime.revision, attached: true, restoredFrom: source,
+      layerCount: inspection.layerCount, semanticElements: { resolved: identity.resolved, resolvedBy: identity.resolvedBy, missing: identity.missing },
+      dirtyScenes: [...runtime.dirtyScenes], statePath: persisted.statePath,
+    };
   });
+}
+
+/** Scene frames used to prove the artifact is not blank: one per scene, after its entrance settles. */
+export function projectSampleFrames(scenes: Array<{ startFrame: number; endFrame: number }>, maximum = 8): number[] {
+  if (!scenes.length) return [];
+  const step = Math.max(1, scenes.length / maximum);
+  const chosen: number[] = [];
+  for (let index = 0; index < scenes.length && chosen.length < maximum; index += step) {
+    const scene = scenes[Math.floor(index)];
+    chosen.push(scene.startFrame + Math.floor((scene.endFrame - scene.startFrame) * 0.6));
+  }
+  return [...new Set(chosen)];
 }
 
 export async function renderProject(input: {
   projectId: string; outputDirectory: string; fileName: string; sceneIds?: string[]; background?: boolean;
   waitForCompletion?: boolean; pollIntervalMs?: number;
   strictVisualValidation?: boolean; allowUniformFrames?: boolean;
+  maxAttempts?: number; inspectionFrames?: number; segmentFrames?: number;
+  signal?: AbortSignal;
 }): Promise<Record<string, unknown>> {
   return withCall(input.projectId, async () => {
     const started = now();
     const runtime = runtimeFor(input.projectId);
-    await fs.mkdir(input.outputDirectory, { recursive: true });
-    const resolvedOutputDirectory = path.resolve(input.outputDirectory);
-    const expectedOutput = path.join(resolvedOutputDirectory, input.fileName.toLowerCase().endsWith('.mp4') ? input.fileName : `${input.fileName}.mp4`);
-    await fs.rm(expectedOutput, { force: true });
+    if (input.waitForCompletion === false) {
+      throw new CavalryError({ code: 'INVALID_VALUE', message: 'motion_project_render only performs supervised, validated renders; waitForCompletion=false is not supported.', operation: 'motion_project_render', suggestion: 'Omit waitForCompletion. For a fire-and-forget export use render_background_start in the standard profile.' });
+    }
+    if (!runtime.compId) {
+      throw new CavalryError({ code: 'NO_ACTIVE_COMPOSITION', message: `Project '${input.projectId}' has not been compiled into Cavalry in this session.`, operation: 'motion_project_render', suggestion: 'Call motion_project_compile, or motion_project_attach_current for a previously compiled scene.' });
+    }
+    if (runtime.dirtyScenes.size) {
+      throw new CavalryError({ code: 'SCENE_DIRTY', message: `Scenes with uncompiled changes would render stale content: ${[...runtime.dirtyScenes].slice(0, 10).join(', ')}${runtime.dirtyScenes.size > 10 ? ', …' : ''}.`, operation: 'motion_project_render', suggestion: 'Call motion_project_compile first.' });
+    }
+    const outputDirectory = filesystem.assertAllowedPath(path.resolve(input.outputDirectory), 'motion_project_render');
     const selected = input.sceneIds?.length ? runtime.plan.scenes.filter((scene) => input.sceneIds!.includes(scene.sceneId)) : runtime.plan.scenes;
-    if (!selected.length) throw new Error('No render scenes selected.');
+    if (!selected.length) throw new CavalryError({ code: 'INVALID_VALUE', message: 'No render scenes selected.', operation: 'motion_project_render' });
     const startFrame = Math.min(...selected.map((scene) => scene.startFrame));
     const endFrame = Math.max(...selected.map((scene) => scene.endFrame));
-    const frameCount = endFrame - startFrame + 1;
-    const validationSettings = {
-      expectedVideo: true,
-      expectedCodec: 'h264',
-      expectedWidth: runtime.spec.resolution.width,
-      expectedHeight: runtime.spec.resolution.height,
-      expectedFrameCount: frameCount,
-      expectedFps: runtime.spec.fps,
-      strictVisualValidation: input.strictVisualValidation === true,
-      allowUniformFrames: input.allowUniformFrames === true,
-    };
-    const renderRange = async (rangeStart: number, rangeEnd: number, fileName: string, strictVisualValidation: boolean) => {
-      const item = await Render.renderQueueAdd(runtime.compId);
-      // Selecting a generator resets several Render Manager attributes in
-      // Cavalry 2.7.2. Select it first, then set the range. Render Manager's
-      // upper frame bound is exclusive, unlike the compiler's inclusive end.
-      await bridgeClient.send('render_item_set_output', { itemId: item.renderQueueItemId, filePath: resolvedOutputDirectory, fileName, formatType: 'renderMP4' }, 120_000);
-      await Render.renderQueueConfigure(item.renderQueueItemId, {
-        filePath: resolvedOutputDirectory, fileName,
-        startFrame: rangeStart, endFrame: rangeEnd + 1,
-        ...validationSettings,
-        expectedFrameCount: rangeEnd - rangeStart + 1,
-        strictVisualValidation,
-        allowUniformFrames: strictVisualValidation ? input.allowUniformFrames === true : true,
-      });
-      return Render.renderStart(item.renderQueueItemId);
-    };
-
-    if (frameCount > 250) {
-      const outputStem = input.fileName.replace(/\.mp4$/i, '');
-      const chunkPaths: string[] = [];
-      const chunkResults: Record<string, unknown>[] = [];
-      for (let chunkStart = startFrame, index = 0; chunkStart <= endFrame; chunkStart += 250, index += 1) {
-        const chunkEnd = Math.min(endFrame, chunkStart + 249);
-        const chunkName = `${outputStem}.part-${String(index).padStart(3, '0')}`;
-        await fs.rm(path.join(resolvedOutputDirectory, `${chunkName}.mp4`), { force: true });
-        const chunk = await renderRange(chunkStart, chunkEnd, chunkName, false) as any;
-        const chunkPath = String(chunk.outputVerification?.path ?? path.join(resolvedOutputDirectory, `${chunkName}.mp4`));
-        chunkPaths.push(chunkPath);
-        chunkResults.push({ startFrame: chunkStart, endFrame: chunkEnd, path: chunkPath, verification: chunk.outputVerification });
-      }
-      const concatList = path.join(resolvedOutputDirectory, `.${outputStem}-concat-${process.pid}.txt`);
-      const concatText = chunkPaths.map((chunkPath) => `file '${chunkPath.replace(/'/g, "'\\''")}'`).join('\n');
-      await fs.writeFile(concatList, `${concatText}\n`, 'utf8');
-      await execFileAsync('ffmpeg', ['-y', '-v', 'error', '-f', 'concat', '-safe', '0', '-i', concatList, '-c', 'copy', '-movflags', '+faststart', expectedOutput]);
-      const outputVerification = await Render.validateRenderedFile(expectedOutput, validationSettings);
-      await Promise.all([fs.rm(concatList, { force: true }), ...chunkPaths.map((chunkPath) => fs.rm(chunkPath, { force: true }))]);
-      const finalStatus = { state: 'COMPLETED', reliable: true, progress: 100, segmented: true, chunkCount: chunkPaths.length };
-      addTiming(input.projectId, 'renderMs', now() - started);
-      return { segmented: true, chunks: chunkResults, outputVerification, finalStatus, startFrame, endFrame, partial: Boolean(input.sceneIds?.length), outputDirectory: resolvedOutputDirectory, fileName: input.fileName };
-    }
-
-    const useBackground = input.background !== false && input.waitForCompletion === false;
-    const result = useBackground
-      ? await (async () => {
-        const item = await Render.renderQueueAdd(runtime.compId);
-        await bridgeClient.send('render_item_set_output', { itemId: item.renderQueueItemId, filePath: resolvedOutputDirectory, fileName: input.fileName, formatType: 'renderMP4' }, 120_000);
-        await Render.renderQueueConfigure(item.renderQueueItemId, { filePath: resolvedOutputDirectory, fileName: input.fileName, startFrame, endFrame: endFrame + 1, ...validationSettings });
-        return Render.renderBackgroundStart(item.renderQueueItemId);
-      })()
-      : await renderRange(startFrame, endFrame, input.fileName, input.strictVisualValidation === true);
-    let finalStatus: Record<string, unknown> | undefined;
-    if (useBackground && input.waitForCompletion !== false) {
-      const pollIntervalMs = Math.max(250, Math.min(10_000, input.pollIntervalMs ?? 2_000));
-      for (;;) {
-        await new Promise((resolve) => setTimeout(resolve, pollIntervalMs));
-        finalStatus = await Render.renderStatus(String((result as any).jobId));
-        const state = String((finalStatus as any).state ?? '');
-        if (state === 'COMPLETED') break;
-        if (state === 'FAILED' || state === 'CANCELLED') {
-          throw new Error(`Project render ${state.toLowerCase()}: ${String((finalStatus as any).error ?? 'no additional details')}`);
-        }
-      }
-    } else if (!useBackground) {
-      finalStatus = (result as any).supervision;
-    }
+    const sampleFrames = projectSampleFrames(selected.filter((scene) => scene.startFrame >= startFrame && scene.endFrame <= endFrame));
+    const result = await RenderService.renderJob({
+      compId: runtime.compId,
+      startFrame, endFrame, outputDirectory, fileName: input.fileName,
+      fps: runtime.spec.fps, width: runtime.spec.resolution.width, height: runtime.spec.resolution.height, codec: 'h264',
+      sampleFrames,
+      ...RenderService.visualTolerance(input, sampleFrames.length),
+      maxAttempts: input.maxAttempts,
+      inspectionFrames: input.inspectionFrames,
+      expectedMinimumLayers: runtime.plan.expectedLayers,
+      label: input.projectId,
+      signal: input.signal,
+    }, input.segmentFrames);
     addTiming(input.projectId, 'renderMs', now() - started);
-    return { ...result, finalStatus, startFrame, endFrame, partial: Boolean(input.sceneIds?.length), outputDirectory: resolvedOutputDirectory, fileName: input.fileName };
+    runtime.renders.push({ jobId: result.jobId, output: result.output, startFrame, endFrame, manifestHash: runtime.plan.hash, completedAt: new Date().toISOString(), recovered: result.recovered, attempts: result.attempts.length, sceneIds: selected.map((scene) => scene.sceneId) });
+    // The checkpoint is what recovery reopens; its sidecar carries the element index.
+    const persisted = await persist(runtime, result.checkpointPath ? [result.checkpointPath] : []);
+    return { ...result, partial: Boolean(input.sceneIds?.length), sceneIds: selected.map((scene) => scene.sceneId), manifestHash: runtime.plan.hash, outputDirectory, fileName: input.fileName, statePath: persisted.statePath };
   });
 }
 

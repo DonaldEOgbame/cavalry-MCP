@@ -320,6 +320,7 @@ export type CavalryToolName =
   "render_queue_add" |
   "render_queue_configure" |
   "render_queue_list" |
+  "render_scene_verified" |
   "render_script_clear" |
   "render_script_get" |
   "render_script_set_post" |

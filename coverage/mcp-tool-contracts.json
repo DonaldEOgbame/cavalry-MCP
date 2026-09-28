@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "count": 403,
+  "count": 404,
   "tools": [
     {
       "name": "app_active_tool",
@@ -1712,7 +1712,7 @@
     },
     {
       "name": "cavalry_health",
-      "description": "Inspect complete health, latency, active composition, and scene status",
+      "description": "Classify the Cavalry host (idle, busy, rendering, wedged, bridge_disconnected, error_dialog_active, cavalry_not_running) with latency, captured JavaScript-error incidents, and bridge session audit",
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
@@ -7419,7 +7419,7 @@
     },
     {
       "name": "motion_project_render",
-      "description": "Configure, supervise, and validate an H.264 project or partial-scene render without exposing bridge polling details",
+      "description": "Render the project (or selected scenes) to H.264 through the supervised pipeline: checkpoint, fresh disposable Render Manager item, artifact validation (codec, resolution, fps, exact frame count, non-blank frames), clean-host recovery, and exactly one retry; optionally returns frames from the validated file",
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
@@ -7440,37 +7440,58 @@
             }
           },
           "background": {
-            "default": true,
+            "description": "Deprecated and ignored: every render is supervised",
             "type": "boolean"
           },
           "waitForCompletion": {
             "default": true,
+            "description": "Must be true; renders complete only with a validated artifact",
             "type": "boolean"
           },
           "pollIntervalMs": {
-            "default": 2000,
+            "description": "Deprecated and ignored",
             "type": "integer",
             "minimum": 250,
             "maximum": 10000
           },
           "strictVisualValidation": {
-            "default": false,
+            "default": true,
             "type": "boolean"
           },
           "allowUniformFrames": {
             "default": false,
             "type": "boolean"
+          },
+          "maxAttempts": {
+            "default": 2,
+            "description": "2 retries exactly once after clean-host recovery",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2
+          },
+          "inspectionFrames": {
+            "default": 0,
+            "description": "Frames from the validated file returned as images for visual inspection",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 12
+          },
+          "segmentFrames": {
+            "description": "Opt-in fallback: render in supervised segments and concatenate losslessly",
+            "type": "integer",
+            "minimum": 30,
+            "maximum": 9007199254740991
           }
         },
         "required": [
           "projectId",
           "outputDirectory",
           "fileName",
-          "background",
           "waitForCompletion",
-          "pollIntervalMs",
           "strictVisualValidation",
-          "allowUniformFrames"
+          "allowUniformFrames",
+          "maxAttempts",
+          "inspectionFrames"
         ],
         "additionalProperties": false
       }
@@ -9980,7 +10001,7 @@
     },
     {
       "name": "render_item_inspect",
-      "description": "Inspect every exposed Render Queue Item attribute and value",
+      "description": "Inspect Render Queue Item values: every attribute the item enumerates, or only the named ones",
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
@@ -9988,6 +10009,15 @@
           "itemId": {
             "type": "string",
             "minLength": 1
+          },
+          "attributes": {
+            "description": "Read only these attributes; otherwise every value attribute the item enumerates",
+            "maxItems": 64,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
           }
         },
         "required": [
@@ -10431,6 +10461,90 @@
       }
     },
     {
+      "name": "render_scene_verified",
+      "description": "Render any scene or composition through the same supervised, validated, recoverable H.264 pipeline, independent of the motion compiler (render isolation and torture testing)",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "scenePath": {
+            "description": "Scene file to open (discarding unsaved changes) before rendering; defaults to the current scene",
+            "type": "string"
+          },
+          "compId": {
+            "description": "Composition to render; defaults to the active composition",
+            "type": "string"
+          },
+          "startFrame": {
+            "description": "First frame (inclusive); defaults to the composition start",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "endFrame": {
+            "description": "Last frame (inclusive); defaults to the composition end",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "outputDirectory": {
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string",
+            "description": "Output name; \".mp4\" is appended when absent"
+          },
+          "sampleFrames": {
+            "description": "Composition frames that must decode as non-blank",
+            "maxItems": 24,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "strictVisualValidation": {
+            "default": true,
+            "type": "boolean"
+          },
+          "allowUniformFrames": {
+            "default": false,
+            "type": "boolean"
+          },
+          "maxAttempts": {
+            "default": 2,
+            "description": "2 retries exactly once after clean-host recovery",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2
+          },
+          "inspectionFrames": {
+            "default": 0,
+            "description": "Frames from the validated file returned as images",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 12
+          },
+          "segmentFrames": {
+            "description": "Opt-in fallback: render in supervised segments and concatenate",
+            "type": "integer",
+            "minimum": 30,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "outputDirectory",
+          "fileName",
+          "strictVisualValidation",
+          "allowUniformFrames",
+          "maxAttempts",
+          "inspectionFrames"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
       "name": "render_script_clear",
       "description": "Clear all three Render Queue Item scripts",
       "inputSchema": {
@@ -10739,8 +10853,26 @@
         "type": "object",
         "properties": {
           "detailed": {
-            "description": "If true, includes full connection wires and parent hierarchy",
+            "description": "If true, includes full connection wires and parent hierarchy (same as mode \"detailed\")",
             "type": "boolean"
+          },
+          "mode": {
+            "description": "summary: identity only, no attribute reads; detailed: hierarchy, connections, and core transforms the node type supports; targeted: only the named attributes",
+            "type": "string",
+            "enum": [
+              "summary",
+              "detailed",
+              "targeted"
+            ]
+          },
+          "attributes": {
+            "description": "Attributes for targeted inspection; ones a node does not have are listed as unsupported and never read",
+            "maxItems": 64,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
           }
         },
         "additionalProperties": false
@@ -10807,7 +10939,7 @@
     },
     {
       "name": "scene_save",
-      "description": "Save the current scene file in place",
+      "description": "Save the current scene file in place (and its motion-compiler state sidecar)",
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
@@ -10817,7 +10949,7 @@
     },
     {
       "name": "scene_save_as",
-      "description": "Save the current scene to a specific .cv file path",
+      "description": "Save the current scene to a specific .cv file path (and its motion-compiler state sidecar)",
       "inputSchema": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",

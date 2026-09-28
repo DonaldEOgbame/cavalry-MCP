@@ -17,6 +17,6 @@ for (const required of ['CAVALRY_TOOL_PROFILE', 'CAVALRY_SECURITY_TIER', 'CAVALR
 for (const tier of ['SAFE', 'EXTENDED', 'RAW', 'SYSTEM_EXEC']) {
   if (!combined.includes(tier)) throw new Error(`Documentation is missing security tier ${tier}`);
 }
-if (!combined.includes('403')) throw new Error('Documentation is missing the canonical full-profile tool count (403).');
+if (!combined.includes('404')) throw new Error('Documentation is missing the canonical full-profile tool count (404).');
 if (!combined.includes('2.7.2')) throw new Error('Documentation is missing the minimum tested Cavalry version (2.7.2).');
 process.stdout.write(`Validated ${files.length} documentation files against package scripts and runtime policy.\n`);

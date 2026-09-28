@@ -1,8 +1,5 @@
-import { execFile } from 'node:child_process';
-import { promisify } from 'node:util';
 import { bridgeClient } from './client.js';
-
-const execFileAsync = promisify(execFile);
+import { defaultProcessControl } from '../runtime/process-control.js';
 
 export type OperationRisk = 'SAFE' | 'CAUTION' | 'HOST_UNSTABLE';
 
@@ -41,26 +38,18 @@ async function waitForBridge(timeoutMs: number): Promise<boolean> {
 }
 
 export async function recoverCavalryBridge(): Promise<boolean> {
-  if (process.platform !== 'darwin') return false;
-  if (process.env.CAVALRY_WATCHDOG_AUTO_RESTART !== 'true') return false;
-  try {
-    await execFileAsync('/usr/bin/pkill', ['-TERM', '-x', 'Cavalry']);
-  } catch {}
-  await new Promise(resolve => setTimeout(resolve, 2_000));
-  await execFileAsync('/usr/bin/open', ['-a', 'Cavalry']);
+  const control = defaultProcessControl();
+  if (!control.supported) return false;
+  // A modal dialog can make Cavalry ignore SIGTERM; relaunching into a still
+  // running instance would only reactivate the wedged process.
+  const terminated = await control.terminate();
+  if (!terminated.exited) return false;
+  await control.launch();
   // Cavalry restores the bridge script window after a crash/restart. Prefer
   // that native recovery path before attempting menu automation (Qt menus are
   // not exposed consistently through macOS System Events).
   if (await waitForBridge(15_000)) return true;
-  try {
-    await execFileAsync('/usr/bin/osascript', [
-      '-e', 'tell application "Cavalry" to activate',
-      '-e', 'delay 1',
-      '-e', 'tell application "System Events" to tell process "Cavalry" to click menu item "CavalryBridge" of menu 1 of menu bar item "Scripts" of menu bar 1',
-    ]);
-  } catch {
-    return false;
-  }
+  if (!await control.activateBridge()) return false;
   return waitForBridge(30_000);
 }
 

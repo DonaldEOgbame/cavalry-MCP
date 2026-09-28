@@ -8,6 +8,7 @@ import { CavalryError } from '../mcp/errors.js';
 import { logger } from '../utils/logger.js';
 import { identityResolver } from '../utils/ids.js';
 import { metadataCache } from '../utils/cache.js';
+import { incidentJournal } from '../runtime/incidents.js';
 
 export interface BridgeClientConfig {
   host?: string;
@@ -21,6 +22,22 @@ export interface BridgeSendOptions {
   signal?: AbortSignal;
 }
 
+export interface InFlightRequest {
+  requestId: string;
+  op: string;
+  startedAt: number;
+  ageMs: number;
+  timeoutMs: number;
+}
+
+export interface BridgeTransportStats {
+  lastSuccessAt: number | null;
+  lastFailure: { code: string; op: string; at: number } | null;
+  consecutiveTimeouts: number;
+  bridgeInstanceId: string | null;
+  incidentAck: number;
+}
+
 export class BridgeClient {
   private host: string;
   private port: number;
@@ -28,6 +45,11 @@ export class BridgeClient {
   private timeoutMs: number;
   private callbackServer: http.Server | null = null;
   private bridgeInstanceId: string | null = null;
+  private incidentAckInstance: string | null = null;
+  private incidentAck = 0;
+  private lastSuccessAt: number | null = null;
+  private lastFailure: BridgeTransportStats['lastFailure'] = null;
+  private consecutiveTimeouts = 0;
   private readonly sessionId = crypto.randomUUID();
   private readonly sessionToken = crypto.randomBytes(32).toString('hex');
   private readonly ipcRoot = path.join(os.tmpdir(), 'cavalry-mcp');
@@ -39,6 +61,7 @@ export class BridgeClient {
     timer: NodeJS.Timeout;
     controller: AbortController;
     startTime: number;
+    timeoutMs: number;
     op: string;
   }>();
 
@@ -50,6 +73,43 @@ export class BridgeClient {
   }
 
   get sessionIdentifier(): string { return this.sessionId; }
+
+  /** Requests dispatched to Cavalry that have not yet resolved. */
+  inFlight(now = Date.now()): InFlightRequest[] {
+    return [...this.pendingRequests.entries()].map(([requestId, pending]) => ({
+      requestId, op: pending.op, startedAt: pending.startTime, ageMs: now - pending.startTime, timeoutMs: pending.timeoutMs,
+    }));
+  }
+
+  transportStats(): BridgeTransportStats {
+    return {
+      lastSuccessAt: this.lastSuccessAt,
+      lastFailure: this.lastFailure,
+      consecutiveTimeouts: this.consecutiveTimeouts,
+      bridgeInstanceId: this.bridgeInstanceId,
+      incidentAck: this.incidentAck,
+    };
+  }
+
+  private absorbIncidents(response: BridgeResponse): void {
+    const instance = response.bridgeInstanceId ?? null;
+    if (instance && instance !== this.incidentAckInstance) {
+      // A restarted bridge numbers incidents from zero again.
+      this.incidentAckInstance = instance;
+      this.incidentAck = 0;
+    }
+    if (response.incidents?.length) {
+      incidentJournal.ingest(response.incidents, instance ?? undefined);
+      this.incidentAck = Math.max(this.incidentAck, ...response.incidents.map((incident) => incident.updatedSeq));
+    } else if (typeof response.incidentSeq === 'number' && instance === this.incidentAckInstance) {
+      this.incidentAck = Math.max(this.incidentAck, response.incidentSeq);
+    }
+  }
+
+  private noteFailure(code: string, op: string): void {
+    this.lastFailure = { code, op, at: Date.now() };
+    if (code === 'BRIDGE_TIMEOUT') this.consecutiveTimeouts += 1;
+  }
 
   private writeSessionFile(): void {
     fs.mkdirSync(this.ipcRoot, { recursive: true, mode: 0o700 });
@@ -138,11 +198,20 @@ export class BridgeClient {
   }
 
   private handleIncomingResponse(response: BridgeResponse) {
+    if (response.token === this.sessionToken) {
+      // Late responses (after a client timeout) still carry incident updates.
+      try { this.absorbIncidents(response); } catch (error) { logger.warn('Could not journal bridge incidents', { data: error }); }
+    }
     const pending = this.pendingRequests.get(response.id);
     if (!pending) return;
 
     clearTimeout(pending.timer);
     this.pendingRequests.delete(response.id);
+
+    if (response.token === this.sessionToken) {
+      this.consecutiveTimeouts = 0;
+      this.lastSuccessAt = Date.now();
+    }
 
     if (response.token !== this.sessionToken) {
       pending.reject(new CavalryError({
@@ -181,6 +250,7 @@ export class BridgeClient {
     }
 
     if (!response.ok && response.error) {
+      this.noteFailure(response.error.code, pending.op);
       pending.reject(new CavalryError(response.error));
     } else {
       pending.resolve(response);
@@ -225,6 +295,7 @@ export class BridgeClient {
 
     const responseFile = path.join(this.responseDirectory, `${reqId}.json`);
     fs.writeFileSync(responseFile, '', { encoding: 'utf8', mode: 0o600, flag: 'wx' });
+    incidentJournal.noteRequest(reqId, op);
 
     const requestPayload: BridgeRequest<TParams> = {
       protocolVersion: BRIDGE_PROTOCOL_VERSION,
@@ -237,6 +308,8 @@ export class BridgeClient {
       callbackUrl: this.callbackServer ? `http://127.0.0.1:${this.callbackPort}/response` : undefined,
       responseFile,
       timestamp: startTime,
+      deadlineAt: startTime + timeoutDuration,
+      ackIncidentSeq: this.incidentAck,
     };
 
     return new Promise<BridgeResponse<TResult>>((resolve, reject) => {
@@ -267,6 +340,7 @@ export class BridgeClient {
           suggestion: 'Check if Cavalry is unresponsive, waiting for user confirmation, or processing a heavy task.',
         });
         logger.error(`Request ${reqId} timed out`, timeoutError, { operation: op, durationMs: Date.now() - startTime });
+        this.noteFailure('BRIDGE_TIMEOUT', op);
         reject(timeoutError);
       }, timeoutDuration);
 
@@ -286,6 +360,7 @@ export class BridgeClient {
         timer,
         controller,
         startTime,
+        timeoutMs: timeoutDuration,
         op,
       });
 
@@ -320,6 +395,7 @@ export class BridgeClient {
         this.pendingRequests.delete(reqId);
         try { if (fs.existsSync(responseFile)) fs.unlinkSync(responseFile); } catch {}
         const error = CavalryError.fromUnknown(postErr, op);
+        this.noteFailure(error.code, op);
         metadataCache.clear();
         identityResolver.invalidate();
         logger.error(`Failed to send request ${reqId} to Cavalry`, error, { operation: op });

@@ -88,8 +88,8 @@ Layer 2 contains reusable scene/system operations:
 
 Layer 3 is the existing typed Cavalry operation surface. Layer 4 is the
 internal bridge. The default `core` profile prioritizes Layers 1 and 2 plus a
-small operational/knowledge set (59 tools). `standard` exposes the broad typed
-editing surface. `full` exposes all 403 registered tools.
+small operational/knowledge set (60 tools). `standard` exposes the broad typed
+editing surface. `full` exposes all 404 registered tools.
 
 ## Compilation and batching
 
@@ -105,9 +105,12 @@ the updated scene revision.
 Project updates compare scene hashes and rebuild only changed scenes.
 Corrections address stable `sceneId`/`elementId` pairs and can change visual,
 timing, or hierarchy properties in one high-level call. Partial rendering maps
-selected scene IDs to one explicit frame range. The runtime state is in-memory;
-after a server restart, `motion_project_attach_current` can associate an
-equivalent manifest with the active compiled scene after structural checks.
+selected scene IDs to one explicit frame range. Compiler state is persisted
+after every mutation (data directory, plus a `<scene>.cv.motion.json` sidecar
+beside saved scenes and render checkpoints), and generated layers carry stable
+semantic ids (`sceneId.elementId`) mapped to Cavalry UUIDs. After a restart,
+`motion_project_attach_current` restores that state and re-resolves every
+element against the live scene. See [runtime-reliability.md](runtime-reliability.md).
 
 ## Visual review and rendering
 
@@ -116,12 +119,13 @@ returns them as actual MCP image content, allowing one visual reasoning pass
 without shell or filesystem access. The correction manifest can then be
 submitted once through `motion_project_apply_corrections`.
 
-`motion_project_render` configures an explicit range and H.264 generator,
-removes the exact stale target, supervises completion internally, validates freshness
-and non-zero size, probes codec/duration/dimensions, decodes representative
-frames, and optionally rejects uniformly blank output. Background polling is
-hidden from the client; `waitForCompletion: false` is available only when a
-caller intentionally wants an asynchronous job.
+`motion_project_render` uses the supervised, disposable render pipeline
+described in [runtime-reliability.md](runtime-reliability.md): a checkpoint, a
+fresh Render Manager item per attempt with read-back range verification, a
+private staging file, artifact validation (codec, resolution, fps, exact frame
+count, duration, non-blank and non-frozen frames), clean-host recovery, and
+exactly one retry. Full-range rendering is the default; segmentation is an
+opt-in fallback (`segmentFrames`).
 
 ## External benchmark evidence
 
@@ -158,14 +162,21 @@ zero-byte container on this Cavalry 2.7.2 host. Existing small-format H.264
 coverage remains valid, so the open issue is specific to this production-sized
 compiled scene/range or its host render state.
 
-An internal segmented-render fallback now splits ranges above 250 frames and
-losslessly concatenates verified H.264 chunks. Its first replay ran after a
-cancelled long render had already wedged Render Manager and the first chunk
-remained empty, so this fallback is implemented but not yet clean-host
-validated. Intermittent user-observed Cavalry **JavaScript Error** dialogs also
-remain unstructured: the bridge does not currently capture their stack traces,
-deduplicate them, or correlate them to the triggering MCP request. That error
-channel must be instrumented before calling the render path release-ready.
+Segmented rendering (supervised segments concatenated losslessly) is now an
+opt-in fallback (`segmentFrames`), not the default. Its first replay ran after
+a cancelled long render had already wedged Render Manager, so it is not yet
+clean-host validated. Cavalry **JavaScript Error** dialogs are now captured as
+structured, deduplicated incidents correlated to the triggering MCP request
+([runtime-reliability.md](runtime-reliability.md)). This has not yet been
+exercised live.
+
+The same benchmark log showed about 124,527 `Attribute not found` errors from
+the bridge's change-notification handlers and identity lookups, not from
+compiler work. That is fixed with a positive capability registry
+([attribute-hygiene.md](attribute-hygiene.md)). The live benchmark now fails
+on any invalid attribute read. Render debugging resumes on a host that logs
+zero such errors, and no claim is made yet that they caused the render
+failures.
 
 Accordingly, the redesign has conclusively removed agent/MCP round-trip
 explosion. Compile, verification, MCP-native QC, and a corrective edit now take

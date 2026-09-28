@@ -1,0 +1,135 @@
+{
+  "kind": "attribute-probing-model",
+  "note": "Counts from the behavioural host model, not a live Cavalry log.",
+  "baselineRef": "HEAD",
+  "before": {
+    "attributeNotFound": 14612,
+    "topFamilies": [
+      {
+        "family": "animationCurve.uuid",
+        "count": 4596
+      },
+      {
+        "family": "animationCurve.keyframes.N",
+        "count": 2241
+      },
+      {
+        "family": "textShape.out",
+        "count": 2164
+      },
+      {
+        "family": "animationCurve.keyframes",
+        "count": 1881
+      },
+      {
+        "family": "textShape.time",
+        "count": 1745
+      },
+      {
+        "family": "basicShape.out",
+        "count": 329
+      },
+      {
+        "family": "basicShape.time",
+        "count": 274
+      },
+      {
+        "family": "timeMarker.uuid",
+        "count": 220
+      },
+      {
+        "family": "textShape.keyframes.N",
+        "count": 83
+      },
+      {
+        "family": "textShape.gradient.N",
+        "count": 83
+      },
+      {
+        "family": "textShape.gradient.N.color",
+        "count": 83
+      },
+      {
+        "family": "textShape.stroke.width",
+        "count": 83
+      }
+    ],
+    "bridgeAttributeMetrics": null,
+    "workload": {
+      "batches": 11,
+      "bridgeOperations": 420,
+      "layersCreated": 138,
+      "keyframesCreated": 2095,
+      "correctionTarget": "00000000-0000-4000-8000-000000000308"
+    },
+    "wallMs": 228.7
+  },
+  "after": {
+    "attributeNotFound": 0,
+    "topFamilies": [],
+    "bridgeAttributeMetrics": {
+      "attributeReadRequests": 1130,
+      "validAttributeReads": 1130,
+      "invalidAttributeReads": 0,
+      "unsupportedReadsAvoided": 0,
+      "trustedReads": 1130,
+      "capabilityCacheHits": 136,
+      "capabilityCacheMisses": 3,
+      "attributeEnumerations": 3,
+      "instanceAttributeChecks": 0,
+      "uuidLookups": 139,
+      "uuidCacheHits": 278,
+      "identitiesWithoutUuid": 0,
+      "nodeInspections": 278,
+      "summaryInspections": 2,
+      "detailedInspections": 0,
+      "targetedInspections": 0,
+      "keyframeApiCalls": 1915,
+      "graphOperations": 0,
+      "eventEnrichmentReads": 0,
+      "eventNotificationsWithoutReads": 15659
+    },
+    "workload": {
+      "batches": 11,
+      "bridgeOperations": 420,
+      "layersCreated": 138,
+      "keyframesCreated": 2095,
+      "correctionTarget": "00000000-0000-4000-8000-000000000308"
+    },
+    "wallMs": 50.4
+  },
+  "afterWithEventSubscription": {
+    "attributeNotFound": 0,
+    "topFamilies": [],
+    "bridgeAttributeMetrics": {
+      "attributeReadRequests": 1134,
+      "validAttributeReads": 1134,
+      "invalidAttributeReads": 0,
+      "unsupportedReadsAvoided": 0,
+      "trustedReads": 1134,
+      "capabilityCacheHits": 143,
+      "capabilityCacheMisses": 3,
+      "attributeEnumerations": 3,
+      "instanceAttributeChecks": 0,
+      "uuidLookups": 139,
+      "uuidCacheHits": 286,
+      "identitiesWithoutUuid": 0,
+      "nodeInspections": 278,
+      "summaryInspections": 2,
+      "detailedInspections": 0,
+      "targetedInspections": 0,
+      "keyframeApiCalls": 1915,
+      "graphOperations": 0,
+      "eventEnrichmentReads": 4,
+      "eventNotificationsWithoutReads": 15651
+    },
+    "workload": {
+      "batches": 11,
+      "bridgeOperations": 420,
+      "layersCreated": 138,
+      "keyframesCreated": 2095,
+      "correctionTarget": "00000000-0000-4000-8000-000000000308"
+    },
+    "wallMs": 49.4
+  }
+}
